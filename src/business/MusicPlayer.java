@@ -1,36 +1,65 @@
 package business;
 import business.entities.Songs;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
+import javazoom.jlgui.basicplayer.*;
 import persistence.MusicDAO;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 
-public class MusicPlayer {
+public class MusicPlayer implements BasicPlayerListener {
 
+    private static MusicPlayer singletonInstance;
     private MusicDAO musicDAO;
-    private HashMap<Songs, Media> songsLoaded;
-    private MediaPlayer currentSongPlayer;
+    private HashMap<Songs, File> songsLoaded;
 
+    private BasicPlayer basicMusicPlayer;
 
+    private MusicPlayer(){}
 
-    public void load() {
-
-        if (musicDAO == null) {
-            musicDAO = new MusicDAO();
+    public static MusicPlayer getInstance() throws IOException{
+        if(singletonInstance == null){
+            singletonInstance = new MusicPlayer();
+            singletonInstance.musicDAO = new MusicDAO();
+            singletonInstance.songsLoaded = singletonInstance.musicDAO.read();
+            singletonInstance.basicMusicPlayer = new BasicPlayer();
+            singletonInstance.basicMusicPlayer.addBasicPlayerListener(singletonInstance);
         }
-        songsLoaded = musicDAO.read();
+        return singletonInstance;
     }
+
 
     public void playInLoop(Songs song){
-        Media mediaToPlay = songsLoaded.get(song);
-        if(currentSongPlayer != null) currentSongPlayer.stop();
+        if(song == null || basicMusicPlayer == null) return;
 
-        currentSongPlayer = new MediaPlayer(mediaToPlay);
-        currentSongPlayer.play();
+        try{
+            if(basicMusicPlayer.getStatus() == BasicPlayer.PLAYING) basicMusicPlayer.stop();
+            basicMusicPlayer.open(songsLoaded.get(song));
+            basicMusicPlayer.play();
+        }catch(BasicPlayerException e){}
     }
 
 
 
+    @Override
+    public void opened(Object o, Map map) {}
+
+    @Override
+    public void progress(int i, long l, byte[] bytes, Map map) {}
+
+    @Override
+    public void stateUpdated(BasicPlayerEvent basicPlayerEvent) {
+        //If the BasicMusicPlayer reaches the end, start again playing (infinite music loop)
+        if(basicPlayerEvent.getCode() == BasicPlayerEvent.EOM){
+            try{
+                basicMusicPlayer.stop();
+                basicMusicPlayer.play();
+            }catch(BasicPlayerException e){}
+        }
+    }
+
+    @Override
+    public void setController(BasicController basicController) {}
 }

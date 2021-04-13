@@ -1,8 +1,8 @@
 package business.entities;
 
 public enum Sounds {
-    Button("button.mp3"),
-    SplashScreen("splashscreen.mp3");
+    BUTTON("button.mp3"),
+    SPLASH_SCREEN("splashscreen.mp3");
 
     private final String path;
 

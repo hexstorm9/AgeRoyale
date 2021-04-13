@@ -1,19 +1,18 @@
 package persistence;
 
 import business.entities.Sounds;
-import javafx.scene.media.Media;
-
+import java.io.File;
 import java.util.HashMap;
+
 
 public class SoundDAO {
 
     private static final String SOUNDS_PATH = "./resources/sounds/";
 
-    public HashMap<Sounds, Media> read() {
-        HashMap<Sounds, Media> soundsLoaded = new HashMap<Sounds, Media>();//aqui el hashmap
-        for(Sounds sounds: Sounds.values()){// aqui el enum i el contructor
-            Media songMedia = new Media(SOUNDS_PATH + sounds.getFileName());
-            soundsLoaded.put(sounds, songMedia);//aqui els song i media
+    public HashMap<Sounds, File> read() {
+        HashMap<Sounds, File> soundsLoaded = new HashMap<>();
+        for(Sounds s: Sounds.values()){
+            soundsLoaded.put(s, new File(SOUNDS_PATH + s.getFileName()));
         }
         return soundsLoaded;
     }

@@ -1,18 +1,20 @@
 package persistence;
 
 import business.entities.Songs;
-import javafx.scene.media.*;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 
 
 public class MusicDAO {
+
     private static final String MUSIC_PATH = "./resources/music/";
 
-    public HashMap<Songs, Media> read() {
-        HashMap<Songs, Media> songsLoaded = new HashMap<Songs, Media>();//aqui el hashmap
-        for(Songs s: Songs.values()){// aqui el enum i el contructor
-            Media songMedia = new Media(MUSIC_PATH + s.getFileName());
-            songsLoaded.put(s, songMedia);//aqui els song i media
+    public HashMap<Songs, File> read() throws IOException {
+        HashMap<Songs, File> songsLoaded = new HashMap<>();
+        for(Songs s: Songs.values()){
+            songsLoaded.put(s, new File(MUSIC_PATH + s.getFileName()));
         }
         return songsLoaded;
     }
