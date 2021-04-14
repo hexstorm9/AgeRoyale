@@ -1,7 +1,9 @@
 package main;
 
 import business.DatabaseInfo;
+import view.Splash_screen;
 
+import javax.swing.*;
 import java.io.IOException;
 
 public class Main {
@@ -20,6 +22,23 @@ public class Main {
             System.out.println("Couldn't read the file correctly.");
             e.printStackTrace();
         }
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+
+                Splash_screen view = null;
+
+                try {
+                    System.out.println("run");
+                    view = new Splash_screen();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+                view.setVisible(true);
+            }
+        });
     }
 
 }
