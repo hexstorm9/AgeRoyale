@@ -1,23 +1,17 @@
 package main;
 
-import business.DatabaseInfo;
+import persistence.LanguageDAO;
 
 import java.io.IOException;
 
 public class Main {
 
     public static void main(String[] args){
-        try{
-            DatabaseInfo databaseInfo = DatabaseInfo.getInstance();
+        LanguageDAO lan = new LanguageDAO();
 
-            System.out.println("IP --> " + databaseInfo.getIp());
-            System.out.println("Port --> " + databaseInfo.getPort());
-            System.out.println("User --> " + databaseInfo.getUser());
-            System.out.println("Password --> " + databaseInfo.getPassword());
-            System.out.println("Database Name --> " + databaseInfo.getDatabaseName());
-        }
-        catch(IOException e){
-            System.out.println("Couldn't read the file correctly.");
+        try {
+            lan.readSentences();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

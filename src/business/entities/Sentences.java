@@ -1,0 +1,5 @@
+package business.entities;
+
+public enum Sentences {
+    LOGIN, USERNAME, PASSWORD, PASSWORDFORGOTTEN, DONTHAVEACCOUNT, ENTER, PLAY, PAUSE, LOADING, EXIT
+}
