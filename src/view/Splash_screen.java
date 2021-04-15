@@ -55,7 +55,7 @@ public class Splash_screen extends JFrame {
         jPanel1.setToolTipText("");
 
         jLabel2.setHorizontalAlignment(SwingConstants.CENTER);
-        jLabel2.setIcon(new ImageIcon(getClass().getResource("/Resources/images/load.png"))); // NOI18N
+        jLabel2.setIcon(new ImageIcon(getClass().getResource("/Resources/images/Cargar_anim3.gif"))); // NOI18N
 
         jLabel1.setFont(new Font("Tahoma", 0, 48)); // NOI18N
         jLabel1.setForeground(new Color(255, 255, 255));
