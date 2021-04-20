@@ -1,11 +1,10 @@
 package main;
 
-import business.MusicPlayer;
-import business.SoundPlayer;
-import business.entities.Songs;
-import business.entities.Sounds;
+import business.GameModel;
+import presentation.controller.SplashScreenController;
+import presentation.view.RoyaleFrame;
 
-import java.io.IOException;
+import javax.swing.*;
 
 
 public class Main {
@@ -13,20 +12,18 @@ public class Main {
     public static void main(String[] args) {
         //Do not remove -----------------------------
         //Uncomment to see BasicPlayer logs ---------
-        //System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.NoOpLog"); //Disable Commons-Logging (the BasicPlayer library uses it)
+        System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.NoOpLog"); //Disable Commons-Logging (the BasicPlayer library uses it)
         // ------------------------------------------
 
-        try{
-            SoundPlayer.getInstance().play(Sounds.BUTTON);
-            Thread.sleep(1000);
-            SoundPlayer.getInstance().play(Sounds.SPLASH_SCREEN);
-            Thread.sleep(4000);
-            MusicPlayer.getInstance().playInLoop(Songs.MENU);
-        }catch(IOException | InterruptedException e){
-            System.out.println("Couldn't find songs. Check whether the paths are correct.");
-        }
-
-
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                GameModel gameModel = new GameModel();
+                RoyaleFrame royaleFrame = new RoyaleFrame();
+                SplashScreenController splashScreenController = SplashScreenController.getInstance(royaleFrame, gameModel);
+                splashScreenController.start();
+            }
+        });
     }
 
 }

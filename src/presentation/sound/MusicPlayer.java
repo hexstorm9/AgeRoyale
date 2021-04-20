@@ -1,7 +1,6 @@
-package business;
+package presentation.sound;
 import business.entities.Songs;
 import javazoom.jlgui.basicplayer.*;
-import persistence.MusicDAO;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,22 +11,24 @@ import java.util.Map;
 public class MusicPlayer implements BasicPlayerListener {
 
     private static MusicPlayer singletonInstance;
-    private MusicDAO musicDAO;
-    private HashMap<Songs, File> songsLoaded;
+    private static final String MUSIC_PATH = "./resources/music/";
 
+    private HashMap<Songs, File> songsLoaded;
     private BasicPlayer basicMusicPlayer;
+
 
     private MusicPlayer(){}
 
-    public static MusicPlayer getInstance() throws IOException{
-        if(singletonInstance == null){
-            singletonInstance = new MusicPlayer();
-            singletonInstance.musicDAO = new MusicDAO();
-            singletonInstance.songsLoaded = singletonInstance.musicDAO.read();
-            singletonInstance.basicMusicPlayer = new BasicPlayer();
-            singletonInstance.basicMusicPlayer.addBasicPlayerListener(singletonInstance);
-        }
+    public static MusicPlayer getInstance() {
+        if(singletonInstance == null) singletonInstance = new MusicPlayer();
         return singletonInstance;
+    }
+
+
+    public void load() throws IOException{
+        singletonInstance.songsLoaded = singletonInstance.read();
+        singletonInstance.basicMusicPlayer = new BasicPlayer();
+        singletonInstance.basicMusicPlayer.addBasicPlayerListener(singletonInstance);
     }
 
 
@@ -62,4 +63,15 @@ public class MusicPlayer implements BasicPlayerListener {
 
     @Override
     public void setController(BasicController basicController) {}
+
+
+    public HashMap<Songs, File> read() throws IOException {
+        HashMap<Songs, File> songsLoaded = new HashMap<>();
+        for(Songs s: Songs.values()){
+            File file = new File(MUSIC_PATH + s.getFileName());
+            if(!file.exists()) throw new IOException(s.getFileName() + " not found");
+            songsLoaded.put(s, file);
+        }
+        return songsLoaded;
+    }
 }

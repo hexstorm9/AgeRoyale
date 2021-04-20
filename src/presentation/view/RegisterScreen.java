@@ -1,2 +1,6 @@
-package presentation.view;public class RegisterScreen {
+package presentation.view;
+
+import javax.swing.*;
+
+public class RegisterScreen extends JPanel {
 }

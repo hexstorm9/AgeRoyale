@@ -1,2 +1,7 @@
-package presentation.view.customcomponents;public class RoyaleProgressBar {
+package presentation.view.customcomponents;
+
+import javax.swing.*;
+
+public class RoyaleProgressBar extends JProgressBar {
+
 }

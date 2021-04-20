@@ -1,2 +1,6 @@
-package presentation.view;public class BattleScreen {
+package presentation.view;
+
+import javax.swing.*;
+
+public class BattleScreen extends JPanel {
 }

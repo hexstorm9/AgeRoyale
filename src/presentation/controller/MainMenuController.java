@@ -1,2 +1,4 @@
-package presentation.controller;public class MainMenuController {
+package presentation.controller;
+
+public class MainMenuController {
 }
