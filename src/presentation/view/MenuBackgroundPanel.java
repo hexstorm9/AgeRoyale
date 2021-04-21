@@ -7,7 +7,7 @@ import java.io.File;
 import java.io.IOException;
 
 
-public class RoyaleScreen extends JPanel {
+public class MenuBackgroundPanel extends JPanel {
 
     private static final String BACKGROUND_TILE_IMAGE_PATH = "./resources/sprites/backgroundTile.png";
     private Image backgroundTile;
@@ -21,7 +21,7 @@ public class RoyaleScreen extends JPanel {
     private final int VERTICAL_TILES;
 
 
-    public RoyaleScreen(int screenWidth, int screenHeight){
+    public MenuBackgroundPanel(int screenWidth, int screenHeight){
         try{
             backgroundTile = ImageIO.read(new File(BACKGROUND_TILE_IMAGE_PATH));
         }catch(IOException e){}
