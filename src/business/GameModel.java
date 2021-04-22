@@ -12,7 +12,6 @@ public class GameModel {
 
     }
 
-
     public void loadDatabase() throws IOException {
     }
 

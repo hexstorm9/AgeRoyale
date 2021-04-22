@@ -80,6 +80,38 @@
         "Salir",
         "Sortir"
       ]
+    },
+    {
+      "key": "register",
+      "values": [
+        "Sign up",
+        "Registrarse",
+        "Registrar-se"
+      ]
+    },
+    {
+      "key": "confirmPassword",
+      "values": [
+        "Confirm password",
+        "Confirmar contraseña",
+        "Confirmar contrasenya"
+      ]
+    },
+    {
+      "key": "mail",
+      "values": [
+        "Mail",
+        "Correo electronico",
+        "Correu electrònic"
+      ]
+    },
+    {
+      "key": "haveAccount",
+      "values": [
+        "Already have an account? Log in",
+        "¿Ya tienes una cuenta? Entra",
+        "Ja tens un compte? Entra"
+      ]
     }
   ]
 }
