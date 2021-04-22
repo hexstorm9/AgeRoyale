@@ -1,0 +1,85 @@
+{
+  "language": "ca",
+  "sentences": [
+    {
+      "key": "login",
+      "values": [
+        "Log In",
+        "Iniciar Sesión",
+        "Iniciar Sessió"
+      ]
+    },
+    {
+      "key": "username",
+      "values": [
+        "Username",
+        "Nombre de usuario",
+        "Nom d\u0027usuari"
+      ]
+    },
+    {
+      "key": "password",
+      "values": [
+        "Password",
+        "Contraseña",
+        "Contrasenya"
+      ]
+    },
+    {
+      "key": "passwordForgotten",
+      "values": [
+        "I forgot the password",
+        "He olvidado mi contraseña",
+        "He oblidat la meva contrasenya"
+      ]
+    },
+    {
+      "key": "dontHaveAccount",
+      "values": [
+        "Don\u0027t have an account? Register",
+        "¿No tienes una cuenta? Registrate",
+        "No tens un compte? Registra\u0027t"
+      ]
+    },
+    {
+      "key": "enter",
+      "values": [
+        "Enter",
+        "Entrar",
+        "Entrar"
+      ]
+    },
+    {
+      "key": "play",
+      "values": [
+        "Play video",
+        "Reproducir video",
+        "Reproduïr vidio"
+      ]
+    },
+    {
+      "key": "pause",
+      "values": [
+        "Pause video",
+        "Parar video",
+        "Parar video"
+      ]
+    },
+    {
+      "key": "loading",
+      "values": [
+        "Loading...",
+        "Cargando...",
+        "Carregant..."
+      ]
+    },
+    {
+      "key": "exit",
+      "values": [
+        "Exit",
+        "Salir",
+        "Sortir"
+      ]
+    }
+  ]
+}
