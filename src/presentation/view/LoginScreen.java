@@ -66,11 +66,10 @@ public class LoginScreen extends JPanel {
 
         loginButton = new RoyaleButton(LanguageManager.getSentence(Sentences.ENTER));
         loginButton.setAlignmentX(CENTER_ALIGNMENT);
-        loginButton.setFont(MenuGraphics.getInstance().getMainFont());
 
-        forgetPasswordLabel = new RoyaleLabel(LanguageManager.getSentence(Sentences.PASSWORD_FORGOTTEN), RoyaleLabel.LabelType.SMALL);
+        forgetPasswordLabel = new RoyaleLabel(LanguageManager.getSentence(Sentences.PASSWORD_FORGOTTEN), RoyaleLabel.LabelType.LINK);
         forgetPasswordLabel.setAlignmentX(CENTER_ALIGNMENT);
-        registerLabel = new RoyaleLabel(LanguageManager.getSentence(Sentences.DONT_HAVE_ACCOUNT), RoyaleLabel.LabelType.SMALL);
+        registerLabel = new RoyaleLabel(LanguageManager.getSentence(Sentences.DONT_HAVE_ACCOUNT), RoyaleLabel.LabelType.LINK);
         registerLabel.setAlignmentX(CENTER_ALIGNMENT);
 
 
