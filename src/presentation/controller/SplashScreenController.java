@@ -1,6 +1,7 @@
 package presentation.controller;
 
 import business.GameModel;
+import presentation.graphics.MenuGraphics;
 import presentation.sound.MusicPlayer;
 import presentation.sound.SoundPlayer;
 import business.entities.Sounds;
@@ -8,63 +9,45 @@ import presentation.view.RoyaleFrame;
 import presentation.view.SplashScreen;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
 
-public class SplashScreenController implements ScreenController{
+public class SplashScreenController extends ScreenController{
 
-    private static SplashScreenController singletonInstance;
     private SplashScreen splashScreen;
-    private RoyaleFrame royaleFrame;
-    private GameModel gameModel;
-
     private LoadGameInBackground loadGameInBackground;
 
 
-    private SplashScreenController(RoyaleFrame royaleFrame, GameModel gameModel){
-        this.royaleFrame = royaleFrame;
-        this.gameModel = gameModel;
+    public SplashScreenController(RoyaleFrame royaleFrame, GameModel gameModel){
+        super(royaleFrame, gameModel);
+    }
+
+
+    public void start(){
+        try{
+            MenuGraphics.getInstance().load(); //Load graphics before creating the screen
+        }catch(IOException e){
+            showCriticalErrorAndExit("Couldn't load Graphics");
+        }
+
+        splashScreen = new SplashScreen();
+        royaleFrame.changeScreen(splashScreen, RoyaleFrame.BackgroundStyle.MENU);
 
         loadGameInBackground = new LoadGameInBackground();
         loadGameInBackground.execute();
     }
 
-    public static SplashScreenController getInstance(RoyaleFrame rf, GameModel gm){
-        if(singletonInstance == null) singletonInstance = new SplashScreenController(rf, gm);
-        return singletonInstance;
-    }
-
-
-    public void start(){
-        splashScreen = new SplashScreen();
-        royaleFrame.changeMainPane(splashScreen);
-    }
 
     public void updateProgressBar(int progress){
         splashScreen.setProgressBarValue(progress);
     }
 
 
-    public void goToScreen(Screen s){
-        switch(s){
-            case LOGIN_SCREEN:
-                freeResources();
-                LoginScreenController.getInstance(royaleFrame, gameModel).start();
-                break;
-        }
-    }
-
-    private void freeResources(){
-        splashScreen = null;
-        loadGameInBackground = null;
-    }
-
-
-    public void showCriticalError(String errorMessage){
-        royaleFrame.showCriticalErrorAndExitApplication(errorMessage);
-    }
+    @Override
+    public void actionPerformed(ActionEvent e) {}
 
 
     private class LoadGameInBackground extends SwingWorker<String, Integer>{
@@ -150,7 +133,7 @@ public class SplashScreenController implements ScreenController{
             }
 
             if (errorMessage == null) goToScreen(Screen.LOGIN_SCREEN);
-            else showCriticalError(errorMessage);
+            else showCriticalErrorAndExit(errorMessage);
         }
     }
 

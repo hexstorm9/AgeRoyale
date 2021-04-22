@@ -1,29 +1,36 @@
 package presentation.view;
 
+import presentation.graphics.MenuGraphics;
+import presentation.view.customcomponents.RoyaleLabel;
 import presentation.view.customcomponents.RoyaleProgressBar;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
 
-
+/**
+ * The SplashScreen class will be a simple JPanel showing the logo and a ProgressBar ({@link RoyaleProgressBar})
+ * controlled through its controller ({@link presentation.controller.SplashScreenController})
+ *
+ * @see presentation.controller.SplashScreenController
+ * @see RoyaleProgressBar
+ * @version 1.0
+ */
 public class SplashScreen extends JPanel {
 
     private Image imageLogo;
     private RoyaleProgressBar royaleProgressBar;
 
-    private final static String LOGO_IMAGE_PATH = "./resources/sprites/logo.png";
-
-
+    /**
+     * SplashScreen Constructor.
+     * <p>It will create the whole Panel and set the ProgressBar to 0.
+     *
+     * @see RoyaleProgressBar
+     */
     public SplashScreen(){
-        try{
-            imageLogo = ImageIO.read(new File(LOGO_IMAGE_PATH));
-        }catch(IOException e){}
+        imageLogo = MenuGraphics.getInstance().getLogo();
         royaleProgressBar = new RoyaleProgressBar();
 
-        JLabel logoLabel = new JLabel(new ImageIcon(imageLogo));
+        RoyaleLabel logoLabel = new RoyaleLabel(new ImageIcon(imageLogo));
         logoLabel.setAlignmentX(CENTER_ALIGNMENT);
         royaleProgressBar.setAlignmentX(CENTER_ALIGNMENT);
 
@@ -39,6 +46,10 @@ public class SplashScreen extends JPanel {
     }
 
 
+    /**
+     * Visually update the ProgressBar value
+     * @param progress Current progress
+     */
     public void setProgressBarValue(int progress){
         royaleProgressBar.setValue(progress);
     }

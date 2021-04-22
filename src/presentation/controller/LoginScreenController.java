@@ -10,33 +10,25 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 
-public class LoginScreenController implements ActionListener {
+public class LoginScreenController extends ScreenController implements ActionListener {
 
-    private static LoginScreenController singletonInstance;
     private LoginScreen loginScreen;
-    private RoyaleFrame royaleFrame;
-    private GameModel gameModel;
 
-
-    private LoginScreenController(RoyaleFrame royaleFrame, GameModel gameModel){
-        this.royaleFrame = royaleFrame;
-        this.gameModel = gameModel;
+    public LoginScreenController(RoyaleFrame royaleFrame, GameModel gameModel){
+        super(royaleFrame, gameModel);
     }
-
-    public static LoginScreenController getInstance(RoyaleFrame rf, GameModel gm){
-        if(singletonInstance == null) singletonInstance = new LoginScreenController(rf, gm);
-        return singletonInstance;
-    }
-
 
     public void start(){
         loginScreen = new LoginScreen();
-        royaleFrame.changeMainPane(loginScreen);
+        loginScreen.addButtonsListener(this);
+        royaleFrame.changeScreen(loginScreen, RoyaleFrame.BackgroundStyle.MENU);
         MusicPlayer.getInstance().playInLoop(Songs.MENU);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        if(e.getActionCommand().equals(LoginScreen.LOGIN_BUTTON_ACTION_COMMAND)){
+            gameModel.checkLogin(loginScreen.getTextUsernameTextField(), loginScreen.getTextPasswordTextField());
+        }
     }
 }

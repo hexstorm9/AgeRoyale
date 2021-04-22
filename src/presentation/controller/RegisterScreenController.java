@@ -4,28 +4,26 @@ import business.GameModel;
 import presentation.view.RegisterScreen;
 import presentation.view.RoyaleFrame;
 
+import java.awt.event.ActionEvent;
 
-public class RegisterScreenController {
 
-    private static RegisterScreenController singletonInstance;
+public class RegisterScreenController extends ScreenController{
+
     private RegisterScreen registerScreen;
-    private RoyaleFrame royaleFrame;
-    private GameModel gameModel;
 
-
-    private RegisterScreenController(RoyaleFrame royaleFrame, GameModel gameModel){
-        this.royaleFrame = royaleFrame;
-        this.gameModel = gameModel;
-    }
-
-    public static RegisterScreenController getInstance(RoyaleFrame rf, GameModel gm){
-        if(singletonInstance == null) singletonInstance = new RegisterScreenController(rf, gm);
-        return singletonInstance;
+    public RegisterScreenController(RoyaleFrame royaleFrame, GameModel gameModel){
+        super(royaleFrame, gameModel);
     }
 
 
     public void start(){
-
+        registerScreen = new RegisterScreen();
+        royaleFrame.changeScreen(registerScreen, RoyaleFrame.BackgroundStyle.MENU);
     }
 
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+    }
 }

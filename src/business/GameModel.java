@@ -1,12 +1,12 @@
 package business;
 
-import business.entities.User;
+import business.entities.Player;
 
 import java.io.IOException;
 
 public class GameModel {
 
-    private User user;
+    private Player player;
 
     public GameModel() {
 
@@ -17,5 +17,9 @@ public class GameModel {
     }
 
     public void loadUserInfo() throws IOException{
+    }
+
+    public void checkLogin(String username, char[] password) {
+        System.out.println(username + " " + password);
     }
 }

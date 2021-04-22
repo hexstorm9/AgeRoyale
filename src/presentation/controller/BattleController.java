@@ -4,24 +4,26 @@ import business.GameModel;
 import presentation.view.BattleScreen;
 import presentation.view.RoyaleFrame;
 
-import java.awt.*;
+import java.awt.event.ActionEvent;
 
-public class BattleController {
 
-    private static BattleController singletonInstance;
+public class BattleController extends ScreenController{
+
     private BattleScreen battleScreen;
-    private RoyaleFrame royaleFrame;
-    private GameModel gameModel;
 
-
-    private BattleController(RoyaleFrame royaleFrame, GameModel gameModel){
-        this.royaleFrame = royaleFrame;
-        this.gameModel = gameModel;
+    public BattleController(RoyaleFrame royaleFrame, GameModel gameModel){
+        super(royaleFrame, gameModel);
     }
 
-    public static BattleController getInstance(RoyaleFrame rf, GameModel gm){
-        if(singletonInstance == null) singletonInstance = new BattleController(rf, gm);
-        return singletonInstance;
+
+    public void start(){
+        battleScreen = new BattleScreen();
+        royaleFrame.changeScreen(battleScreen, RoyaleFrame.BackgroundStyle.BATTLE);
     }
 
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+    }
 }

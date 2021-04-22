@@ -3,11 +3,33 @@ package presentation.view;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Main View Class of the project.
+ * RoyaleFrame will be the JFrame of the game.
+ * <p>Whenever a screen change wants to take place, the RoyaleFrame will need to be called ({@link RoyaleFrame#changeScreen(JPanel, BackgroundStyle)} (JPanel)})
+ * <p>The frame will be displayed in full screen, using the Java FullScreenExclusiveMode API.
+ *
+ * @see <a href="https://docs.oracle.com/javase/tutorial/extra/fullscreen/index.html">FullScreenExclusiveMode API</a>
+ */
 public class RoyaleFrame extends JFrame {
 
     private GraphicsDevice gd;
-    private RoyaleScreen royaleScreen;
+    private MenuBackgroundPanel menuBackgroundPanel;
+    private BattleBackgroundPanel battleBackgroundPanel;
 
+    public enum BackgroundStyle{
+        MENU,
+        BATTLE
+    }
+
+
+    /**
+     * RoyalFrame Constructor.
+     * <p>Creates a Full-Screen RoyaleFrame if FullScreenExclusiveMode is allowed in the current machine.
+     * Otherwise, shows an error message dialog and exits the application.
+     *
+     * @see <a href="https://docs.oracle.com/javase/tutorial/extra/fullscreen/index.html">FullScreenExclusiveMode API</a>
+     */
     public RoyaleFrame(){
         //Using the Java Full Screen Exclusive Mode API on the main application frame
         //More information on https://docs.oracle.com/javase/tutorial/extra/fullscreen/index.html
@@ -24,8 +46,8 @@ public class RoyaleFrame extends JFrame {
             System.exit(0);
         }
         else{
-            royaleScreen = new RoyaleScreen(gd.getDisplayMode().getWidth(), gd.getDisplayMode().getHeight());
-            setContentPane(royaleScreen);
+            menuBackgroundPanel = new MenuBackgroundPanel(gd.getDisplayMode().getWidth(), gd.getDisplayMode().getHeight());
+            setContentPane(menuBackgroundPanel);
 
             gd.setFullScreenWindow(this);
             validate();
@@ -33,14 +55,46 @@ public class RoyaleFrame extends JFrame {
     }
 
 
-    public void changeMainPane(JPanel newMainPane){
-        royaleScreen.removeAll();
-        newMainPane.setOpaque(false);
-        royaleScreen.add(newMainPane);
-        repaint();
-        revalidate();
+    /**
+     * Provided a JPanel, this method deletes the Main Panel in the Frame and paints the new one provided.
+     * The background style will also need to be provided so as to update it.
+     *
+     * @param newMainPanel The new main JPanel to put in the RoyaleFrame
+     * @param backgroundStyle The Background style desired for this main JPanel provided
+     *
+     * @see BackgroundStyle
+     */
+    public void changeScreen(JPanel newMainPanel, BackgroundStyle backgroundStyle){
+        if(newMainPanel == null) return;
+        newMainPanel.setOpaque(false); //Force transparent JPanel
+
+        //If the current content pane is the menuBackgroundPanel (meaning we're in the menu) add the panel provided to the menuBackgroundPanel
+        //Else, add the panel provided to the battleBackgroundPanel (meaning we're in the battle)
+        if(backgroundStyle == BackgroundStyle.MENU){
+            if(getContentPane() != menuBackgroundPanel) setContentPane(menuBackgroundPanel);
+            menuBackgroundPanel.removeAll();
+            menuBackgroundPanel.add(newMainPanel);
+        }
+        else if(backgroundStyle == BackgroundStyle.BATTLE){
+            if(getContentPane() != battleBackgroundPanel) setContentPane(battleBackgroundPanel);
+            battleBackgroundPanel.removeAll();
+            battleBackgroundPanel.add(newMainPanel);
+        }
+
+        repaint(); //Repaint the frame as its contents have been updated
+        revalidate(); //Recalculate again layouts, as the frame has been updated
     }
 
+
+    /**
+     * Whenever a critical application error occurs and we can't continue the game because of it,
+     * this method will add a {@code JPanel} to the {@code RoyaleFrame}, show the critical message error and exit the application.
+     *
+     * <p>From the point the critical error is shown, the user won't be able to interact with the app anymore.
+     * The only interaction he will be able to carry out is to click the "OK" button of the message and exit the application.
+     *
+     * @param errorMessage The error message that will be displayed to the user.
+     */
     public void showCriticalErrorAndExitApplication(String errorMessage){
         System.out.println(errorMessage);
         System.exit(0);
