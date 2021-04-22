@@ -1,7 +1,10 @@
 package presentation.view.customcomponents;
 
 
+import presentation.graphics.MenuGraphics;
+
 import javax.swing.*;
+import java.awt.*;
 
 
 /**
@@ -20,6 +23,14 @@ public class RoyaleButton extends JButton {
 
     public RoyaleButton(String buttonMessage){
         super(buttonMessage);
+
+        setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        setFont(MenuGraphics.getInstance().getMainFont());
+        setBackground(MenuGraphics.YELLOW);
+        setOpaque(true);
+        setBorderPainted(false);
+
+        setMargin(new Insets(10, 20, 10, 20));
     }
 
 }

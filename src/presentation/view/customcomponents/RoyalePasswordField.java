@@ -5,19 +5,19 @@ import presentation.graphics.MenuGraphics;
 import javax.swing.*;
 
 /**
- * RoyaleTextField is the custom JTextField of the application.
+ * RoyalePasswordField is the custom JPasswordField of the application.
  * <p>It features a custom style and added functionalities.
  *
- * @see JTextField
+ * @see JPasswordField
  * @version 1.0
-*/
-public class RoyaleTextField extends JTextField {
+ */
+public class RoyalePasswordField extends JPasswordField {
 
 
-    public RoyaleTextField(){
+    public RoyalePasswordField() {
         super(20);
         setFont(MenuGraphics.getInstance().getMainFont());
+        setEchoChar('*');
     }
-
 
 }

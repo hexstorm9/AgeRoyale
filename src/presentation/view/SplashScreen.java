@@ -23,10 +23,11 @@ public class SplashScreen extends JPanel {
     /**
      * SplashScreen Constructor.
      * <p>It will create the whole Panel and set the ProgressBar to 0.
+     * @param screenHeight Height of the Screen so as to scale the Panel accordingly
      *
      * @see RoyaleProgressBar
      */
-    public SplashScreen(){
+    public SplashScreen(int screenHeight){
         imageLogo = MenuGraphics.getInstance().getLogo();
         royaleProgressBar = new RoyaleProgressBar();
 

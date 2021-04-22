@@ -18,11 +18,15 @@ import java.io.IOException;
  */
 public class MenuGraphics {
 
-    private Color red;
+    public static final Color RED = new Color(200, 30, 30);
+    public static final Color YELLOW = new Color(255, 183, 72);
+
     private Image backgroundTile, logo;
+    private Font mainFont;
 
     private static final String BACKGROUND_TILE_IMAGE_PATH = "./resources/sprites/backgroundTile.png";
-    private final static String LOGO_IMAGE_PATH = "./resources/sprites/logo.png";
+    private static final String LOGO_IMAGE_PATH = "./resources/sprites/logo.png";
+    private static final String YOU_BLOCKHEAD_FONT_PATH = "./resources/fonts/YouBlockhead.ttf";
 
     private static MenuGraphics singletonInstance;
 
@@ -42,10 +46,13 @@ public class MenuGraphics {
      * Loads all the resources into RAM to the singleton's attributes for later use.
      * @throws IOException Whenever a resource hasn't been found
      */
-    public void load() throws IOException{
-        red = new Color(200, 30, 30);
+    public void load() throws IOException, FontFormatException{
         backgroundTile = ImageIO.read(new File(BACKGROUND_TILE_IMAGE_PATH));
         logo = ImageIO.read(new File(LOGO_IMAGE_PATH));
+
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        ge.registerFont(mainFont = Font.createFont(Font.TRUETYPE_FONT, new File(YOU_BLOCKHEAD_FONT_PATH)));
+        mainFont = mainFont.deriveFont(16f);
         //TODO: Load other resources like fonts
     }
 
@@ -66,12 +73,8 @@ public class MenuGraphics {
         return logo;
     }
 
-    /**
-     * Returns the red color
-     * @return Red Color
-     */
-    public Color getRed(){
-        return red;
-    }
 
+    public Font getMainFont(){
+        return mainFont;
+    }
 }

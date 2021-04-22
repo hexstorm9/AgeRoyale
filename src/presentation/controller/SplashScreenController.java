@@ -1,6 +1,9 @@
 package presentation.controller;
 
 import business.GameModel;
+import business.entities.LanguageManager;
+import business.entities.Sentences;
+import com.google.gson.JsonSyntaxException;
 import presentation.graphics.MenuGraphics;
 import presentation.sound.MusicPlayer;
 import presentation.sound.SoundPlayer;
@@ -9,6 +12,7 @@ import presentation.view.RoyaleFrame;
 import presentation.view.SplashScreen;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.List;
@@ -29,11 +33,11 @@ public class SplashScreenController extends ScreenController{
     public void start(){
         try{
             MenuGraphics.getInstance().load(); //Load graphics before creating the screen
-        }catch(IOException e){
+        }catch(IOException | FontFormatException e){
             showCriticalErrorAndExit("Couldn't load Graphics");
         }
 
-        splashScreen = new SplashScreen();
+        splashScreen = new SplashScreen(royaleFrame.getHeight());
         royaleFrame.changeScreen(splashScreen, RoyaleFrame.BackgroundStyle.MENU);
 
         loadGameInBackground = new LoadGameInBackground();
@@ -56,33 +60,32 @@ public class SplashScreenController extends ScreenController{
             try{
                 try {
                     SoundPlayer.getInstance().load(); //Load Sounds
-                    SoundPlayer.getInstance().play(Sounds.SPLASH_SCREEN); // Play the SplashScreen sound when sounds have been loaded
+                    SoundPlayer.getInstance().play(Sounds.SPLASH_SCREEN); // Play the SplashScreen sound when sounds have been loaded (ASAP)
                     moveProgress(0, 10, 600);
                 }catch(IOException e){
                     e.printStackTrace();
                     return "Error Loading Sounds";
                 }
                 try {
-                    MusicPlayer.getInstance().load(); //Load musics
+                    MusicPlayer.getInstance().load(); //Load Songs
                     moveProgress(11, 40, 800);
                 }catch(IOException e){
                     e.printStackTrace();
-                    return "Error Loading Sounds";
+                    return "Error Loading Songs";
                 }
                 try {
                     gameModel.loadDatabase(); //Load Database
                     moveProgress(41, 70, 300);
                 }catch(IOException e){
                     e.printStackTrace();
-                    return "Error Loading Sounds";
+                    return "Error Loading Database";
                 }
                 try {
-                    //LanguageManager.load(); //Load current language sentences
+                    LanguageManager.load(); //Load current language sentences
                     moveProgress(71, 90, 600);
-                    if(false) throw new IOException(); //TODO: Load language manager and delete this line
-                }catch(IOException e){
+                }catch(JsonSyntaxException | IOException e){
                     e.printStackTrace();
-                    return "Error Loading Sounds";
+                    return "Error Loading the Language Manager";
                 }
                 try {
                     gameModel.loadUserInfo(); //Load the user info

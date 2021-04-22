@@ -36,7 +36,7 @@ public class MenuBackgroundPanel extends JPanel {
         HORIZONTAL_TILES = (SCREEN_WIDTH / TILE_HORIZONTAL_SIZE) + 1; //Horizontal Tiles needed
         VERTICAL_TILES = (SCREEN_HEIGHT / TILE_VERTICAL_SIZE) + 1; //Vertical Tiles needed
 
-        setBackground(MenuGraphics.getInstance().getRed());
+        setBackground(MenuGraphics.RED);
         setLayout(new BorderLayout());
     }
 

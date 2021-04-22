@@ -1,5 +1,6 @@
 package business.entities;
 
+import com.google.gson.JsonSyntaxException;
 import persistence.LanguageDAO;
 
 import java.io.IOException;
@@ -14,7 +15,7 @@ public class LanguageManager {
     private LanguageManager(){ }
 
 
-    public static void load() throws IOException{
+    public static void load() throws JsonSyntaxException, IOException {
         languageDAO = new LanguageDAO();
         sentencesLoaded = languageDAO.readSentences();
     }

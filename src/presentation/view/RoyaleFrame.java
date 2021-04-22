@@ -39,6 +39,7 @@ public class RoyaleFrame extends JFrame {
         setUndecorated(true);
 
         gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+        //gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[1]; //Open frame in the second monitor
         if(!gd.isFullScreenSupported()){
             setSize(0, 0);
             setVisible(true);

@@ -1,8 +1,11 @@
 package presentation.view.customcomponents;
 
 
+import presentation.graphics.MenuGraphics;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseListener;
 
 /**
  * RoyaleLabel is the custom {@code JLabel} of the program.
@@ -12,6 +15,12 @@ import java.awt.*;
  * @version 1.0
  */
 public class RoyaleLabel extends JLabel {
+
+    private boolean hoverEffect;
+    private String actionCommand;
+
+    private boolean clickable; //Can the Label be clicked?
+    private MouseListener[] mouseListenerBuffer; //Needed so as to disable clicks temporarily
 
 
     public RoyaleLabel(ImageIcon imageIcon) {
@@ -28,16 +37,65 @@ public class RoyaleLabel extends JLabel {
     public RoyaleLabel(String s, LabelType labelType){
         super(s);
 
+        setFont(MenuGraphics.getInstance().getMainFont());
         setForeground(Color.WHITE);
         switch (labelType){
             case TITLE:
                 setFont(getFont().deriveFont(40f));
+                setForeground(MenuGraphics.YELLOW);
                 break;
             case PARAGRAPH:
-                setFont(getFont().deriveFont(26f));
+                setFont(getFont().deriveFont(20f));
                 break;
             default:
                 setFont(getFont().deriveFont(16f));
+        }
+    }
+
+
+    public void setHoverEffect(boolean hoverEffect){
+        this.hoverEffect = hoverEffect;
+    }
+
+    /**
+     * Sets the action command of this Label.
+     * <p>As RoyaleLabels can be clicked (using a mouseListener), an actionCommand is necessary so as to
+     * detect what RoyaleLabel has been pressed.
+      * @param actionCommand Action Command of this Label
+     */
+    public void setActionCommand(String actionCommand){
+       this.actionCommand = actionCommand;
+    }
+
+    /**
+     * Returns the action command of this label
+     * @return Action Command of this Label
+     */
+    public String getActionCommand(){
+        return actionCommand;
+    }
+
+    /**
+     * Modifies whether the RoyaleLabel can be clicked or not.
+     * <p>Depending on its state, the cursor when hovering the Label will change.
+     * @param clickable Whether it's clickable or not
+     */
+    public void setClickable(boolean clickable){
+        if(clickable){
+            this.clickable = true;
+            setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+            if(mouseListenerBuffer == null) return;
+            for(MouseListener ml: mouseListenerBuffer) addMouseListener(ml);
+            mouseListenerBuffer = null;
+        }
+        else{
+            this.clickable = false;
+            setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+            mouseListenerBuffer = getMouseListeners();
+
+            if(mouseListenerBuffer == null) return;
+            for(MouseListener ml: mouseListenerBuffer) removeMouseListener(ml);
         }
     }
 

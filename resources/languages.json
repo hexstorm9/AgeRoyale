@@ -1,5 +1,5 @@
 {
-  "language": "ca",
+  "language": "default",
   "sentences": [
     {
       "key": "login",
@@ -13,8 +13,8 @@
       "key": "username",
       "values": [
         "Username",
-        "Nombre de usuario",
-        "Nom d\u0027usuari"
+        "Nombre de Usuario",
+        "Nom d\u0027Usuari"
       ]
     },
     {
