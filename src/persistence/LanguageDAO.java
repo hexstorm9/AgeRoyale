@@ -3,19 +3,45 @@ package persistence;
 import business.entities.Language;
 import business.entities.Sentences;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.HashMap;
-import java.util.Locale;
 
 public class LanguageDAO {
     private static final String FILE_PATH = "./resources/languages.json";
 
     public void updatePreferredLanguage(Language l){
+        try {
+
+            BufferedReader br = new BufferedReader(new FileReader(FILE_PATH));
+            Gson gson = new Gson();
+
+            LanguageFile lf = gson.fromJson(br, LanguageFile.class);
+
+            switch (l){
+                case ENGLISH:
+                    lf.language = "en";
+                    break;
+                case SPANISH:
+                    lf.language = "es";
+                    break;
+                case CATALAN:
+                    lf.language = "ca";
+                    break;
+            }
+
+            Gson gs = new GsonBuilder().setPrettyPrinting().create();
+            String json = gs.toJson(lf);
+            FileWriter fw = new FileWriter(FILE_PATH);
+            fw.write(json);
+            fw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
+
     class Sentence{
         String key;
         String[] values;
@@ -27,32 +53,31 @@ public class LanguageDAO {
     }
 
     public HashMap<Sentences, String> readSentences() throws IOException {
+        int language;
         BufferedReader br = new BufferedReader(new FileReader(FILE_PATH));
         Gson gson = new Gson();
 
         LanguageFile lf = gson.fromJson(br, LanguageFile.class);
         HashMap<Sentences, String> hashMap= new HashMap<>();
-        Language l;
 
-        //Locale.getDefault().getLanguage();
         switch (lf.language){
             case "en":
-                l = Language.ENGLISH;
+                language = 0;
                 break;
             case "ca":
-                l = Language.CATALAN;
+                language = 1;
                 break;
             case "es":
-                l = Language.SPANISH;
+                language = 2;
                 break;
             default:
-
+                language = 0;
+                break;
         }
 
-        System.out.println(lf.sentences[4].values[1]);
         int i=0;
         for(Sentences s: Sentences.values()){
-            hashMap.put(s, lf.sentences[i].values[0]);
+            hashMap.put(s, lf.sentences[i].values[language]);
             i++;
         }
         return hashMap;

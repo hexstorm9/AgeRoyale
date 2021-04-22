@@ -1,8 +1,8 @@
 {
-  "language" : "default",
-  "sentences" : [
+  "language": "ca",
+  "sentences": [
     {
-      "key" : "login",
+      "key": "login",
       "values": [
         "Log In",
         "Iniciar Sesión",
@@ -10,11 +10,11 @@
       ]
     },
     {
-      "key" : "username",
+      "key": "username",
       "values": [
         "Username",
         "Nombre de usuario",
-        "Nom d'usuari"
+        "Nom d\u0027usuari"
       ]
     },
     {
@@ -36,9 +36,9 @@
     {
       "key": "dontHaveAccount",
       "values": [
-        "Don't have an account? Register",
+        "Don\u0027t have an account? Register",
         "¿No tienes una cuenta? Registrate",
-        "No tens un compte? Registra't"
+        "No tens un compte? Registra\u0027t"
       ]
     },
     {
@@ -55,7 +55,7 @@
         "Play video",
         "Reproducir video",
         "Reproduïr vidio"
-        ]
+      ]
     },
     {
       "key": "pause",
