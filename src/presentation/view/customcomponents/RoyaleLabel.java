@@ -5,6 +5,7 @@ import presentation.graphics.MenuGraphics;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 /**
@@ -14,9 +15,8 @@ import java.awt.event.MouseListener;
  * @see JLabel
  * @version 1.0
  */
-public class RoyaleLabel extends JLabel {
+public class RoyaleLabel extends JLabel implements MouseListener{
 
-    private boolean hoverEffect;
     private String actionCommand;
 
     private boolean clickable; //Can the Label be clicked?
@@ -27,10 +27,12 @@ public class RoyaleLabel extends JLabel {
         super(imageIcon);
     }
 
+
     public enum LabelType{
         TITLE,
         PARAGRAPH,
-        SMALL
+        SMALL,
+        LINK
     }
 
 
@@ -47,15 +49,14 @@ public class RoyaleLabel extends JLabel {
             case PARAGRAPH:
                 setFont(getFont().deriveFont(20f));
                 break;
+            case LINK:
+                addMouseListener(this);
+                setFont(getFont().deriveFont(16f));
             default:
                 setFont(getFont().deriveFont(16f));
         }
     }
 
-
-    public void setHoverEffect(boolean hoverEffect){
-        this.hoverEffect = hoverEffect;
-    }
 
     /**
      * Sets the action command of this Label.
@@ -99,5 +100,27 @@ public class RoyaleLabel extends JLabel {
         }
     }
 
+
+
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+        setForeground(MenuGraphics.YELLOW);
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+        setForeground(Color.WHITE);
+    }
+
+
+    @Override
+    public void mouseClicked(MouseEvent e) {}
+
+    @Override
+    public void mousePressed(MouseEvent e) {}
+
+    @Override
+    public void mouseReleased(MouseEvent e) {}
 
 }
