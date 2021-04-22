@@ -34,6 +34,7 @@ public class SplashScreenController extends ScreenController{
         try{
             MenuGraphics.getInstance().load(); //Load graphics before creating the screen
         }catch(IOException | FontFormatException e){
+            e.printStackTrace();
             showCriticalErrorAndExit("Couldn't load Graphics");
         }
 
