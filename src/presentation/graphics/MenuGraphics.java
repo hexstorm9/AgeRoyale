@@ -73,8 +73,20 @@ public class MenuGraphics {
         return logo;
     }
 
-
+    /**
+     * Returns the main font of the application
+     * @return Main font of the application
+     */
     public Font getMainFont(){
         return mainFont;
     }
+
+
+    //TODO: --------------------------------------------------------
+    public Image getScaledImage(Image imageToScale){
+        return null;
+
+    }
+    //TODO: ----------------------------------------------------------
+
 }

@@ -34,8 +34,8 @@ public class LoginScreenController extends ScreenController implements ActionLis
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getActionCommand().equals(LoginScreen.LOGIN_BUTTON_ACTION_COMMAND)){
-            loginScreen.pauseAllComponents();
             SoundPlayer.getInstance().play(Sounds.BUTTON);
+            loginScreen.pauseAllComponents();
             gameModel.checkLogin(loginScreen.getTextUsernameTextField(), loginScreen.getTextPasswordTextField());
         }
     }

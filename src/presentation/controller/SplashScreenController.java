@@ -15,6 +15,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Random;
 
@@ -75,11 +76,11 @@ public class SplashScreenController extends ScreenController{
                     return "Error Loading Songs";
                 }
                 try {
-                    gameModel.loadDatabase(); //Load Database
+                    gameModel.loadDatabaseAndTestConnection(); //Load Database and Test the connection
                     moveProgress(41, 70, 300);
-                }catch(IOException e){
+                }catch(IOException | ClassNotFoundException | SQLException e){
                     e.printStackTrace();
-                    return "Error Loading Database";
+                    return "Error Loading the Database";
                 }
                 try {
                     LanguageManager.load(); //Load current language sentences
@@ -93,7 +94,7 @@ public class SplashScreenController extends ScreenController{
                     moveProgress(91, 100, 200);
                 }catch(IOException e){
                     e.printStackTrace();
-                    return "Error Loading Sounds";
+                    return "Error Loading the Player info";
                 }
             }catch(InterruptedException e){
                 e.printStackTrace();

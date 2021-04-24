@@ -4,28 +4,51 @@ import persistence.DatabaseInfoDAO;
 
 import java.io.IOException;
 
+/**
+ * DatabaseInfo will hold the information to access a database.
+ *
+ * <p>The params it will contain are:
+ * <ul><li>IP</li><li>Port</li><li>Database User</li><li>Database User Password</li><li>Database Name</li></ul>
+ *
+ * <p>Take into account that in order for this class to work, {@link DatabaseInfoDAO} is needed.
+ *
+ * @see DatabaseInfoDAO
+ * @version 1.0
+ */
 public class DatabaseInfo {
 
+    private DatabaseInfoDAO databaseInfoDAO;
+
     private String ip;
-    private int port;
+    private String port;
     private String user;
     private String password;
     private String databaseName;
 
-    private static DatabaseInfo databaseInfoInstance;
+    /**
+     * Default DatabaseInfo constructor.
+     * <p>Loads all the attributes with the help of a {@link DatabaseInfoDAO}
+     *
+     * @throws IOException Whenever the DatabaseInfo file can't be read or information is corrupted
+     */
+    public DatabaseInfo() throws IOException{
+        databaseInfoDAO = new DatabaseInfoDAO();
+        String[] databaseInfo = databaseInfoDAO.read();
+        if(databaseInfo.length != 5) throw new IOException("Database Info is not correct");
 
-    private DatabaseInfo(){}
-
-    public static DatabaseInfo getInstance() throws IOException {
-        if(databaseInfoInstance == null) databaseInfoInstance = new DatabaseInfoDAO().read();
-        return databaseInfoInstance;
+        ip = databaseInfo[0];
+        port = databaseInfo[1];
+        user = databaseInfo[2];
+        password = databaseInfo[3];
+        databaseName = databaseInfo[4];
     }
+
 
     public String getIp(){
         return ip;
     }
 
-    public int getPort(){
+    public String getPort(){
         return port;
     }
 

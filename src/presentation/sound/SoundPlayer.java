@@ -63,7 +63,15 @@ public class SoundPlayer{
     public void load() throws IOException{
         singletonInstance.soundsLoaded = singletonInstance.read();
         singletonInstance.soundPlayerPool = new ArrayList<>(SOUND_PLAYER_POOL_SIZE);
-        for(int i = 0; i < SOUND_PLAYER_POOL_SIZE; i++) singletonInstance.soundPlayerPool.add(new BasicPlayer());
+        for(int i = 0; i < SOUND_PLAYER_POOL_SIZE; i++){
+            BasicPlayer player = new BasicPlayer();
+            try{
+                player.setLineBufferSize(1000);
+                player.open(soundsLoaded.get(Sounds.BUTTON));
+            }catch(Exception e){}
+            singletonInstance.soundPlayerPool.add(new BasicPlayer());
+        }
+
     }
 
 
