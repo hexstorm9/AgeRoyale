@@ -16,7 +16,9 @@ import java.awt.event.MouseListener;
 public class RegisterScreen extends JPanel {
     private RoyaleButton registerButton;
     private RoyaleTextField usernameTextField;
+    private RoyaleTextField mailTextField;
     private RoyalePasswordField passwordTextField;
+    private RoyalePasswordField confirmPasswordTextField;
     private RoyaleLabel haveAccount;
 
     public static final String LOGIN_LABEL_ACTION_COMMAND = "login_label";
@@ -41,7 +43,7 @@ public class RegisterScreen extends JPanel {
         mailPanel.setAlignmentX(CENTER_ALIGNMENT);
         mailPanel.setOpaque(false);
         mailPanel.add(new RoyaleLabel(LanguageManager.getSentence(Sentences.MAIL), RoyaleLabel.LabelType.PARAGRAPH));
-        mailPanel.add(usernameTextField = new RoyaleTextField());
+        mailPanel.add(mailTextField = new RoyaleTextField());
 
         JPanel passwordPanel = new JPanel();
         passwordPanel.setAlignmentX(CENTER_ALIGNMENT);
@@ -53,13 +55,13 @@ public class RegisterScreen extends JPanel {
         confirmPasswordPanel.setAlignmentX(CENTER_ALIGNMENT);
         confirmPasswordPanel.setOpaque(false);
         confirmPasswordPanel.add(new RoyaleLabel(LanguageManager.getSentence(Sentences.CONFIRM_PASSWORD), RoyaleLabel.LabelType.PARAGRAPH));
-        confirmPasswordPanel.add(passwordTextField = new RoyalePasswordField());
+        confirmPasswordPanel.add(confirmPasswordTextField = new RoyalePasswordField());
 
         registerButton = new RoyaleButton(LanguageManager.getSentence(Sentences.ENTER));
         registerButton.setAlignmentX(CENTER_ALIGNMENT);
         registerButton.setFont(MenuGraphics.getInstance().getMainFont());
 
-        haveAccount = new RoyaleLabel(LanguageManager.getSentence(Sentences.HAVE_AN_ACCOUNT), RoyaleLabel.LabelType.SMALL);
+        haveAccount = new RoyaleLabel(LanguageManager.getSentence(Sentences.HAVE_AN_ACCOUNT), RoyaleLabel.LabelType.LINK);
         haveAccount.setAlignmentX(CENTER_ALIGNMENT);
 
         JPanel centerPane = new JPanel();
@@ -100,4 +102,19 @@ public class RegisterScreen extends JPanel {
         haveAccount.setClickable(false);
     }
 
+    public String getUsernameTextField() {
+        return usernameTextField.getText();
+    }
+
+    public String getMailTextField() {
+        return mailTextField.getText();
+    }
+
+    public char[] getPasswordTextField() {
+        return passwordTextField.getPassword();
+    }
+
+    public char[] getConfirmPasswordTextField() {
+        return confirmPasswordTextField.getPassword();
+    }
 }

@@ -14,10 +14,8 @@ import javax.swing.*;
 public class RoyaleTextField extends JTextField {
 
 
-    public RoyaleTextField(){
+    public RoyaleTextField() {
         super(20);
         setFont(MenuGraphics.getInstance().getMainFont());
     }
-
-
 }

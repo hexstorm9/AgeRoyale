@@ -38,7 +38,7 @@ public class RegisterScreenController extends ScreenController implements Action
         if(e.getActionCommand().equals(RegisterScreen.REGISTER_BUTTON_ACTION_COMMAND)){
             registerScreen.pauseAllComponents();
             SoundPlayer.getInstance().play(Sounds.BUTTON);
-            // gameModel.checkLogin(registerScreen.getTextUsernameTextField(), registerScreen.getTextPasswordTextField());
+            gameModel.checkRegister(registerScreen.getUsernameTextField(), registerScreen.getMailTextField(), registerScreen.getPasswordTextField(), registerScreen.getConfirmPasswordTextField());
         }
     }
 

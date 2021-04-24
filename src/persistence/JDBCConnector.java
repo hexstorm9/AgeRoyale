@@ -74,11 +74,10 @@ public class JDBCConnector {
      */
     public ResultSet queryDatabase(String formattedQuery) throws SQLException{
         databaseConnection = DriverManager.getConnection(databaseURL, databaseInfo.getUser(), databaseInfo.getPassword());
-
         Statement statement = databaseConnection.createStatement();
         ResultSet resultSet = statement.executeQuery(formattedQuery); //Holds the information retrieved from the DB
         databaseConnection.close();
-
+        System.out.println("3");
         return resultSet;
     }
 
