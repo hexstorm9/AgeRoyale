@@ -10,7 +10,11 @@ public enum Sentences {
     PLAY("play"),
     PAUSE("pause"),
     LOADING("loading"),
-    EXIT("exit");
+    EXIT("exit"),
+    REGISTER("register"),
+    CONFIRM_PASSWORD("confirmPassword"),
+    MAIL("mail"),
+    HAVE_AN_ACCOUNT("haveAccount");
 
 
     private String stringValue;

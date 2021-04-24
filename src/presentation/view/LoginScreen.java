@@ -63,7 +63,6 @@ public class LoginScreen extends JPanel {
         passwordPanel.add(new RoyaleLabel(LanguageManager.getSentence(Sentences.PASSWORD), RoyaleLabel.LabelType.PARAGRAPH));
         passwordPanel.add(passwordTextField = new RoyalePasswordField());
 
-
         loginButton = new RoyaleButton(LanguageManager.getSentence(Sentences.ENTER));
         loginButton.setAlignmentX(CENTER_ALIGNMENT);
 
@@ -90,7 +89,6 @@ public class LoginScreen extends JPanel {
         centerPane.add(registerLabel);
 
         add(centerPane, new GridBagConstraints());
-
     }
 
 
