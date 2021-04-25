@@ -32,6 +32,7 @@ public class LoginScreen extends JPanel {
     private RoyaleTextField usernameTextField;
     private RoyalePasswordField passwordTextField;
     private RoyaleLabel forgetPasswordLabel, registerLabel;
+    private RoyaleLabel errorLabel;
 
     public static final String LOGIN_BUTTON_ACTION_COMMAND = "login_button";
     public static final String REGISTER_LABEL_ACTION_COMMAND = "register_button";
@@ -51,17 +52,35 @@ public class LoginScreen extends JPanel {
         RoyaleLabel loginText = new RoyaleLabel(LanguageManager.getSentence(Sentences.LOGIN), RoyaleLabel.LabelType.TITLE);
         loginText.setAlignmentX(CENTER_ALIGNMENT);
 
-        JPanel usernamePanel = new JPanel();
-        usernamePanel.setAlignmentX(CENTER_ALIGNMENT);
-        usernamePanel.setOpaque(false);
-        usernamePanel.add(new RoyaleLabel(LanguageManager.getSentence(Sentences.USERNAME), RoyaleLabel.LabelType.PARAGRAPH));
-        usernamePanel.add(usernameTextField = new RoyaleTextField());
 
-        JPanel passwordPanel = new JPanel();
-        passwordPanel.setAlignmentX(CENTER_ALIGNMENT);
-        passwordPanel.setOpaque(false);
-        passwordPanel.add(new RoyaleLabel(LanguageManager.getSentence(Sentences.PASSWORD), RoyaleLabel.LabelType.PARAGRAPH));
-        passwordPanel.add(passwordTextField = new RoyalePasswordField());
+        JPanel groupTextFieldsPanel = new JPanel();
+        groupTextFieldsPanel.setAlignmentX(CENTER_ALIGNMENT);
+        groupTextFieldsPanel.setOpaque(false);
+        GroupLayout groupLayout = new GroupLayout(groupTextFieldsPanel);
+        groupTextFieldsPanel.setLayout(groupLayout);
+        groupLayout.setAutoCreateGaps(true);
+        groupLayout.setAutoCreateContainerGaps(true);
+
+        RoyaleLabel usernameLabel = new RoyaleLabel(LanguageManager.getSentence(Sentences.USERNAME), RoyaleLabel.LabelType.PARAGRAPH);
+        usernameTextField = new RoyaleTextField();
+
+        RoyaleLabel passwordLabel = new RoyaleLabel(LanguageManager.getSentence(Sentences.PASSWORD), RoyaleLabel.LabelType.PARAGRAPH);
+        passwordTextField = new RoyalePasswordField();
+
+        GroupLayout.SequentialGroup horizontalGroup = groupLayout.createSequentialGroup();
+        horizontalGroup.addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.TRAILING).addComponent(usernameLabel).addComponent(passwordLabel));
+        horizontalGroup.addGroup(groupLayout.createParallelGroup().addComponent(usernameTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                .addComponent(passwordTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE));
+        groupLayout.setHorizontalGroup(horizontalGroup);
+
+        GroupLayout.SequentialGroup verticalGroup = groupLayout.createSequentialGroup();
+        verticalGroup.addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(usernameLabel).addComponent(usernameTextField));
+        verticalGroup.addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(passwordLabel).addComponent(passwordTextField));
+        groupLayout.setVerticalGroup(verticalGroup);
+
+
+        errorLabel = new RoyaleLabel("   ", RoyaleLabel.LabelType.ERROR);
+        errorLabel.setAlignmentX(CENTER_ALIGNMENT);
 
         loginButton = new RoyaleButton(LanguageManager.getSentence(Sentences.ENTER));
         loginButton.setAlignmentX(CENTER_ALIGNMENT);
@@ -80,9 +99,10 @@ public class LoginScreen extends JPanel {
         centerPane.add(Box.createRigidArea(new Dimension(100,(int)(screenHeight*0.05))));
         centerPane.add(loginText);
         centerPane.add(Box.createRigidArea(new Dimension(100,(int)(screenHeight*0.03))));
-        centerPane.add(usernamePanel);
-        centerPane.add(passwordPanel);
+        centerPane.add(groupTextFieldsPanel);
         centerPane.add(Box.createRigidArea(new Dimension(100,(int)(screenHeight*0.01))));
+        centerPane.add(errorLabel);
+        centerPane.add(Box.createRigidArea(new Dimension(100,(int)(screenHeight*0.02))));
         centerPane.add(loginButton);
         centerPane.add(Box.createRigidArea(new Dimension(100,(int)(screenHeight*0.1))));
         centerPane.add(forgetPasswordLabel);
@@ -134,6 +154,9 @@ public class LoginScreen extends JPanel {
     }
 
 
+    /**
+     * Pauses all components so as the user is not able to click anything or carry out any action.
+     */
     public void pauseAllComponents(){
         usernameTextField.setEnabled(false);
         passwordTextField.setEnabled(false);
@@ -142,12 +165,37 @@ public class LoginScreen extends JPanel {
         forgetPasswordLabel.setClickable(false);
     }
 
-    public void stopPausingAllComponents(){
+
+    /**
+     * Enables all components so as the user can carry out actions again
+     */
+    public void enableAllComponents(){
         usernameTextField.setEnabled(true);
         passwordTextField.setEnabled(true);
         loginButton.setEnabled(true);
         registerLabel.setClickable(true);
         forgetPasswordLabel.setClickable(true);
+    }
+
+
+    /**
+     * Shows an error message in a Label with the String provided
+     * @param errorMessage The error message to be shown
+     */
+    public void setErrorMessage(String errorMessage){
+        errorLabel.setText(errorMessage);
+        repaint();
+        revalidate();
+    }
+
+    /**
+     * Clears the current empty error message.
+     * <p>If there is no error message currently displayed, nothing will be done.
+     */
+    public void emptyErrorMessage(){
+        errorLabel.setText("   ");
+        repaint();
+        revalidate();
     }
 
 }

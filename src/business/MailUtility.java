@@ -9,7 +9,7 @@ import java.util.Properties;
 
 public class MailUtility {
 
-    public static void sendMail(String destinatario, String asunto, String cuerpo, String clave) throws AddressException {
+    public static void sendMail(String destinatario, String asunto, String cuerpo) throws AddressException {
         // Esto es lo que va delante de @gmail.com en tu cuenta de correo. Es el remitente también.
         String remitente = "dpobassols";  //Para la dirección nomcuenta@gmail.com
 
@@ -30,7 +30,7 @@ public class MailUtility {
             message.setSubject(asunto);
             message.setText(cuerpo);
             Transport transport = session.getTransport("smtp");
-            transport.connect("smtp.gmail.com", remitente, clave);
+            transport.connect("smtp.gmail.com", remitente, "111222333a!");
             transport.sendMessage(message, message.getAllRecipients());
             transport.close();
         }

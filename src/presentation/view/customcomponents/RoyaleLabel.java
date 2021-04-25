@@ -1,7 +1,9 @@
 package presentation.view.customcomponents;
 
 
+import business.entities.Sounds;
 import presentation.graphics.MenuGraphics;
+import presentation.sound.SoundPlayer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,7 +34,8 @@ public class RoyaleLabel extends JLabel implements MouseListener{
         TITLE,
         PARAGRAPH,
         SMALL,
-        LINK
+        LINK,
+        ERROR
     }
 
 
@@ -52,6 +55,11 @@ public class RoyaleLabel extends JLabel implements MouseListener{
             case LINK:
                 addMouseListener(this);
                 setFont(getFont().deriveFont(16f));
+                break;
+            case ERROR:
+                setFont(getFont().deriveFont(14f));
+                setForeground(MenuGraphics.BLUE);
+                break;
             default:
                 setFont(getFont().deriveFont(16f));
         }
@@ -115,7 +123,11 @@ public class RoyaleLabel extends JLabel implements MouseListener{
 
 
     @Override
-    public void mouseClicked(MouseEvent e) {}
+    public void mouseClicked(MouseEvent e) {
+        if(clickable){
+            SoundPlayer.getInstance().play(Sounds.BUTTON);
+        }
+    }
 
     @Override
     public void mousePressed(MouseEvent e) {}

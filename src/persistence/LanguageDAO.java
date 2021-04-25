@@ -72,12 +72,17 @@ public class LanguageDAO {
 
         //Let's loop through every sentence of the file
         for(int i = 0; i < lf.sentences.length; i++){
+            boolean sentenceFound = false;
 
             //With every sentence of the file, let's check what sentence it is, and save it to the hashMap
             for(Sentences s: Sentences.values()){
-                if(s.toString().equals(lf.sentences[i].key))
+                if(s.toString().equals(lf.sentences[i].key)){
+                    sentenceFound = true;
                     hashMap.put(s, lf.sentences[i].values[currentLanguage.toInt()]);
+                }
             }
+
+            if(sentenceFound == false) System.err.println("A sentence has not been properly loaded --> " + lf.sentences[i].values[0]);
         }
 
         return hashMap;

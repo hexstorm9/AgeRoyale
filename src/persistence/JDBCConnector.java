@@ -4,6 +4,7 @@ import business.DatabaseInfo;
 
 import java.io.IOException;
 import java.sql.*;
+import java.util.ArrayList;
 
 /**
  * JDBCConnector is the class that connects and performs operations to the Database
@@ -68,17 +69,101 @@ public class JDBCConnector {
     /**
      * Queries the Database with the query provided and returns the ResultSet object
      *
+     * <p>This methods is only intended for SELECT queries (getting information from the database).
+     * For other types of query, use {@link JDBCConnector#updateDatabase(String)}
+     *
      * @param formattedQuery The SQL query to be executed
-     * @return A ResultSet Object with the information retrieved from the database
+     * @return An {@code ArrayList<Object>} with the information retrieved from the database without formatting (Java Object format)
      * @throws SQLException If the connection can't be established or the query is incorrect
      */
-    public ResultSet queryDatabase(String formattedQuery) throws SQLException{
+    public ArrayList<Object> queryDatabase(String formattedQuery) throws SQLException{
         databaseConnection = DriverManager.getConnection(databaseURL, databaseInfo.getUser(), databaseInfo.getPassword());
         Statement statement = databaseConnection.createStatement();
         ResultSet resultSet = statement.executeQuery(formattedQuery); //Holds the information retrieved from the DB
+
+        ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+        int columns = resultSetMetaData.getColumnCount();
+
+        ArrayList<Object> list = new ArrayList<>();
+        while(resultSet.next()){
+            for(int i = 0; i < columns; i++){
+                list.add(resultSet.getObject(i+1)); //Result set index starts at 1
+            }
+        }
+
         databaseConnection.close();
-        System.out.println("3");
-        return resultSet;
+        return list;
+    }
+
+
+    /**
+     * Queries the Database with the multiple queries provided and returns an ArrayList of Objects.
+     *
+     * <p>This methods is only intended for SELECT queries (getting information from the database).
+     * For other types of query, use {@link JDBCConnector#updateDatabase(String)}
+     *
+     * @param formattedQueries The SQL queries to be executed
+     * @return An {@code ArrayList<Object>} with the information retrieved from the database without formatting (Java Object format)
+     * @throws SQLException If the connection can't be established or the query is incorrect
+     */
+    public ArrayList<Object> queryDatabase(String[] formattedQueries) throws SQLException{
+        databaseConnection = DriverManager.getConnection(databaseURL, databaseInfo.getUser(), databaseInfo.getPassword());
+        Statement statement = databaseConnection.createStatement();
+
+        ArrayList<Object> list = new ArrayList<>();
+
+        for(String currentQuery: formattedQueries){
+            ResultSet resultSet = statement.executeQuery(currentQuery); //Holds the information retrieved from the DB
+
+            ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+            int columns = resultSetMetaData.getColumnCount();
+
+            while(resultSet.next()){
+                for(int i = 0; i < columns; i++){
+                    list.add(resultSet.getObject(i+1)); //Result set index starts at 1
+                }
+            }
+        }
+
+        databaseConnection.close();
+        return list;
+    }
+
+
+    /**
+     * Creates, Updates or Deletes the database with the query provided.
+     * <p>These queries do not return information, so the method does neither.
+     * <p>If the query fails, a {@link SQLException} is thrown.
+     *
+     * @param formattedQuery The query to be executed in the database
+     * @throws SQLException When the query is incorrect or a connection can't be established with the database
+     */
+    public void updateDatabase(String formattedQuery) throws SQLException{
+        databaseConnection = DriverManager.getConnection(databaseURL, databaseInfo.getUser(), databaseInfo.getPassword());
+        Statement statement = databaseConnection.createStatement();
+
+        statement.executeUpdate(formattedQuery);
+        databaseConnection.close();
+    }
+
+
+    /**
+     * Creates, Updates or Deletes the database with the queries provided.
+     * <p>These queries do not return information, so the method does neither.
+     * <p>If the query fails, a {@link SQLException} is thrown.
+     *
+     * @param formattedQueries The multiple queries to be executed in the database
+     * @throws SQLException When some query is incorrect or a connection can't be established with the database
+     */
+    public void updateDatabase(String[] formattedQueries) throws SQLException{
+        databaseConnection = DriverManager.getConnection(databaseURL, databaseInfo.getUser(), databaseInfo.getPassword());
+        Statement statement = databaseConnection.createStatement();
+
+        for(String currentQuery: formattedQueries)
+            statement.executeUpdate(currentQuery);
+
+
+        databaseConnection.close();
     }
 
 }

@@ -20,6 +20,7 @@ public class MenuGraphics {
 
     public static final Color RED = new Color(200, 30, 30);
     public static final Color YELLOW = new Color(255, 183, 72);
+    public static final Color BLUE = new Color(100, 146, 221);
 
     private Image backgroundTile, logo;
     private Font mainFont;

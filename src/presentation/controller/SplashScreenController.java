@@ -2,7 +2,6 @@ package presentation.controller;
 
 import business.GameModel;
 import business.entities.LanguageManager;
-import business.entities.Sentences;
 import com.google.gson.JsonSyntaxException;
 import presentation.graphics.MenuGraphics;
 import presentation.sound.MusicPlayer;
@@ -84,17 +83,10 @@ public class SplashScreenController extends ScreenController{
                 }
                 try {
                     LanguageManager.load(); //Load current language sentences
-                    moveProgress(71, 90, 600);
+                    moveProgress(71, 100, 600);
                 }catch(JsonSyntaxException | IOException e){
                     e.printStackTrace();
                     return "Error Loading the Language Manager";
-                }
-                try {
-                    gameModel.loadUserInfo(); //Load the user info
-                    moveProgress(91, 100, 200);
-                }catch(IOException e){
-                    e.printStackTrace();
-                    return "Error Loading the Player info";
                 }
             }catch(InterruptedException e){
                 e.printStackTrace();
@@ -129,12 +121,14 @@ public class SplashScreenController extends ScreenController{
             updateProgressBar(currentProgress);
         }
 
+        @Override
         protected void done(){
             String errorMessage = null;
             try{
                 errorMessage = get();
             }catch(Exception e){
                 errorMessage = "Error in the Worker Thread";
+                e.printStackTrace();
             }
 
             if (errorMessage == null) goToScreen(Screen.LOGIN_SCREEN);

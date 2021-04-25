@@ -112,6 +112,165 @@
         "¿Ya tienes una cuenta? Entra",
         "Ja tens un compte? Entra"
       ]
+    },
+    {
+      "key": "nameDoesNotExist",
+      "values": [
+        "The username introduced does not exist",
+        "El usuario introducido no existe",
+        "L'usuari introduït no existeix"
+      ]
+    },
+    {
+      "key": "emailDoesNotExist",
+      "values": [
+        "The email introduced does not exist",
+        "El email introducido no existe",
+        "L'email introduït no existeix"
+      ]
+    },
+    {
+      "key": "incorrectPassword",
+      "values": [
+        "The password is incorrect",
+        "La contraseña no es correcta",
+        "La contrasenya no és correcte"
+      ]
+    },
+    {
+      "key": "databaseError",
+      "values": [
+        "Error trying to establish a connection with the Database",
+        "Error al establecer conexión con la base de datos",
+        "Error al establir connexió amb la base de dades"
+      ]
+    },
+    {
+      "key": "unknownError",
+      "values": [
+        "Unknown error. Please, restart the game",
+        "Error desconocido. Porfavor, reinicia el juego",
+        "Error desconegut. Si us plau, reinicia el joc"
+      ]
+    },
+    {
+      "key": "passwordsDontMatch",
+      "values": [
+        "Error. Passwords don't match",
+        "Error. Las contraseñas no coinciden",
+        "Error. Les contrasenyes no conicideixen"
+      ]
+    },
+    {
+      "key": "passwordNotSecure",
+      "values": [
+        "Error. The password is not secure enough.",
+        "Error. La contraseña no es lo suficientemente segura",
+        "Error. La contrasenya no és prou segura"
+      ]
+    },
+    {
+      "key": "nameNotWellFormatted",
+      "values": [
+        "Error. The name is not properly formatted",
+        "Error. El nombre no cumple los requisitos",
+        "Error. El nom no compleix els requisits"
+      ]
+    },
+    {
+      "key": "emailNotValid",
+      "values": [
+        "Error. The email is not valid",
+        "Error. El email no es valido",
+        "Error. L'email no és valid"
+      ]
+    },
+    {
+      "key": "nameAlreadyInUse",
+      "values": [
+        "Error. The name is already in use",
+        "Error. El nombre ya está en uso",
+        "Error. El nom ja està en ús"
+      ]
+    },
+    {
+      "key": "emailAlreadyInUse",
+      "values": [
+        "Error. The email is already in use",
+        "Error. El email ya está en uso",
+        "Error. L'email ja està en ús"
+      ]
+    },{
+      "key": "sendEmail",
+      "values": [
+        "Send Email",
+        "Enviar Email",
+        "Enviar Email"
+      ]
+    },
+    {
+      "key": "recoverPassword",
+      "values": [
+        "Recover Password",
+        "Recuperar Contraseña",
+        "Recuperar Contrasenya"
+      ]
+    },
+    {
+      "key": "verificationCode",
+      "values": [
+        "Verification Code",
+        "Codigo de verificación",
+        "Codi de verificació"
+      ]
+    },
+    {
+      "key": "returnLogin",
+      "values": [
+        "Return to Login",
+        "Volver a Login",
+        "Tornar a Login"
+      ]
+    },
+    {
+      "key": "checkCode",
+      "values": [
+        "Check Code",
+        "Verificar Codigo",
+        "Verificar Codi"
+      ]
+    },
+    {
+      "key": "enterNewPassword",
+      "values": [
+        "Enter new password",
+        "Introducir nueva contraseña",
+        "Introduir nova contrasenya"
+      ]
+    },
+    {
+      "key": "generateNewPassword",
+      "values": [
+        "Generate the new password",
+        "Genera la nueva contraseña",
+        "Genera la nuva contrasenya"
+      ]
+    },
+    {
+      "key": "enterNewPassword",
+      "values": [
+        "Enter new password",
+        "Entra la nueva contraseña",
+        "Entara la nova contrasenya"
+      ]
+    },
+    {
+      "key": "exit",
+      "values": [
+        "Exit",
+        "Salir",
+        "Sortir"
+      ]
     }
   ]
 }

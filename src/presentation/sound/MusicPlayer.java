@@ -59,9 +59,17 @@ public class MusicPlayer implements BasicPlayerListener {
      * @throws IOException Whenever a Song provided in the {@link Songs} enum is not found.
      */
     public void load() throws IOException{
-        singletonInstance.songsLoaded = singletonInstance.read();
-        singletonInstance.basicMusicPlayer = new BasicPlayer();
-        singletonInstance.basicMusicPlayer.addBasicPlayerListener(singletonInstance);
+        try{
+            if(basicMusicPlayer != null){
+                basicMusicPlayer.stop();
+                basicMusicPlayer.removeBasicPlayerListener(this);
+                currentSongPlaying = null;
+            }
+        }catch(BasicPlayerException e){ e.printStackTrace(); }
+
+        songsLoaded = singletonInstance.read();
+        basicMusicPlayer = new BasicPlayer();
+        basicMusicPlayer.addBasicPlayerListener(singletonInstance);
     }
 
 

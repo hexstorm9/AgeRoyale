@@ -40,6 +40,8 @@ public class SoundPlayer{
     private ArrayList<BasicPlayer> soundPlayerPool;
     private static final int SOUND_PLAYER_POOL_SIZE = 10;
 
+    private BasicPlayer buttonSound; //Has to be already loaded and ready to play as the sound when clicking a button has to be instantaneously
+
 
     private SoundPlayer() {
         //Disable BasicPlayer Logging
@@ -61,17 +63,16 @@ public class SoundPlayer{
      * @throws IOException Whenever a Sound provided in the {@link Sounds} enum is not found.
      */
     public void load() throws IOException{
-        singletonInstance.soundsLoaded = singletonInstance.read();
-        singletonInstance.soundPlayerPool = new ArrayList<>(SOUND_PLAYER_POOL_SIZE);
+        soundsLoaded = singletonInstance.read();
+        soundPlayerPool = new ArrayList<>(SOUND_PLAYER_POOL_SIZE);
         for(int i = 0; i < SOUND_PLAYER_POOL_SIZE; i++){
-            BasicPlayer player = new BasicPlayer();
-            try{
-                player.setLineBufferSize(1000);
-                player.open(soundsLoaded.get(Sounds.BUTTON));
-            }catch(Exception e){}
-            singletonInstance.soundPlayerPool.add(new BasicPlayer());
+            soundPlayerPool.add(new BasicPlayer());
         }
 
+        buttonSound = new BasicPlayer(); //Load the buttonSound and have it prepared to be played
+        try{
+            buttonSound.open(soundsLoaded.get(Sounds.BUTTON));
+        }catch(BasicPlayerException e){ e.printStackTrace();}
     }
 
 
@@ -83,6 +84,15 @@ public class SoundPlayer{
      */
     public void play(Sounds sound){
         if(sound == null || soundPlayerPool == null) return;
+
+        if(sound == Sounds.BUTTON){
+            try{
+                buttonSound.play();
+            }catch(BasicPlayerException e) {
+                e.printStackTrace();
+            }
+            return; //Always exit the method
+        }
 
         BasicPlayer soundPlayerToUse = soundPlayerPool.get(0); //Get the first BasicPlayer of the pool
         soundPlayerPool.remove(soundPlayerToUse); //Remove it of the pool

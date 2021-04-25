@@ -14,15 +14,16 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 
 public class RegisterScreen extends JPanel {
+
     private RoyaleButton registerButton;
-    private RoyaleTextField usernameTextField;
-    private RoyaleTextField mailTextField;
-    private RoyalePasswordField passwordTextField;
-    private RoyalePasswordField confirmPasswordTextField;
+    private RoyaleTextField usernameTextField, mailTextField;
+    private RoyalePasswordField passwordTextField, confirmPasswordTextField;
     private RoyaleLabel haveAccount;
+    private RoyaleLabel errorLabel;
 
     public static final String LOGIN_LABEL_ACTION_COMMAND = "login_label";
     public static final String REGISTER_BUTTON_ACTION_COMMAND = "register_button";
+
 
     public RegisterScreen(int screenHeight){
         setLayout(new GridBagLayout());
@@ -33,29 +34,45 @@ public class RegisterScreen extends JPanel {
         RoyaleLabel registerText = new RoyaleLabel(LanguageManager.getSentence(Sentences.REGISTER), RoyaleLabel.LabelType.TITLE);
         registerText.setAlignmentX(CENTER_ALIGNMENT);
 
-        JPanel usernamePanel = new JPanel();
-        usernamePanel.setAlignmentX(CENTER_ALIGNMENT);
-        usernamePanel.setOpaque(false);
-        usernamePanel.add(new RoyaleLabel(LanguageManager.getSentence(Sentences.USERNAME), RoyaleLabel.LabelType.PARAGRAPH));
-        usernamePanel.add(usernameTextField = new RoyaleTextField());
 
-        JPanel mailPanel = new JPanel();
-        mailPanel.setAlignmentX(CENTER_ALIGNMENT);
-        mailPanel.setOpaque(false);
-        mailPanel.add(new RoyaleLabel(LanguageManager.getSentence(Sentences.MAIL), RoyaleLabel.LabelType.PARAGRAPH));
-        mailPanel.add(mailTextField = new RoyaleTextField());
+        JPanel groupTextFieldsPanel = new JPanel();
+        groupTextFieldsPanel.setAlignmentX(CENTER_ALIGNMENT);
+        groupTextFieldsPanel.setOpaque(false);
+        GroupLayout groupLayout = new GroupLayout(groupTextFieldsPanel);
+        groupTextFieldsPanel.setLayout(groupLayout);
+        groupLayout.setAutoCreateGaps(true);
+        groupLayout.setAutoCreateContainerGaps(true);
 
-        JPanel passwordPanel = new JPanel();
-        passwordPanel.setAlignmentX(CENTER_ALIGNMENT);
-        passwordPanel.setOpaque(false);
-        passwordPanel.add(new RoyaleLabel(LanguageManager.getSentence(Sentences.PASSWORD), RoyaleLabel.LabelType.PARAGRAPH));
-        passwordPanel.add(passwordTextField = new RoyalePasswordField());
+        RoyaleLabel usernameLabel = new RoyaleLabel(LanguageManager.getSentence(Sentences.USERNAME), RoyaleLabel.LabelType.PARAGRAPH);
+        usernameTextField = new RoyaleTextField();
 
-        JPanel confirmPasswordPanel = new JPanel();
-        confirmPasswordPanel.setAlignmentX(CENTER_ALIGNMENT);
-        confirmPasswordPanel.setOpaque(false);
-        confirmPasswordPanel.add(new RoyaleLabel(LanguageManager.getSentence(Sentences.CONFIRM_PASSWORD), RoyaleLabel.LabelType.PARAGRAPH));
-        confirmPasswordPanel.add(confirmPasswordTextField = new RoyalePasswordField());
+        RoyaleLabel mailLabel = new RoyaleLabel(LanguageManager.getSentence(Sentences.MAIL), RoyaleLabel.LabelType.PARAGRAPH);
+        mailTextField = new RoyaleTextField();
+
+        RoyaleLabel passwordLabel = new RoyaleLabel(LanguageManager.getSentence(Sentences.PASSWORD), RoyaleLabel.LabelType.PARAGRAPH);
+        passwordTextField = new RoyalePasswordField();
+
+        RoyaleLabel confirmPasswordLabel = new RoyaleLabel(LanguageManager.getSentence(Sentences.CONFIRM_PASSWORD), RoyaleLabel.LabelType.PARAGRAPH);
+        confirmPasswordTextField = new RoyalePasswordField();
+
+        GroupLayout.SequentialGroup horizontalGroup = groupLayout.createSequentialGroup();
+        horizontalGroup.addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.TRAILING).addComponent(usernameLabel).addComponent(mailLabel).addComponent(passwordLabel).addComponent(confirmPasswordLabel));
+        horizontalGroup.addGroup(groupLayout.createParallelGroup().addComponent(usernameTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                .addComponent(mailTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                .addComponent(passwordTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                .addComponent(confirmPasswordTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE));
+        groupLayout.setHorizontalGroup(horizontalGroup);
+
+        GroupLayout.SequentialGroup verticalGroup = groupLayout.createSequentialGroup();
+        verticalGroup.addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(usernameLabel).addComponent(usernameTextField));
+        verticalGroup.addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(mailLabel).addComponent(mailTextField));
+        verticalGroup.addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(passwordLabel).addComponent(passwordTextField));
+        verticalGroup.addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(confirmPasswordLabel).addComponent(confirmPasswordTextField));
+        groupLayout.setVerticalGroup(verticalGroup);
+
+
+        errorLabel = new RoyaleLabel("   ", RoyaleLabel.LabelType.ERROR);
+        errorLabel.setAlignmentX(CENTER_ALIGNMENT);
 
         registerButton = new RoyaleButton(LanguageManager.getSentence(Sentences.ENTER));
         registerButton.setAlignmentX(CENTER_ALIGNMENT);
@@ -69,16 +86,15 @@ public class RegisterScreen extends JPanel {
         centerPane.setOpaque(false);
 
         centerPane.add(logoImage);
-        centerPane.add(Box.createRigidArea(new Dimension(100,(int)(screenHeight*0.003))));
+        centerPane.add(Box.createRigidArea(new Dimension(100,(int)(screenHeight*0.03))));
         centerPane.add(registerText);
-        centerPane.add(Box.createRigidArea(new Dimension(100,(int)(screenHeight*0.007))));
-        centerPane.add(usernamePanel);
-        centerPane.add(mailPanel);
-        centerPane.add(passwordPanel);
-        centerPane.add(confirmPasswordPanel);
-        centerPane.add(Box.createRigidArea(new Dimension(100,(int)(screenHeight*0.05))));
+        centerPane.add(Box.createRigidArea(new Dimension(100,(int)(screenHeight*0.03))));
+        centerPane.add(groupTextFieldsPanel);
+        centerPane.add(Box.createRigidArea(new Dimension(100,(int)(screenHeight*0.01))));
+        centerPane.add(errorLabel);
+        centerPane.add(Box.createRigidArea(new Dimension(100,(int)(screenHeight*0.02))));
         centerPane.add(registerButton);
-        centerPane.add(Box.createRigidArea(new Dimension(100,(int)(screenHeight*0.05))));
+        centerPane.add(Box.createRigidArea(new Dimension(100,(int)(screenHeight*0.1))));
         centerPane.add(haveAccount);
 
         add(centerPane, new GridBagConstraints());
@@ -95,6 +111,10 @@ public class RegisterScreen extends JPanel {
         haveAccount.setClickable(true);
     }
 
+
+    /**
+     * Pauses all components so as the user is not able to click anything or carry out any action.
+     */
     public void pauseAllComponents(){
         usernameTextField.setEnabled(false);
         passwordTextField.setEnabled(false);
@@ -102,19 +122,51 @@ public class RegisterScreen extends JPanel {
         haveAccount.setClickable(false);
     }
 
-    public String getUsernameTextField() {
+    /**
+     * Enables all components so as the user can carry out actions again
+     */
+    public void enableAllComponents(){
+        usernameTextField.setEnabled(true);
+        passwordTextField.setEnabled(true);
+        registerButton.setEnabled(true);
+        haveAccount.setClickable(true);
+    }
+
+
+    /**
+     * Shows an error message in a Label with the String provided
+     * @param errorMessage The error message to be shown
+     */
+    public void setErrorMessage(String errorMessage){
+        errorLabel.setText(errorMessage);
+        repaint();
+        revalidate();
+    }
+
+    /**
+     * Clears the current empty error message.
+     * <p>If there is no error message currently displayed, nothing will be done.
+     */
+    public void emptyErrorMessage(){
+        errorLabel.setText("   ");
+        repaint();
+        revalidate();
+    }
+
+
+    public String getTextUsernameTextField() {
         return usernameTextField.getText();
     }
 
-    public String getMailTextField() {
+    public String getTextMailTextField() {
         return mailTextField.getText();
     }
 
-    public char[] getPasswordTextField() {
+    public char[] getTextPasswordTextField() {
         return passwordTextField.getPassword();
     }
 
-    public char[] getConfirmPasswordTextField() {
+    public char[] getTextConfirmPasswordTextField() {
         return confirmPasswordTextField.getPassword();
     }
 }

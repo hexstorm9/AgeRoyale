@@ -1,6 +1,8 @@
 package presentation.controller;
 
 import business.GameModel;
+import business.entities.Songs;
+import presentation.sound.MusicPlayer;
 import presentation.view.MainMenuScreen;
 import presentation.view.RoyaleFrame;
 
@@ -17,6 +19,7 @@ public class MainMenuController extends ScreenController{
     public void start(){
         mainMenuScreen = new MainMenuScreen();
         royaleFrame.changeScreen(mainMenuScreen, RoyaleFrame.BackgroundStyle.MENU);
+        MusicPlayer.getInstance().playInLoop(Songs.MAIN_MENU);
     }
 
 

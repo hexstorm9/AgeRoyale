@@ -5,7 +5,9 @@ public class RegistrationException extends RuntimeException{
     public enum RegistrationExceptionCause{
         NAME_ALREADY_IN_USE,
         EMAIL_ALREADY_IN_USE,
-        PASSWORD_NOT_SECURE
+        PASSWORD_NOT_SECURE,
+        NAME_NOT_WELL_FORMATTED,
+        EMAIL_NOT_VALID
     }
     private RegistrationExceptionCause exceptionCause;
 
