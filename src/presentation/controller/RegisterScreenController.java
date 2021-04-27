@@ -27,12 +27,26 @@ public class RegisterScreenController extends ScreenController implements Action
         super(royaleFrame, gameModel);
     }
 
-    public void start(){
+    public void start(boolean showSettingsPanelOnStart){
         registerScreen = new RegisterScreen(royaleFrame.getHeight());
-        registerScreen.addButtonListener(this);
         registerScreen.addLabelsListener(this);
+        registerScreen.addButtonListener(this);
+        setPanelToListenForESCKey(registerScreen);
+
         royaleFrame.changeScreen(registerScreen, RoyaleFrame.BackgroundStyle.MENU);
+
+        if(showSettingsPanelOnStart){
+            royaleFrame.setPanelOnTop(settingsPanel);
+            royaleFrame.setPanelOnTopVisible(true);
+            settingsPanelIsBeingShown = true;
+        }
+
         MusicPlayer.getInstance().playInLoop(Songs.MENU);
+    }
+
+
+    public void buildSettingsPanel(){
+
     }
 
 

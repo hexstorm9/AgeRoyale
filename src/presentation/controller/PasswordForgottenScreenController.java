@@ -21,7 +21,7 @@ import java.awt.event.MouseListener;
 import java.sql.SQLException;
 import java.util.Arrays;
 
-public class PasswordForgottenScreenController extends ScreenController implements ActionListener, MouseListener{
+public class PasswordForgottenScreenController extends ScreenController implements MouseListener{
 
     private PasswordForgottenScreen passwordForgottenScreen;
 
@@ -30,12 +30,27 @@ public class PasswordForgottenScreenController extends ScreenController implemen
         super(royaleFrame, gameModel);
     }
 
-    public void start(){
+    public void start(boolean showSettingsPanelOnStart){
         passwordForgottenScreen = new PasswordForgottenScreen(royaleFrame.getHeight());
-        royaleFrame.changeScreen(passwordForgottenScreen, RoyaleFrame.BackgroundStyle.MENU);
         passwordForgottenScreen.addButtonListener(this);
         passwordForgottenScreen.addLabelsListener(this);
+        setPanelToListenForESCKey(passwordForgottenScreen);
+
+        royaleFrame.changeScreen(passwordForgottenScreen, RoyaleFrame.BackgroundStyle.MENU);
+
+        if(showSettingsPanelOnStart){
+            royaleFrame.setPanelOnTop(settingsPanel);
+            royaleFrame.setPanelOnTopVisible(true);
+            settingsPanelIsBeingShown = true;
+        }
+
         MusicPlayer.getInstance().playInLoop(Songs.MENU);
+    }
+
+
+    @Override
+    public void buildSettingsPanel(){
+
 
     }
 

@@ -11,7 +11,6 @@ import presentation.view.RoyaleFrame;
 import presentation.view.SplashScreen;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -30,19 +29,20 @@ public class SplashScreenController extends ScreenController{
     }
 
 
-    public void start(){
-        try{
-            MenuGraphics.getInstance().load(); //Load graphics before creating the screen
-        }catch(IOException | FontFormatException e){
-            e.printStackTrace();
-            showCriticalErrorAndExit("Couldn't load Graphics");
-        }
-
+    public void start(boolean showSettingsPanelOnStart){
         splashScreen = new SplashScreen(royaleFrame.getHeight());
+        setPanelToListenForESCKey(splashScreen);
+
         royaleFrame.changeScreen(splashScreen, RoyaleFrame.BackgroundStyle.MENU);
 
         loadGameInBackground = new LoadGameInBackground();
         loadGameInBackground.execute();
+    }
+
+
+    @Override
+    public void buildSettingsPanel(){
+
     }
 
 
@@ -132,7 +132,7 @@ public class SplashScreenController extends ScreenController{
             }
 
             if (errorMessage == null) goToScreen(Screen.LOGIN_SCREEN);
-            else showCriticalErrorAndExit(errorMessage);
+            else royaleFrame.showCriticalErrorAndExitApplication(errorMessage);
         }
     }
 

@@ -5,6 +5,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -130,13 +131,25 @@ public class SecurityUtility {
     }
 
 
+    /**
+     * Returns a six digit random verification code and saves it into a class attribute so as to be retrieved
+     * later on by {@link SecurityUtility#latestVerificationCodeGenerated)
+     *
+     * @return  A randomly generated six digit random verification code
+     */
     public static String getSixDigitRandomVerificationCode(){
-        //TODO: Generate Random Code
-        String code = "58914";
-        return latestVerificationCodeGenerated = code;
+        Random r = new Random();
+        int intCode = r.nextInt(999999);
+
+        //String.format will always provide us with a 6 number string (even when the int has not a length of 6)
+        return latestVerificationCodeGenerated = String.format("%06d", intCode);
     }
 
 
+    /**
+     * Returns the latest 6-digit verification code generated.
+     * @return The latest 6-digit verification code generated.
+     */
     public static String getLatestVerificationCodeGenerated(){
         return latestVerificationCodeGenerated;
     }

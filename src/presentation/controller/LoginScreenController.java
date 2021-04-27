@@ -23,17 +23,35 @@ public class LoginScreenController extends ScreenController implements ActionLis
 
     private LoginScreen loginScreen;
 
+
     public LoginScreenController(RoyaleFrame royaleFrame, GameModel gameModel){
         super(royaleFrame, gameModel);
     }
 
-    public void start(){
+    public void start(boolean settingsPanelIsBeingShown){
         loginScreen = new LoginScreen(royaleFrame.getHeight());
         loginScreen.addButtonListener(this);
         loginScreen.addLabelsListener(this);
+        setPanelToListenForESCKey(loginScreen);
+
         royaleFrame.changeScreen(loginScreen, RoyaleFrame.BackgroundStyle.MENU);
+
+        if(settingsPanelIsBeingShown){
+            this.settingsPanelIsBeingShown = true;
+            royaleFrame.setPanelOnTop(settingsPanel);
+            royaleFrame.setPanelOnTopVisible(true);
+        }
+
         MusicPlayer.getInstance().playInLoop(Songs.MENU);
     }
+
+    @Override
+    public void buildSettingsPanel(){
+        settingsPanel.addPlayerInformation("Raial", "Level 5", "5000 trophies");
+        settingsPanel.addLanguagesButton();
+        settingsPanel.addCreditsButton();
+    }
+
 
     @Override
     public void actionPerformed(ActionEvent e) {

@@ -22,12 +22,13 @@ public class MenuGraphics {
     public static final Color YELLOW = new Color(255, 183, 72);
     public static final Color BLUE = new Color(100, 146, 221);
 
-    private Image backgroundTile, logo;
+    private Image backgroundTile, logo, settingsIcon;
     private Font mainFont;
 
     private static final String BACKGROUND_TILE_IMAGE_PATH = "./resources/sprites/backgroundTile.png";
     private static final String LOGO_IMAGE_PATH = "./resources/sprites/logo.png";
     private static final String YOU_BLOCKHEAD_FONT_PATH = "./resources/fonts/YouBlockhead.ttf";
+    private static final String SETTINGS_ICON_PATH = "./resources/sprites/settingsIcon.png";
 
     private static MenuGraphics singletonInstance;
 
@@ -50,6 +51,7 @@ public class MenuGraphics {
     public void load() throws IOException, FontFormatException{
         backgroundTile = ImageIO.read(new File(BACKGROUND_TILE_IMAGE_PATH));
         logo = ImageIO.read(new File(LOGO_IMAGE_PATH));
+        settingsIcon = ImageIO.read(new File(SETTINGS_ICON_PATH));
 
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         ge.registerFont(mainFont = Font.createFont(Font.TRUETYPE_FONT, new File(YOU_BLOCKHEAD_FONT_PATH)));
@@ -81,6 +83,12 @@ public class MenuGraphics {
     public Font getMainFont(){
         return mainFont;
     }
+
+
+    public Image getSettingsIcon(){
+        return settingsIcon;
+    }
+
 
 
     //TODO: --------------------------------------------------------

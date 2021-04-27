@@ -16,10 +16,25 @@ public class MainMenuController extends ScreenController{
         super(royaleFrame, gameModel);
     }
 
-    public void start(){
+    public void start(boolean showSettingsPanelOnStart){
         mainMenuScreen = new MainMenuScreen();
+        setPanelToListenForESCKey(mainMenuScreen);
+
         royaleFrame.changeScreen(mainMenuScreen, RoyaleFrame.BackgroundStyle.MENU);
+
+
+        if(showSettingsPanelOnStart){
+            royaleFrame.setPanelOnTop(settingsPanel);
+            royaleFrame.setPanelOnTopVisible(true);
+            settingsPanelIsBeingShown = true;
+        }
         MusicPlayer.getInstance().playInLoop(Songs.MAIN_MENU);
+    }
+
+
+    @Override
+    public void buildSettingsPanel(){
+
     }
 
 

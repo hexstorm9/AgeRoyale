@@ -16,11 +16,23 @@ public class BattleController extends ScreenController{
     }
 
 
-    public void start(){
+    public void start(boolean showSettingsPanelOnStart){
         battleScreen = new BattleScreen();
+        setPanelToListenForESCKey(battleScreen);
+
         royaleFrame.changeScreen(battleScreen, RoyaleFrame.BackgroundStyle.BATTLE);
+
+        if(showSettingsPanelOnStart){
+            royaleFrame.setPanelOnTop(settingsPanel);
+            royaleFrame.setPanelOnTopVisible(true);
+            settingsPanelIsBeingShown = true;
+        }
     }
 
+    @Override
+    public void buildSettingsPanel(){
+
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {

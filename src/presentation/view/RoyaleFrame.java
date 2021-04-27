@@ -1,7 +1,10 @@
 package presentation.view;
 
+import presentation.controller.ScreenController;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyListener;
 
 /**
  * Main View Class of the project.
@@ -16,6 +19,7 @@ public class RoyaleFrame extends JFrame {
     private GraphicsDevice gd;
     private MenuBackgroundPanel menuBackgroundPanel;
     private BattleBackgroundPanel battleBackgroundPanel;
+
 
     public enum BackgroundStyle{
         MENU,
@@ -38,8 +42,8 @@ public class RoyaleFrame extends JFrame {
         setResizable(false);
         setUndecorated(true);
 
-        //gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-        gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[1]; //Open frame in the second monitor
+        gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+        //gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[1]; //Open frame in the second monitor
         if(!gd.isFullScreenSupported()){
             setSize(0, 0);
             setVisible(true);
@@ -82,6 +86,35 @@ public class RoyaleFrame extends JFrame {
             battleBackgroundPanel.add(newMainPanel);
         }
 
+        if(getKeyListeners() != null){
+            for(KeyListener kl: getKeyListeners()){ //Delete other keyListeners that could exist. We only want one
+                removeKeyListener(kl);
+            }
+        }
+
+        repaint(); //Repaint the frame as its contents have been updated
+        revalidate(); //Recalculate again layouts, as the frame has been updated
+    }
+
+
+
+    /**
+     * Sets the panel that will be on top of everything else. If you want it to be shown, {@link RoyaleFrame#setPanelOnTopVisible(boolean)} has to be called.
+     * <p>Caution! There can only be one single panel at a time on top of everything else
+     */
+    public void setPanelOnTop(JPanel panelOnTop){
+        panelOnTop.setVisible(false);
+        setGlassPane(panelOnTop);
+    }
+
+
+    /**
+     * Toggles the PanelOnTop visibility.
+     * @param visible Whether the PanelOnTop is visible or not
+     */
+    public void setPanelOnTopVisible(boolean visible){
+        Component glassPane = getGlassPane();
+        if(glassPane != null) glassPane.setVisible(visible);
         repaint(); //Repaint the frame as its contents have been updated
         revalidate(); //Recalculate again layouts, as the frame has been updated
     }
@@ -97,8 +130,10 @@ public class RoyaleFrame extends JFrame {
      * @param errorMessage The error message that will be displayed to the user.
      */
     public void showCriticalErrorAndExitApplication(String errorMessage){
+
         System.out.println(errorMessage);
         System.exit(0);
     }
+
 
 }
