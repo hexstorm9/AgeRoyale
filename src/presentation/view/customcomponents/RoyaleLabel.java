@@ -33,14 +33,13 @@ public class RoyaleLabel extends JLabel implements MouseListener{
     public enum LabelType{
         TITLE,
         PARAGRAPH,
-        SMALL,
         LINK,
         ERROR
     }
 
 
     public RoyaleLabel(String s, LabelType labelType){
-        super(s);
+        super(s, JLabel.CENTER);
 
         setFont(MenuGraphics.getInstance().getMainFont());
         setForeground(Color.WHITE);
@@ -92,7 +91,7 @@ public class RoyaleLabel extends JLabel implements MouseListener{
     public void setClickable(boolean clickable){
         if(clickable){
             this.clickable = true;
-            setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            setCursor(MenuGraphics.getInstance().getClickableCursor());
 
             if(mouseListenerBuffer == null) return;
             for(MouseListener ml: mouseListenerBuffer) addMouseListener(ml);
@@ -100,7 +99,7 @@ public class RoyaleLabel extends JLabel implements MouseListener{
         }
         else{
             this.clickable = false;
-            setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+            setCursor(MenuGraphics.getInstance().getDefaultCursor());
             mouseListenerBuffer = getMouseListeners();
 
             if(mouseListenerBuffer == null) return;

@@ -38,11 +38,8 @@ public class PasswordForgottenScreenController extends ScreenController implemen
 
         royaleFrame.changeScreen(passwordForgottenScreen, RoyaleFrame.BackgroundStyle.MENU);
 
-        if(showSettingsPanelOnStart){
-            royaleFrame.setPanelOnTop(settingsPanel);
-            royaleFrame.setPanelOnTopVisible(true);
-            settingsPanelIsBeingShown = true;
-        }
+        if(showSettingsPanelOnStart)
+            showFrontPanel(settingsPanel, settingsPanelController);
 
         MusicPlayer.getInstance().playInLoop(Songs.MENU);
     }
@@ -50,8 +47,8 @@ public class PasswordForgottenScreenController extends ScreenController implemen
 
     @Override
     public void buildSettingsPanel(){
-
-
+        settingsPanel.addLanguagesButton();
+        settingsPanel.addCreditsButton();
     }
 
 

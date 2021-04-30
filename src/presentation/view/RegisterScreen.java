@@ -76,7 +76,6 @@ public class RegisterScreen extends JPanel {
 
         registerButton = new RoyaleButton(LanguageManager.getSentence(Sentences.ENTER));
         registerButton.setAlignmentX(CENTER_ALIGNMENT);
-        registerButton.setFont(MenuGraphics.getInstance().getMainFont());
 
         haveAccount = new RoyaleLabel(LanguageManager.getSentence(Sentences.HAVE_AN_ACCOUNT), RoyaleLabel.LabelType.LINK);
         haveAccount.setAlignmentX(CENTER_ALIGNMENT);

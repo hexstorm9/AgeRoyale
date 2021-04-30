@@ -1,6 +1,5 @@
 package presentation.sound;
 
-import business.entities.Songs;
 import business.entities.Sounds;
 import javazoom.jlgui.basicplayer.BasicPlayer;
 import javazoom.jlgui.basicplayer.BasicPlayerException;
@@ -27,6 +26,7 @@ public class SoundPlayer{
     private static SoundPlayer singletonInstance;
     private static final String SOUNDS_PATH = "./resources/sounds/";
 
+    private double volume = 100; //From 0 to 100
     private HashMap<Sounds, File> soundsLoaded;
 
     /**
@@ -76,6 +76,15 @@ public class SoundPlayer{
     }
 
 
+    public void setVolume(int newVolume){
+        volume = newVolume;
+    }
+
+    public int getVolume(){
+        return (int)volume;
+    }
+
+
     /**
      * Starts playing the {@link Sounds} provided.
      * <p>If {@link SoundPlayer#load()} has not yet been called, the sound won't be played.
@@ -121,4 +130,6 @@ public class SoundPlayer{
         }
         return soundsLoaded;
     }
+
+
 }

@@ -1,5 +1,7 @@
 package presentation.view.customcomponents;
 
+import presentation.graphics.MenuGraphics;
+
 import javax.swing.*;
 
 /**
@@ -14,7 +16,7 @@ public class RoyaleProgressBar extends JProgressBar {
 
     public RoyaleProgressBar(){
         super();
-
+        setCursor(MenuGraphics.getInstance().getDefaultCursor());
     }
 
 }

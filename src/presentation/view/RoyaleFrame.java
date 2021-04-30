@@ -1,6 +1,6 @@
 package presentation.view;
 
-import presentation.controller.ScreenController;
+import presentation.graphics.MenuGraphics;
 
 import javax.swing.*;
 import java.awt.*;
@@ -57,6 +57,8 @@ public class RoyaleFrame extends JFrame {
             gd.setFullScreenWindow(this);
             validate();
         }
+
+        setCursor(MenuGraphics.getInstance().getDefaultCursor());
     }
 
 
@@ -99,12 +101,12 @@ public class RoyaleFrame extends JFrame {
 
 
     /**
-     * Sets the panel that will be on top of everything else. If you want it to be shown, {@link RoyaleFrame#setPanelOnTopVisible(boolean)} has to be called.
+     * Sets the panel that will be on top of everything else. If you want it to be shown, {@link RoyaleFrame#setFrontPanelVisible(boolean)} has to be called.
      * <p>Caution! There can only be one single panel at a time on top of everything else
      */
-    public void setPanelOnTop(JPanel panelOnTop){
-        panelOnTop.setVisible(false);
-        setGlassPane(panelOnTop);
+    public void setFrontPanel(FrontPanel newFrontPanel){
+        newFrontPanel.setVisible(false);
+        setGlassPane(newFrontPanel);
     }
 
 
@@ -112,7 +114,7 @@ public class RoyaleFrame extends JFrame {
      * Toggles the PanelOnTop visibility.
      * @param visible Whether the PanelOnTop is visible or not
      */
-    public void setPanelOnTopVisible(boolean visible){
+    public void setFrontPanelVisible(boolean visible){
         Component glassPane = getGlassPane();
         if(glassPane != null) glassPane.setVisible(visible);
         repaint(); //Repaint the frame as its contents have been updated

@@ -32,6 +32,8 @@ public class MusicPlayer implements BasicPlayerListener {
      */
     private HashMap<Songs, File> songsLoaded;
 
+    private double volume = 0; //From 0 to 100
+
     /**
      * Only one song can be played at a time, so we'll only have one BasicPlayer
      */
@@ -72,6 +74,21 @@ public class MusicPlayer implements BasicPlayerListener {
         basicMusicPlayer.addBasicPlayerListener(singletonInstance);
     }
 
+
+    public void setVolume(int newVolume){
+        volume = newVolume;
+        if(basicMusicPlayer != null){
+            try{
+                basicMusicPlayer.setGain(volume/100);
+            }catch(BasicPlayerException e){
+            }
+        }
+
+    }
+
+    public int getVolume(){
+        return (int)volume;
+    }
 
     /**
      * Starts playing the {@link Songs} provided in an infinite loop.

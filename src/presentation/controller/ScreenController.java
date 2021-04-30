@@ -1,8 +1,7 @@
 package presentation.controller;
 
 import business.GameModel;
-import business.entities.Sounds;
-import presentation.sound.SoundPlayer;
+import presentation.view.FrontPanel;
 import presentation.view.RoyaleFrame;
 import presentation.view.SettingsPanel;
 
@@ -19,8 +18,10 @@ public abstract class ScreenController implements ActionListener{
     protected GameModel gameModel;
 
     protected SettingsPanel settingsPanel;
+    protected SettingsPanelController settingsPanelController;
 
-    protected boolean settingsPanelIsBeingShown;
+
+    private FrontPanelController currentFrontPanelController;
 
 
     public enum Screen{
@@ -43,16 +44,16 @@ public abstract class ScreenController implements ActionListener{
     public ScreenController(RoyaleFrame rf, GameModel gm){
         royaleFrame = rf;
         gameModel = gm;
-
+        rf.setFrontPanelVisible(false); //Clear frontPanel from the royaleFrame when starting a new Screen
 
         settingsPanel = new SettingsPanel(rf.getWidth(), rf.getHeight());
-        SettingsPanelController settingsPanelController = new SettingsPanelController(settingsPanel);
-        settingsPanelIsBeingShown = false;
+        settingsPanelController = new SettingsPanelController(settingsPanel, this, rf);
 
         buildSettingsPanel();
         settingsPanel.addButtonsListener(settingsPanelController);
         settingsPanel.addMouseListener(settingsPanelController);
         settingsPanel.addLabelsListener(settingsPanelController);
+        settingsPanel.addSlidersListener(settingsPanelController);
     }
 
 
@@ -76,16 +77,36 @@ public abstract class ScreenController implements ActionListener{
      * @param screen {@link Screen} which we want to go to
      */
     public void goToScreen(Screen screen){
-        switch(screen){
-            case LOGIN_SCREEN -> new LoginScreenController(royaleFrame, gameModel).start(false); //Never start the splashScreen with a settingsPanel being shown //Never start the splashScreen with a settingsPanel being shown //Never start the splashScreen with a settingsPanel being shown //Never start the splashScreen with a settingsPanel being shown
-            case REGISTER_SCREEN -> new RegisterScreenController(royaleFrame, gameModel).start(settingsPanelIsBeingShown);
-            case PASSWORD_FORGOTTEN_SCREEN -> new PasswordForgottenScreenController(royaleFrame, gameModel).start(settingsPanelIsBeingShown);
-            case MAIN_MENU -> new MainMenuController(royaleFrame, gameModel).start(settingsPanelIsBeingShown);
-            case BATTLE -> new BattleController(royaleFrame, gameModel).start(settingsPanelIsBeingShown);
-            default -> new SplashScreenController(royaleFrame, gameModel).start(settingsPanelIsBeingShown);
-        }
+        //Now that we know that we need to change screen, let's check whether that
+        //new screen should start with the settingsPanel or not
+
+        boolean settingsPanelIsBeingShown = false;
+        //If the front panel is visible and the current FrontPanel is the SettingsPanel, let's set the flag to true
+        if(currentFrontPanelController != null && currentFrontPanelController.isFrontPanelVisible()
+                && currentFrontPanelController == settingsPanelController)
+            settingsPanelIsBeingShown = true;
+
+        goToScreen(screen, settingsPanelIsBeingShown);
     }
 
+
+    /**
+     * Creates a new {@link ScreenController} depending on the Screen that we want to go to, and calls the method
+     * {@link ScreenController#start(boolean)} on that controller (which creates the Screen and puts it into the frame)
+     *
+     * @param screen {@link Screen} which we want to go to
+     * @param startWithSettingsPanelEnabled Whether the next screen should start with the settingsPanel enabled or not
+     */
+    public void goToScreen(Screen screen, boolean startWithSettingsPanelEnabled){
+        switch(screen){
+            case LOGIN_SCREEN -> new LoginScreenController(royaleFrame, gameModel).start(startWithSettingsPanelEnabled);
+            case REGISTER_SCREEN -> new RegisterScreenController(royaleFrame, gameModel).start(startWithSettingsPanelEnabled);
+            case PASSWORD_FORGOTTEN_SCREEN -> new PasswordForgottenScreenController(royaleFrame, gameModel).start(startWithSettingsPanelEnabled);
+            case MAIN_MENU -> new MainMenuController(royaleFrame, gameModel).start(startWithSettingsPanelEnabled);
+            case BATTLE -> new BattleController(royaleFrame, gameModel).start(startWithSettingsPanelEnabled);
+            default -> new SplashScreenController(royaleFrame, gameModel).start(false); //Never start the splashScreen with a settingsPanel being shown
+        }
+    }
 
     /**
      * The {@link SettingsPanel} class is a <b>customizable panel</b>. As each Screen needs a settings panel,
@@ -100,29 +121,23 @@ public abstract class ScreenController implements ActionListener{
     public abstract void buildSettingsPanel();
 
 
-    /**
-     * To be called whenever the {@link ScreenController#settingsPanel} needs to appear on top of everything else.
-     */
-    public void showSettingsPanel(){
-        showPanelOnTopOfEverythingElse(settingsPanel);
-    }
-
 
     /**
      * Puts a {@link JPanel} on top of everything else, and shows it.
-     * <p>In order to hide it, call {@link ScreenController#hidePanelOnTopOfEverythingElse()}
+     * <p>In order to hide it, call {@link ScreenController#hideFrontPanel()}
      */
-    public void showPanelOnTopOfEverythingElse(JPanel panelToPutOnTopOfEverythingElse){
-        royaleFrame.setPanelOnTop(panelToPutOnTopOfEverythingElse);
-        royaleFrame.setPanelOnTopVisible(true);
+    public void showFrontPanel(FrontPanel panelToPutOnTopOfEverythingElse, FrontPanelController frontPanelController){
+        currentFrontPanelController = frontPanelController;
+        currentFrontPanelController.setFrontPanelVisibility(true);
     }
 
 
     /**
      * Hides the {@link JPanel} that is on top of everything else.
      */
-    public void hidePanelOnTopOfEverythingElse(){
-        royaleFrame.setPanelOnTopVisible(false);
+    public void hideFrontPanel(){
+        if(currentFrontPanelController != null)
+            currentFrontPanelController.setFrontPanelVisibility(false);
     }
 
 
@@ -153,10 +168,13 @@ public abstract class ScreenController implements ActionListener{
      * <p>It will show the {@link ScreenController#settingsPanel} of this {@link ScreenController}
      */
     protected void escKeyPressed(){
-            if(settingsPanelIsBeingShown) hidePanelOnTopOfEverythingElse();
-            else showSettingsPanel();
-            SoundPlayer.getInstance().play(Sounds.BUTTON);
-            settingsPanelIsBeingShown = !settingsPanelIsBeingShown;
+        if(currentFrontPanelController != null && currentFrontPanelController.isFrontPanelVisible()) currentFrontPanelController.setFrontPanelVisibility(false);
+        else showFrontPanel(settingsPanel, settingsPanelController);
+    }
+
+
+    public GameModel getGameModel(){
+        return gameModel;
     }
 
 }

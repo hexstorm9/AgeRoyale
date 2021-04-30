@@ -36,18 +36,15 @@ public class LoginScreenController extends ScreenController implements ActionLis
 
         royaleFrame.changeScreen(loginScreen, RoyaleFrame.BackgroundStyle.MENU);
 
-        if(settingsPanelIsBeingShown){
-            this.settingsPanelIsBeingShown = true;
-            royaleFrame.setPanelOnTop(settingsPanel);
-            royaleFrame.setPanelOnTopVisible(true);
-        }
+        if(settingsPanelIsBeingShown)
+            showFrontPanel(settingsPanel, settingsPanelController);
 
         MusicPlayer.getInstance().playInLoop(Songs.MENU);
     }
 
+
     @Override
     public void buildSettingsPanel(){
-        settingsPanel.addPlayerInformation("Raial", "Level 5", "5000 trophies");
         settingsPanel.addLanguagesButton();
         settingsPanel.addCreditsButton();
     }

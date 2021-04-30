@@ -20,9 +20,15 @@ public class LanguageManager {
         sentencesLoaded = languageDAO.readSentences();
     }
 
-    public static void changePreferredLanguage(Language language) throws IOException{
+    public static void changePreferredLanguage(Language language){
         if(languageDAO == null) return;
-        languageDAO.updatePreferredLanguage(language);
+        try{
+            languageDAO.updatePreferredLanguage(language);
+        }catch(IOException e){
+            //Don't show an error to the user. Only show error in the stderr
+            System.err.println("Failed to write the new language to the Languages file");
+            e.printStackTrace();
+        }
     }
 
     public static String getSentence(Sentences sentence){

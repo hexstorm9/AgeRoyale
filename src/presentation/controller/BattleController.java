@@ -22,11 +22,8 @@ public class BattleController extends ScreenController{
 
         royaleFrame.changeScreen(battleScreen, RoyaleFrame.BackgroundStyle.BATTLE);
 
-        if(showSettingsPanelOnStart){
-            royaleFrame.setPanelOnTop(settingsPanel);
-            royaleFrame.setPanelOnTopVisible(true);
-            settingsPanelIsBeingShown = true;
-        }
+        if(showSettingsPanelOnStart)
+            showFrontPanel(settingsPanel, settingsPanelController);
     }
 
     @Override

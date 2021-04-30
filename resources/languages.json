@@ -1,5 +1,5 @@
 {
-  "language": "default",
+  "language": "en",
   "sentences": [
     {
       "key": "login",
@@ -118,7 +118,7 @@
       "values": [
         "The username introduced does not exist",
         "El usuario introducido no existe",
-        "L'usuari introduït no existeix"
+        "L\u0027usuari introduït no existeix"
       ]
     },
     {
@@ -126,7 +126,7 @@
       "values": [
         "The email introduced does not exist",
         "El email introducido no existe",
-        "L'email introduït no existeix"
+        "L\u0027email introduït no existeix"
       ]
     },
     {
@@ -156,7 +156,7 @@
     {
       "key": "passwordsDontMatch",
       "values": [
-        "Error. Passwords don't match",
+        "Error. Passwords don\u0027t match",
         "Error. Las contraseñas no coinciden",
         "Error. Les contrasenyes no conicideixen"
       ]
@@ -182,7 +182,7 @@
       "values": [
         "Error. The email is not valid",
         "Error. El email no es valido",
-        "Error. L'email no és valid"
+        "Error. L\u0027email no és valid"
       ]
     },
     {
@@ -198,9 +198,10 @@
       "values": [
         "Error. The email is already in use",
         "Error. El email ya está en uso",
-        "Error. L'email ja està en ús"
+        "Error. L\u0027email ja està en ús"
       ]
-    },{
+    },
+    {
       "key": "sendEmail",
       "values": [
         "Send Email",

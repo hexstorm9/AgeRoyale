@@ -16,6 +16,7 @@ public class RoyalePasswordField extends JPasswordField {
     public RoyalePasswordField() {
         super(20);
         setFont(MenuGraphics.getInstance().getMainFont());
+        setCursor(MenuGraphics.getInstance().getWritingCursor());
         setEchoChar('*');
     }
 

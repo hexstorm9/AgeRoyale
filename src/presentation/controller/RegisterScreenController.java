@@ -35,18 +35,16 @@ public class RegisterScreenController extends ScreenController implements Action
 
         royaleFrame.changeScreen(registerScreen, RoyaleFrame.BackgroundStyle.MENU);
 
-        if(showSettingsPanelOnStart){
-            royaleFrame.setPanelOnTop(settingsPanel);
-            royaleFrame.setPanelOnTopVisible(true);
-            settingsPanelIsBeingShown = true;
-        }
+        if(showSettingsPanelOnStart)
+            showFrontPanel(settingsPanel, settingsPanelController);
 
         MusicPlayer.getInstance().playInLoop(Songs.MENU);
     }
 
 
     public void buildSettingsPanel(){
-
+        settingsPanel.addLanguagesButton();
+        settingsPanel.addCreditsButton();
     }
 
 

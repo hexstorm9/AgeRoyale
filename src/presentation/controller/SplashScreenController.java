@@ -42,7 +42,8 @@ public class SplashScreenController extends ScreenController{
 
     @Override
     public void buildSettingsPanel(){
-
+        settingsPanel.addLanguagesButton();
+        settingsPanel.addCreditsButton();
     }
 
 

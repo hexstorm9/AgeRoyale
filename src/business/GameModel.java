@@ -119,4 +119,36 @@ public class GameModel {
         userDAO.modifyHash(email, hash);
     }
 
+
+    /**
+     * Deletes the user of the whole system (in the Database and from RAM too).
+     * <p>When this method deletes successfully the user, a log out needs to be performed too (as the {@link Player} of this class is deleted too).
+     *
+     * @param password The password of the current user that wants its account to be deleted
+     *
+     * @return Boolean telling whether the user has been deleted or not. If it has not been deleted, the cause will always
+     * be that the password introduced is not correct
+     * @throws SQLException If a connection to the database can't be established or queries are wrong
+     */
+    public boolean deleteUser(char[] password) throws SQLException{
+        //If the password provided does not match the security criteria, it means it will be incorrect for sure
+        if(SecurityUtility.checkIfPasswordIsSecure(password) == false) return false;
+
+        String hash = SecurityUtility.getHashAndDeletePassword(password);
+        boolean accountDeleted = userDAO.deleteUser(player.getName(), hash);
+        if(accountDeleted) forgetPlayer();
+
+        return accountDeleted;
+    }
+
+   public Player getPlayer(){
+        return player;
+   }
+
+   public void forgetPlayer(){
+        //Delete the reference to the current player (let the GC do its job) and create a new empty one
+        player = null;
+        player = new Player();
+   }
+
 }
