@@ -13,9 +13,11 @@ public class MainMenuController extends ScreenController{
 
     private MainMenuScreen mainMenuScreen;
 
+
     public MainMenuController(RoyaleFrame royaleFrame, GameModel gameModel){
         super(royaleFrame, gameModel);
     }
+
 
     public void start(boolean showSettingsPanelOnStart){
         mainMenuScreen = new MainMenuScreen(gameModel.getPlayer().getName(), gameModel.getPlayer().getCrowns(),

@@ -20,9 +20,12 @@ public class MainMenuScreen extends Screen {
     public static final String BATTLE_MENU_BUTTON_ACTION_COMMAND = "battle_menu";
     public static final String RANKINGS_MENU_BUTTON_ACTION_COMMAND = "ranking_menu";
 
+    private final int SCREEN_HEIGHT;
+
 
     public MainMenuScreen(String username, int crowns, int battleWins, int battlePlays, int arena, int screenHeight){
         setLayout(new BorderLayout());
+       SCREEN_HEIGHT = screenHeight;
 
         JPanel northPanel = new JPanel();
         //build north panel displaying username, crowns, battlewins, battleplays and arena
@@ -101,16 +104,67 @@ public class MainMenuScreen extends Screen {
     }
 
 
+
     private class CardsMenuPanel extends JPanel{
+
 
         public CardsMenuPanel(){
             setOpaque(false);
-            add(new RoyaleLabel("We're in the cards Menu Panel", RoyaleLabel.LabelType.TITLE));
+            setLayout(new GridBagLayout()); //To make everything centered
+
+            JPanel centerPanel = new JPanel(); //The only thing we'll add in this cardsMenuPanel
+            centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+            centerPanel.setOpaque(false);
+
+
+            JPanel cardsGridPanel = new JPanel();
+            cardsGridPanel.setAlignmentX(CENTER_ALIGNMENT);
+            cardsGridPanel.setLayout(new GridLayout(2, 4));
+
+            cardsGridPanel.add(new CardPanel("Giant", 1, 6));
+            cardsGridPanel.add(new CardPanel("Giant", 1, 6));
+            cardsGridPanel.add(new CardPanel("Giant", 1, 6));
+            cardsGridPanel.add(new CardPanel("Giant", 1, 6));
+            cardsGridPanel.add(new CardPanel("Giant", 1, 6));
+            cardsGridPanel.add(new CardPanel("Giant", 1, 6));
+            cardsGridPanel.add(new CardPanel("Giant", 1, 6));
+            cardsGridPanel.add(new CardPanel("Giant", 1, 6));
+
+            RoyaleLabel deckLabel = new RoyaleLabel("Deck", RoyaleLabel.LabelType.TITLE);
+            deckLabel.setAlignmentX(CENTER_ALIGNMENT);
+
+            centerPanel.add(deckLabel);
+            centerPanel.add(Box.createRigidArea(new Dimension(50, SCREEN_HEIGHT * 3/100)));
+            centerPanel.add(cardsGridPanel);
+            add(centerPanel, new GridBagConstraints());
         }
 
         public void addButtonsListener(ActionListener al){
 
         }
+
+
+        private class CardPanel extends JPanel{
+
+            public CardPanel(String cardName, int cardLevel, int totalCards){
+                //Each card should occupy 25% of screen height
+
+                add(new RoyaleLabel(cardName, RoyaleLabel.LabelType.PARAGRAPH));
+                add(new RoyaleLabel(Integer.toString(cardLevel), RoyaleLabel.LabelType.PARAGRAPH));
+                add(new RoyaleLabel(Integer.toString(totalCards), RoyaleLabel.LabelType.PARAGRAPH));
+
+
+                //Set size of the card to occupy 25% of the screen height
+                Dimension d = getPreferredSize();
+                d.height = SCREEN_HEIGHT * 25/100;
+                setPreferredSize(d);
+                setMinimumSize(d);
+                setMaximumSize(d);
+            }
+
+
+        }
+
 
     }
 
@@ -134,11 +188,46 @@ public class MainMenuScreen extends Screen {
 
         public RankingsMenuPanel(){
             setOpaque(false);
-            add(new RoyaleLabel("We're in the Rankings Menu Panel", RoyaleLabel.LabelType.TITLE));
+            setLayout(new GridBagLayout());
 
+            JPanel centerPanel = new JPanel();
+            centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+            centerPanel.setOpaque(false);
+
+            ScrollableRankingPanel globalRankingByCrowns = new ScrollableRankingPanel("Global Ranking by Crowns");
+            ScrollableRankingPanel globalRankingByWinRatio = new ScrollableRankingPanel("Global Ranking by Win Ratio");
+            ScrollableRankingPanel latestBattles = new ScrollableRankingPanel("Latest Battles");
+
+
+            JTabbedPane rankingsTabbedPane = new JTabbedPane();
+            rankingsTabbedPane.add("Global Ranking", globalRankingByCrowns);
+            rankingsTabbedPane.add("Win Ratio", globalRankingByWinRatio);
+            rankingsTabbedPane.add("Latest Battles", latestBattles);
+
+
+
+
+            RoyaleLabel rankingsLabel = new RoyaleLabel("Rankings", RoyaleLabel.LabelType.TITLE);
+            rankingsLabel.setAlignmentX(CENTER_ALIGNMENT);
+
+
+            centerPanel.add(rankingsLabel);
+            centerPanel.add(Box.createRigidArea(new Dimension(50, SCREEN_HEIGHT * 3/100)));
+            centerPanel.add(rankingsTabbedPane);
+
+            add(centerPanel, new GridBagConstraints());
         }
 
         public void addButtonsListener(ActionListener al){
+
+        }
+
+
+        private class ScrollableRankingPanel extends JPanel{
+
+            public ScrollableRankingPanel(String ranking){
+                add(new RoyaleLabel(ranking, RoyaleLabel.LabelType.PARAGRAPH));
+            }
 
         }
     }

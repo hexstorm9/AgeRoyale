@@ -32,7 +32,7 @@ public class MusicPlayer implements BasicPlayerListener {
      */
     private HashMap<Songs, File> songsLoaded;
 
-    private double volume = 0; //From 0 to 100
+    private double volume = 100; //From 0 to 100
 
     /**
      * Only one song can be played at a time, so we'll only have one BasicPlayer
