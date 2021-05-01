@@ -141,6 +141,8 @@ public class GameModel {
         return accountDeleted;
     }
 
+
+
    public Player getPlayer(){
         return player;
    }

@@ -48,6 +48,7 @@ public class RoyaleFrame extends JFrame {
         else
             gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 
+
         if(!gd.isFullScreenSupported()){
             setSize(0, 0);
             setVisible(true);
