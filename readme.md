@@ -51,7 +51,8 @@ $ git clone https://github.com/hexstorm9/AgeRoyale/tree/develop.git
 ## Contact
 :email: **hexstorm@outlook.com**
 
-##Authors
+
+## Authors
 
 @**marc.cano**
 
