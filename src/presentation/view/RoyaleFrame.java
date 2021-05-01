@@ -42,8 +42,12 @@ public class RoyaleFrame extends JFrame {
         setResizable(false);
         setUndecorated(true);
 
-        //gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-        gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[1]; //Open frame in the second monitor
+        //TODO: Delete this before production. Opens the game in the second monitor if the user has one
+        if(GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[1] != null)
+            gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[1]; //Open frame in the second monitor
+        else
+            gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+
         if(!gd.isFullScreenSupported()){
             setSize(0, 0);
             setVisible(true);
