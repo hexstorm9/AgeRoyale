@@ -26,21 +26,23 @@ public class Player {
         //TODO: Interact with the database and implement PlayerDAO
         name = "bielcarpi";
         email = "bielcarpi@outlook.com";
-        crowns = 543;
-        battleWins = 19;
-        battlePlays = 28;
+        crowns = 143;
+        battleWins = 9;
+        battlePlays = 13;
     }
 
 
     public String getName(){ return name;}
 
-    public String getEmail(){ return email;}
 
     public int getCrowns(){ return crowns;}
 
+    public int getBattleWins(){ return battleWins;}
+    public int getBattlePlays(){ return battlePlays;}
+
     public int getArena(){
         //There are two arenas at the moment of creating the class
-        if(crowns < 100) return 1;
+        if(crowns < 300) return 1;
         else return 2;
     }
 

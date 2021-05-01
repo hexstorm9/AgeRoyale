@@ -3,7 +3,6 @@ package presentation.controller;
 import business.GameModel;
 import business.entities.LanguageManager;
 import com.google.gson.JsonSyntaxException;
-import presentation.graphics.MenuGraphics;
 import presentation.sound.MusicPlayer;
 import presentation.sound.SoundPlayer;
 import business.entities.Sounds;

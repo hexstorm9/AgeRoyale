@@ -77,6 +77,7 @@ public class SettingsPanel extends FrontPanel {
         scrollPaneCentered.setMinimumSize(new Dimension(CENTER_PANEL_WIDTH, CENTER_PANEL_HEIGHT));
         scrollPaneCentered.setMaximumSize(new Dimension(CENTER_PANEL_WIDTH, CENTER_PANEL_HEIGHT));
         scrollPaneCentered.getVerticalScrollBar().setPreferredSize(new Dimension(0,0)); //Hide the Vertical Scroll Bar if it appears
+        scrollPaneCentered.getVerticalScrollBar().setUnitIncrement(6);
 
         add(scrollPaneCentered);
     }

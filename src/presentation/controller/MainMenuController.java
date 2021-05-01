@@ -18,7 +18,10 @@ public class MainMenuController extends ScreenController{
     }
 
     public void start(boolean showSettingsPanelOnStart){
-        mainMenuScreen = new MainMenuScreen();
+        mainMenuScreen = new MainMenuScreen(gameModel.getPlayer().getName(), gameModel.getPlayer().getCrowns(),
+                gameModel.getPlayer().getBattleWins(), gameModel.getPlayer().getBattlePlays(),
+                gameModel.getPlayer().getArena(), royaleFrame.getHeight());
+        mainMenuScreen.addButtonsListener(this);
         setPanelToListenForESCKey(mainMenuScreen);
 
         royaleFrame.changeScreen(mainMenuScreen, RoyaleFrame.BackgroundStyle.MENU);
@@ -53,5 +56,16 @@ public class MainMenuController extends ScreenController{
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        switch(e.getActionCommand()){
+            case MainMenuScreen.BATTLE_MENU_BUTTON_ACTION_COMMAND:
+                mainMenuScreen.putBattleMenuPanelToCenter();
+                break;
+            case MainMenuScreen.CARDS_MENU_BUTTON_ACTION_COMMAND:
+                mainMenuScreen.putCardsMenuPanelToCenter();
+                break;
+            case MainMenuScreen.RANKINGS_MENU_BUTTON_ACTION_COMMAND:
+                mainMenuScreen.putRankingsMenuPanelToCenter();
+                break;
+        }
     }
 }
