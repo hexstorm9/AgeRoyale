@@ -42,7 +42,7 @@ public class PasswordForgottenScreen extends JPanel {
         centerPane.setLayout(new BoxLayout(centerPane, BoxLayout.Y_AXIS));
 
 
-        RoyaleLabel logoImage = new RoyaleLabel(new ImageIcon(MenuGraphics.getInstance().getLogo()));
+        RoyaleLabel logoImage = new RoyaleLabel(new ImageIcon(MenuGraphics.getLogo()));
         logoImage.setAlignmentX(CENTER_ALIGNMENT);
 
         //Send Email Part ---------------------------------------------------------

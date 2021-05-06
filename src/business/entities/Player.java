@@ -1,17 +1,24 @@
 package business.entities;
 
+import persistence.PlayerDAO;
+
 import java.sql.SQLException;
 import java.util.HashMap;
 
 public class Player {
 
     private String name;
-    private String email;
     private int crowns;
     private int battleWins;
     private int battlePlays;
 
     private HashMap<Cards, Integer> cardsHashMap;
+
+
+    private PlayerDAO playerDAO;
+
+    //private ChestInfo chestOne, chestTwo, chestThree, chestFour, chestFive;
+
 
 
     public Player(){}
@@ -25,7 +32,6 @@ public class Player {
     public void initialize(String playerNameOrEmail) throws SQLException{
         //TODO: Interact with the database and implement PlayerDAO
         name = "bielcarpi";
-        email = "bielcarpi@outlook.com";
         crowns = 143;
         battleWins = 9;
         battlePlays = 13;

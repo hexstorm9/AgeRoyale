@@ -41,14 +41,14 @@ public class RoyaleFrame extends JFrame {
         setLocationRelativeTo(null);
         setResizable(false);
         setUndecorated(true);
-/*
-        //TODO: Delete this before production. Opens the game in the second monitor if the user has one
-        if(GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[1] != null)
-            gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[1]; //Open frame in the second monitor
-        else
 
- */
+
+        //TODO: Delete before production. Opens the game in the second monitor if the user has one.
+        try{
+            gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[1];
+        }catch(ArrayIndexOutOfBoundsException e){
             gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+        }
 
 
         if(!gd.isFullScreenSupported()){
@@ -65,8 +65,10 @@ public class RoyaleFrame extends JFrame {
             validate();
         }
 
-        setCursor(MenuGraphics.getInstance().getDefaultCursor());
+        //Setting default cursor in the frame (some components will use their own cursor, overriding this)
+        setCursor(MenuGraphics.getDefaultCursor());
     }
+
 
     /**
      * Provided a JPanel, this method deletes the Main Panel in the Frame and paints the new one provided.

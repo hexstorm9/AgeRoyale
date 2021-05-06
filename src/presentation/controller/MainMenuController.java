@@ -9,22 +9,26 @@ import presentation.view.RoyaleFrame;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseEvent;
+
 
 public class MainMenuController extends ScreenController implements ActionListener, MouseListener{
 
     private MainMenuScreen mainMenuScreen;
 
+
     public MainMenuController(RoyaleFrame royaleFrame, GameModel gameModel){
         super(royaleFrame, gameModel);
     }
+
 
     public void start(boolean showSettingsPanelOnStart){
         mainMenuScreen = new MainMenuScreen(gameModel.getPlayer().getName(), gameModel.getPlayer().getCrowns(),
                 gameModel.getPlayer().getBattleWins(), gameModel.getPlayer().getBattlePlays(),
                 gameModel.getPlayer().getArena(), royaleFrame.getHeight());
         mainMenuScreen.addButtonsListener(this);
+        mainMenuScreen.addPanelsListener(this);
         mainMenuScreen.addLabelsListener(this);
         setPanelToListenForESCKey(mainMenuScreen);
 
@@ -76,28 +80,48 @@ public class MainMenuController extends ScreenController implements ActionListen
         }
     }
 
+
     @Override
     public void mouseClicked(MouseEvent e) {
+        if(e.getSource() instanceof MainMenuScreen.CardsMenuPanel.CardPanel){
+            MainMenuScreen.CardsMenuPanel.CardPanel cardPanelClicked = (MainMenuScreen.CardsMenuPanel.CardPanel) e.getSource();
 
+            if(cardPanelClicked.getActionCommand().equals(MainMenuScreen.CARD_PANEL_1_ACTION_COMMAND)){
+                System.out.println("Card one clicked");
+            }
+            else if(cardPanelClicked.getActionCommand().equals(MainMenuScreen.CARD_PANEL_2_ACTION_COMMAND)){
+                System.out.println("Card two clicked");
+            }
+            else if(cardPanelClicked.getActionCommand().equals(MainMenuScreen.CARD_PANEL_3_ACTION_COMMAND)){
+                System.out.println("Card three clicked");
+            }
+            else if(cardPanelClicked.getActionCommand().equals(MainMenuScreen.CARD_PANEL_4_ACTION_COMMAND)){
+                System.out.println("Card four clicked");
+            }
+            else if(cardPanelClicked.getActionCommand().equals(MainMenuScreen.CARD_PANEL_5_ACTION_COMMAND)){
+                System.out.println("Card five clicked");
+            }
+            else if(cardPanelClicked.getActionCommand().equals(MainMenuScreen.CARD_PANEL_6_ACTION_COMMAND)){
+                System.out.println("Card six clicked");
+            }
+            else if(cardPanelClicked.getActionCommand().equals(MainMenuScreen.CARD_PANEL_7_ACTION_COMMAND)){
+                System.out.println("Card seven clicked");
+            }
+            else if(cardPanelClicked.getActionCommand().equals(MainMenuScreen.CARD_PANEL_8_ACTION_COMMAND)){
+                System.out.println("Card eight clicked");
+            }
+        }
     }
 
     @Override
-    public void mousePressed(MouseEvent e) {
-
-    }
+    public void mousePressed(MouseEvent e) {}
 
     @Override
-    public void mouseReleased(MouseEvent e) {
-
-    }
+    public void mouseReleased(MouseEvent e) {}
 
     @Override
-    public void mouseEntered(MouseEvent e) {
-
-    }
+    public void mouseEntered(MouseEvent e) {}
 
     @Override
-    public void mouseExited(MouseEvent e) {
-
-    }
+    public void mouseExited(MouseEvent e) {}
 }

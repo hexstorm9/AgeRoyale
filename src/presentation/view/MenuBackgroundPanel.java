@@ -44,7 +44,7 @@ public class MenuBackgroundPanel extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        Image backgroundTile = MenuGraphics.getInstance().getBackgroundTile();
+        Image backgroundTile = MenuGraphics.getBackgroundTile();
         if(backgroundTile == null) return;
 
         //Drawing each tile to the background depending on the vertical and horizontal tiles needed

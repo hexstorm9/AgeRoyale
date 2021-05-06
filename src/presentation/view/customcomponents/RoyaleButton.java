@@ -37,8 +37,8 @@ public class RoyaleButton extends JButton implements MouseListener{
         setMargin(new Insets(10, 20, 10, 20));
         addMouseListener(this);
 
-        setFont(MenuGraphics.getInstance().getMainFont());
-        setCursor(MenuGraphics.getInstance().getClickableCursor());
+        setFont(MenuGraphics.getMainFont());
+        setCursor(MenuGraphics.getClickableCursor());
     }
 
     @Override

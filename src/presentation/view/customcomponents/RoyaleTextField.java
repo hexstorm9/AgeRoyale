@@ -16,7 +16,7 @@ public class RoyaleTextField extends JTextField {
 
     public RoyaleTextField() {
         super(20);
-        setFont(MenuGraphics.getInstance().getMainFont());
-        setCursor(MenuGraphics.getInstance().getWritingCursor());
+        setFont(MenuGraphics.getMainFont());
+        setCursor(MenuGraphics.getWritingCursor());
     }
 }

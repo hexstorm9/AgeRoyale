@@ -50,7 +50,7 @@
       ]
     },
     {
-      "key": "play video",
+      "key": "playVideo",
       "values": [
         "Play video",
         "Reproducir video",
@@ -282,11 +282,67 @@
       ]
     },
     {
-      "key": "play game",
+      "key": "playGame",
       "values": [
         "Play",
         "Jugar",
         "Jugar"
+      ]
+    },
+    {
+      "key": "credits",
+      "values": [
+        "Credits",
+        "Créditos",
+        "Crèdits"
+      ]
+    },
+    {
+      "key": "logOut",
+      "values": [
+        "Log Out",
+        "Cerrar sesión",
+        "Tancar sessió"
+      ]
+    },
+    {
+      "key": "changeLanguage",
+      "values": [
+        "Change Language",
+        "Cambiar idioma",
+        "Canviar d\u0027idioma"
+      ]
+    },
+    {
+      "key": "deleteAccount",
+      "values": [
+        "Delete Account",
+        "Borrar Cuenta",
+        "Esborrar compte"
+      ]
+    },
+    {
+      "key": "settings",
+      "values": [
+        "Settings",
+        "Ajustes",
+        "Configuració"
+      ]
+    },
+    {
+      "key": "music",
+      "values": [
+        "Music",
+        "Música",
+        "Música"
+      ]
+    },
+    {
+      "key": "sound",
+      "values": [
+        "Sound",
+        "Sonido",
+        "So"
       ]
     }
   ]

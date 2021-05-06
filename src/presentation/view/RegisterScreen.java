@@ -28,7 +28,7 @@ public class RegisterScreen extends JPanel {
     public RegisterScreen(int screenHeight){
         setLayout(new GridBagLayout());
 
-        RoyaleLabel logoImage = new RoyaleLabel(new ImageIcon(MenuGraphics.getInstance().getLogo()));
+        RoyaleLabel logoImage = new RoyaleLabel(new ImageIcon(MenuGraphics.getLogo()));
         logoImage.setAlignmentX(CENTER_ALIGNMENT);
 
         RoyaleLabel registerText = new RoyaleLabel(LanguageManager.getSentence(Sentences.REGISTER), RoyaleLabel.LabelType.TITLE);

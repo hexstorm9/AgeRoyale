@@ -16,7 +16,7 @@ public class RoyaleProgressBar extends JProgressBar {
 
     public RoyaleProgressBar(){
         super();
-        setCursor(MenuGraphics.getInstance().getDefaultCursor());
+        setCursor(MenuGraphics.getDefaultCursor());
     }
 
 }

@@ -3,7 +3,6 @@ package persistence;
 import business.LoginException;
 import business.RegistrationException;
 
-import java.sql.Array;
 import java.sql.SQLException;
 import java.util.ArrayList;
 

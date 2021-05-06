@@ -28,7 +28,7 @@ public class SplashScreen extends JPanel {
      * @see RoyaleProgressBar
      */
     public SplashScreen(int screenHeight){
-        imageLogo = MenuGraphics.getInstance().getLogo();
+        imageLogo = MenuGraphics.getLogo();
         royaleProgressBar = new RoyaleProgressBar();
 
         RoyaleLabel logoLabel = new RoyaleLabel(new ImageIcon(imageLogo));

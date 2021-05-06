@@ -14,13 +14,17 @@ import java.io.IOException;
  * <p>As the game follows the {@code MVC Pattern}, this Main class starts the game by creating the model, the view and the first controller.
  * It all will be done on the {@code AWT Event Dispatch Thread}, as it should be the "Main Thread" of any Swing Application.
  *
+ * <p>Note that before starting the model, view and controller, the MenuGraphics module will be loaded (the project can't start
+ * without graphics).
+ *
  * <p>A UML Class Diagram is added to the root project folder so as to provide a better description of the whole project.
  *
- * @author david.bassols
+ *
  * @author marc.cano
  * @author biel.carpi
  * @author rafael.morera
  * @author pol.saula
+ * @author david.bassols
  * @version 1.0
  *
  * @see GameModel
@@ -35,11 +39,13 @@ public class Main {
             @Override
             public void run() {
 
+                //Let's load the Graphics of the Menu
                 try{
-                    MenuGraphics.getInstance().load(); //Load graphics before creating the screen
+                    MenuGraphics.load(); //Load graphics before creating the screen
                 }catch(IOException | FontFormatException e){
                     System.err.println("Can't load graphics. Please, reinstall the game.");
                     e.printStackTrace();
+                    System.exit(1); //Exit the application
                 }
 
                 GameModel gameModel = new GameModel(); //Create the Model

@@ -392,9 +392,9 @@ public class SettingsPanel extends FrontPanel {
             catalanLabel.setClickable(true);
             catalanLabel.setActionCommand(CHANGE_LANGUAGE_TO_CATALAN_ACTION_COMMAND);
 
-            RoyaleLabel englishFlag = new RoyaleLabel(new ImageIcon(MenuGraphics.getInstance().getEnglishFlag()));
-            RoyaleLabel spanishFlag = new RoyaleLabel(new ImageIcon(MenuGraphics.getInstance().getSpanishFlag()));
-            RoyaleLabel catalanFlag = new RoyaleLabel(new ImageIcon(MenuGraphics.getInstance().getCatalanFlag()));
+            RoyaleLabel englishFlag = new RoyaleLabel(new ImageIcon(MenuGraphics.getEnglishFlag()));
+            RoyaleLabel spanishFlag = new RoyaleLabel(new ImageIcon(MenuGraphics.getSpanishFlag()));
+            RoyaleLabel catalanFlag = new RoyaleLabel(new ImageIcon(MenuGraphics.getCatalanFlag()));
 
             JPanel englishPanel = new JPanel();
             englishPanel.setOpaque(false);

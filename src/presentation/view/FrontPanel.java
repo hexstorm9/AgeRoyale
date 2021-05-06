@@ -59,7 +59,7 @@ public abstract class FrontPanel extends JPanel {
      * @return int representing the Table's width
      */
     public int setWoodTableVisible(int tableHeight){
-        woodTable = MenuGraphics.getInstance().scaleImage(MenuGraphics.getInstance().getWoodTable(), tableHeight);
+        woodTable = MenuGraphics.scaleImage(MenuGraphics.getWoodTable(), tableHeight);
         woodTableEnabled = true;
 
         int tableWidth = woodTable.getWidth(null);

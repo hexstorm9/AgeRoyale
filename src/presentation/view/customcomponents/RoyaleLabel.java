@@ -41,7 +41,7 @@ public class RoyaleLabel extends JLabel implements MouseListener{
     public RoyaleLabel(String s, LabelType labelType){
         super(s, JLabel.CENTER);
 
-        setFont(MenuGraphics.getInstance().getMainFont());
+        setFont(MenuGraphics.getMainFont());
         setForeground(Color.WHITE);
         switch (labelType){
             case TITLE:
@@ -91,7 +91,7 @@ public class RoyaleLabel extends JLabel implements MouseListener{
     public void setClickable(boolean clickable){
         if(clickable){
             this.clickable = true;
-            setCursor(MenuGraphics.getInstance().getClickableCursor());
+            setCursor(MenuGraphics.getClickableCursor());
 
             if(mouseListenerBuffer == null) return;
             for(MouseListener ml: mouseListenerBuffer) addMouseListener(ml);
@@ -99,7 +99,7 @@ public class RoyaleLabel extends JLabel implements MouseListener{
         }
         else{
             this.clickable = false;
-            setCursor(MenuGraphics.getInstance().getDefaultCursor());
+            setCursor(MenuGraphics.getDefaultCursor());
             mouseListenerBuffer = getMouseListeners();
 
             if(mouseListenerBuffer == null) return;

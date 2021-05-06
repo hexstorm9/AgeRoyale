@@ -46,7 +46,7 @@ public class LoginScreen extends JPanel {
     public LoginScreen(int screenHeight){
         setLayout(new GridBagLayout());
 
-        RoyaleLabel logoImage = new RoyaleLabel(new ImageIcon(MenuGraphics.getInstance().getLogo()));
+        RoyaleLabel logoImage = new RoyaleLabel(new ImageIcon(MenuGraphics.getLogo()));
         logoImage.setAlignmentX(CENTER_ALIGNMENT);
 
         RoyaleLabel loginText = new RoyaleLabel(LanguageManager.getSentence(Sentences.LOGIN), RoyaleLabel.LabelType.TITLE);
