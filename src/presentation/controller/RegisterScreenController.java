@@ -82,7 +82,6 @@ public class RegisterScreenController extends ScreenController implements Action
     @Override
     public void mouseExited(MouseEvent e) {}
 
-
     private class RegisterUserInBackground extends SwingWorker<String, Void> {
 
         @Override
@@ -134,5 +133,4 @@ public class RegisterScreenController extends ScreenController implements Action
             else goToScreen(Screen.MAIN_MENU); //If there is no error, let's go to the main menu
         }
     }
-
 }

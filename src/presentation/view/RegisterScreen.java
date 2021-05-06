@@ -34,7 +34,6 @@ public class RegisterScreen extends JPanel {
         RoyaleLabel registerText = new RoyaleLabel(LanguageManager.getSentence(Sentences.REGISTER), RoyaleLabel.LabelType.TITLE);
         registerText.setAlignmentX(CENTER_ALIGNMENT);
 
-
         JPanel groupTextFieldsPanel = new JPanel();
         groupTextFieldsPanel.setAlignmentX(CENTER_ALIGNMENT);
         groupTextFieldsPanel.setOpaque(false);

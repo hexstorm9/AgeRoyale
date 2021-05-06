@@ -41,11 +41,13 @@ public class RoyaleFrame extends JFrame {
         setLocationRelativeTo(null);
         setResizable(false);
         setUndecorated(true);
-
+/*
         //TODO: Delete this before production. Opens the game in the second monitor if the user has one
         if(GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[1] != null)
             gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[1]; //Open frame in the second monitor
         else
+
+ */
             gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 
 
@@ -65,7 +67,6 @@ public class RoyaleFrame extends JFrame {
 
         setCursor(MenuGraphics.getInstance().getDefaultCursor());
     }
-
 
     /**
      * Provided a JPanel, this method deletes the Main Panel in the Frame and paints the new one provided.
@@ -113,7 +114,6 @@ public class RoyaleFrame extends JFrame {
         newFrontPanel.setVisible(false);
         setGlassPane(newFrontPanel);
     }
-
 
     /**
      * Toggles the PanelOnTop visibility.

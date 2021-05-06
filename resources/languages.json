@@ -1,5 +1,5 @@
 {
-  "language": "en",
+  "language": "ca",
   "sentences": [
     {
       "key": "login",
@@ -50,7 +50,7 @@
       ]
     },
     {
-      "key": "play",
+      "key": "play video",
       "values": [
         "Play video",
         "Reproducir video",
@@ -271,6 +271,22 @@
         "Exit",
         "Salir",
         "Sortir"
+      ]
+    },
+    {
+      "key": "unlock",
+      "values": [
+        "Unlock",
+        "Desbloquear",
+        "Desbloquejar"
+      ]
+    },
+    {
+      "key": "play game",
+      "values": [
+        "Play",
+        "Jugar",
+        "Jugar"
       ]
     }
   ]

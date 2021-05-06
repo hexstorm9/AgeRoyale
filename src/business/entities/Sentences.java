@@ -7,7 +7,7 @@ public enum Sentences {
     PASSWORD_FORGOTTEN("passwordForgotten"),
     DONT_HAVE_ACCOUNT("dontHaveAccount"),
     ENTER("enter"),
-    PLAY("play"),
+    PLAY_VIDEO("play video"),
     PAUSE("pause"),
     LOADING("loading"),
     EXIT("exit"),
@@ -33,8 +33,9 @@ public enum Sentences {
     CHECK_CODE("checkCode"),
     ENTER_NEW_PASSWORD("enterNewPassword"),
     GENERATE_NEW_PASSWORD("generateNewPassword"),
-    ENTER_PASSWORD("enterNewPassword");
-
+    ENTER_PASSWORD("enterNewPassword"),
+    UNLOCK_CHEST("unlock"),
+    PLAY_GAME("play game");
 
     private String stringValue;
     Sentences(String stringValue){

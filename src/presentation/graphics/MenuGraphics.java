@@ -29,11 +29,11 @@ public class MenuGraphics {
 
     private BufferedImage backgroundTile, logo, woodTable, settingsIcon;
     private BufferedImage englishFlag, catalanFlag, spanishFlag;
+    private BufferedImage usernameLogo, crown, arenaGif, chest;
     private Font mainFont;
 
     private BufferedImage mainCursorImage, clickableCursorImage, writingCursorImage;
     private Cursor mainCursor, clickableCursor, writingCursor;
-
 
     private static final String BACKGROUND_TILE_IMAGE_PATH = "./resources/sprites/backgroundTile.png";
     private static final String LOGO_IMAGE_PATH = "./resources/sprites/logo.png";
@@ -50,6 +50,11 @@ public class MenuGraphics {
     private static final String SPANISH_FLAG_PATH = "./resources/sprites/spanishFlag.png";
     private static final String CATALAN_FLAG_PATH = "./resources/sprites/catalanFlag.png";
 
+    private static final String USERNAME_LOGO_PATH = "./resources/sprites/usernameLogo.png";
+    private static final String CROWN_PATH = "./resources/sprites/crown.png";
+
+    private static final String ARENA_GIF_PATH = "./resources/sprites/arena.png";
+    private static final String CHEST_PATH = "./resources/sprites/chest.png";
 
     private MenuGraphics(){}
 
@@ -79,6 +84,12 @@ public class MenuGraphics {
         mainCursorImage = ImageIO.read(new File(MAIN_CURSOR_ICON_PATH));
         clickableCursorImage = ImageIO.read(new File(CLICKABLE_CURSOR_ICON_PATH));
         writingCursorImage = ImageIO.read(new File(WRITING_CURSOR_ICON_PATH));
+
+        usernameLogo = ImageIO.read(new File(USERNAME_LOGO_PATH));
+        crown = ImageIO.read(new File(CROWN_PATH));
+
+        arenaGif = ImageIO.read(new File(ARENA_GIF_PATH));
+        chest = ImageIO.read(new File(CHEST_PATH));
 
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         ge.registerFont(mainFont = Font.createFont(Font.TRUETYPE_FONT, new File(YOU_BLOCKHEAD_FONT_PATH)));
@@ -134,7 +145,6 @@ public class MenuGraphics {
         return mainFont;
     }
 
-
     public Image getSpanishFlag(){
         return spanishFlag;
     }
@@ -147,11 +157,9 @@ public class MenuGraphics {
         return catalanFlag;
     }
 
-
     public Image getSettingsIcon(){
         return settingsIcon;
     }
-
 
     public Cursor getDefaultCursor(){
         return mainCursor;
@@ -165,4 +173,19 @@ public class MenuGraphics {
         return writingCursor;
     }
 
+    public BufferedImage getUsernameLogo() {
+        return usernameLogo;
+    }
+
+    public BufferedImage getCrown() {
+        return crown;
+    }
+
+    public BufferedImage getArenaGif() {
+        return arenaGif;
+    }
+
+    public BufferedImage getChest() {
+        return chest;
+    }
 }

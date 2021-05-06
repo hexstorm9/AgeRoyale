@@ -2,14 +2,12 @@ package presentation.controller;
 
 import business.GameModel;
 import presentation.view.FrontPanel;
+import presentation.view.LoadingBattleScreen;
 import presentation.view.RoyaleFrame;
 import presentation.view.SettingsPanel;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 
 
 public abstract class ScreenController implements ActionListener{
@@ -30,7 +28,8 @@ public abstract class ScreenController implements ActionListener{
         REGISTER_SCREEN,
         PASSWORD_FORGOTTEN_SCREEN,
         MAIN_MENU,
-        BATTLE
+        BATTLE,
+        LOADING_BATTLE_SCREEN;
     }
 
 
@@ -104,6 +103,7 @@ public abstract class ScreenController implements ActionListener{
             case PASSWORD_FORGOTTEN_SCREEN -> new PasswordForgottenScreenController(royaleFrame, gameModel).start(startWithSettingsPanelEnabled);
             case MAIN_MENU -> new MainMenuController(royaleFrame, gameModel).start(startWithSettingsPanelEnabled);
             case BATTLE -> new BattleController(royaleFrame, gameModel).start(startWithSettingsPanelEnabled);
+            case LOADING_BATTLE_SCREEN -> new LoadingBattleScreenController(royaleFrame, gameModel).start(startWithSettingsPanelEnabled);
             default -> new SplashScreenController(royaleFrame, gameModel).start(false); //Never start the splashScreen with a settingsPanel being shown
         }
     }
