@@ -26,7 +26,7 @@ public class MainMenuController extends ScreenController implements ActionListen
     public void start(boolean showSettingsPanelOnStart){
         mainMenuScreen = new MainMenuScreen(gameModel.getPlayer().getName(), gameModel.getPlayer().getCrowns(),
                 gameModel.getPlayer().getBattleWins(), gameModel.getPlayer().getBattlePlays(),
-                gameModel.getPlayer().getArena(), royaleFrame.getHeight());
+                gameModel.getPlayer().getArena(), royaleFrame.getWidth(), royaleFrame.getHeight());
         mainMenuScreen.addButtonsListener(this);
         mainMenuScreen.addPanelsListener(this);
         mainMenuScreen.addLabelsListener(this);

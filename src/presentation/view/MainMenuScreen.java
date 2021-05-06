@@ -22,7 +22,6 @@ public class MainMenuScreen extends Screen {
     private RoyaleButton playButton;
     private RoyaleLabel usernameLogo, usernameLabel, crownImage, crownsLabel;
 
-    private RoyaleLabel arenaImage, chestImage, chestLabel1, chestLabel2, chestLabel3, chestLabel4, chestLabel5;
 
 
     public static final String CARDS_MENU_BUTTON_ACTION_COMMAND = "cards_menu";
@@ -49,13 +48,21 @@ public class MainMenuScreen extends Screen {
     private final int SCREEN_HEIGHT;
 
 
-    public MainMenuScreen(String username, int crowns, int battleWins, int battlePlays, int arena, int screenHeight){
+    public MainMenuScreen(String username, int crowns, int battleWins, int battlePlays, int arena, int screenWidth, int screenHeight){
         setLayout(new BorderLayout());
         SCREEN_HEIGHT = screenHeight;
 
-        JPanel northPanel = new JPanel();
-        northPanel.setBackground(Color.GRAY);
-        northPanel.setAlignmentX(LEFT_ALIGNMENT);
+        JPanel northPanel = new JPanel(){
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2d = (Graphics2D) g;
+                g2d.setColor(new Color(0, 0, 0, 120));
+                g2d.fillRoundRect(getLocation().x + 50, getLocation().y + 20, screenWidth - 100, getPreferredSize().height - 40, 50, 50);
+                super.paintComponent(g);
+            }
+        };
+        northPanel.setOpaque(false);
+        northPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
 
         JPanel usernamePanel = new JPanel();
         usernamePanel.setLayout(new BoxLayout(usernamePanel, BoxLayout.X_AXIS));
@@ -157,6 +164,12 @@ public class MainMenuScreen extends Screen {
 
 
 
+    public void pauseAllComponents(){
+        battleMenuPanel.pauseAllComponents();
+    }
+
+
+
 
     public class CardsMenuPanel extends JPanel{
 
@@ -216,8 +229,6 @@ public class MainMenuScreen extends Screen {
             if(woodTableXCoord == 0){
                 JFrame parentJFrame = (JFrame) SwingUtilities.getWindowAncestor(cardsGridPanel); //Obtain a reference to the current JFrame
 
-                System.out.println(cardsGridPanel.getLocation().x);
-                System.out.println(cardsGridPanel.getLocation().y);
                 final Point cardsGridPanelPosition = SwingUtilities.convertPoint(centerPanel, cardsGridPanel.getLocation().x,
                         cardsGridPanel.getLocation().y, parentJFrame.getContentPane());
                 woodTableXCoord = cardsGridPanelPosition.x - (woodTable.getWidth(null) - cardsGridPanel.getPreferredSize().width)/2;
@@ -284,7 +295,9 @@ public class MainMenuScreen extends Screen {
 
 
     private class BattleMenuPanel extends JPanel{
+
         private int currentArena;
+        private RoyaleLabel arenaImage, chestImage, chestLabel1, chestLabel2, chestLabel3, chestLabel4, chestLabel5;
 
         public BattleMenuPanel(int currentArena){
             this.currentArena = currentArena; //We need to know the current arena in order to load the gif of the arena
@@ -405,7 +418,18 @@ public class MainMenuScreen extends Screen {
             chestLabel5.setActionCommand(UNLOCK_CHEST5_COMMAND);
             chestLabel5.setClickable(true);
         }
+
+        public void pauseAllComponents(){
+            chestLabel1.setClickable(false);
+            chestLabel2.setClickable(false);
+            chestLabel3.setClickable(false);
+            chestLabel4.setClickable(false);
+            chestLabel5.setClickable(false);
+            playButton.setEnabled(false);
+        }
     }
+
+
 
     private class RankingsMenuPanel extends JPanel{
 
@@ -455,14 +479,6 @@ public class MainMenuScreen extends Screen {
         }
     }
 
-    public void pauseAllComponents(){
-        chestLabel1.setClickable(false);
-        chestLabel2.setClickable(false);
-        chestLabel3.setClickable(false);
-        chestLabel4.setClickable(false);
-        chestLabel5.setClickable(false);
-        playButton.setEnabled(false);
-    }
 
 
 
