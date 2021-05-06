@@ -16,6 +16,7 @@ import java.io.IOException;
  *
  *
  * @see Image
+ * @see java.awt.image.BufferedImage
  * @see Font
  * @see Color
  * @version 1.0
