@@ -108,6 +108,14 @@ public class MusicPlayer implements BasicPlayerListener {
     }
 
 
+    public void stop(){
+        if(basicMusicPlayer == null) return;
+        try{
+            if(basicMusicPlayer.getStatus() == BasicPlayer.PLAYING) basicMusicPlayer.stop();
+        }catch(BasicPlayerException e){}
+    }
+
+
 
     @Override
     public void opened(Object o, Map map) {}

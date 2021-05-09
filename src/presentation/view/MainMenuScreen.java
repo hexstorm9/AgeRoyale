@@ -56,6 +56,7 @@ public class MainMenuScreen extends Screen {
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2d = (Graphics2D) g;
+
                 g2d.setColor(new Color(0, 0, 0, 120));
                 g2d.fillRoundRect(getLocation().x + 50, getLocation().y + 20, screenWidth - 100, getPreferredSize().height - 40, 50, 50);
                 super.paintComponent(g);
@@ -72,7 +73,6 @@ public class MainMenuScreen extends Screen {
         usernamePanel.add(usernameLogo);
         usernamePanel.add(Box.createRigidArea(new Dimension(10,(int)(screenHeight*0.03))));
         usernamePanel.add(usernameLabel);
-        //usernamePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JPanel crownsPanel = new JPanel();
         crownsPanel.setLayout(new BoxLayout(crownsPanel, BoxLayout.X_AXIS));
@@ -82,7 +82,6 @@ public class MainMenuScreen extends Screen {
         crownsPanel.add(crownImage);
         crownsPanel.add(Box.createRigidArea(new Dimension(10,(int)(screenHeight*0.03))));
         crownsPanel.add(crownsLabel);
-        //crownsPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         northPanel.add(usernamePanel);
         northPanel.add(Box.createRigidArea(new Dimension(50,(int)(screenHeight*0.03))));

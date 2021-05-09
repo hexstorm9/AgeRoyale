@@ -20,7 +20,6 @@ import java.util.Random;
 public class SplashScreenController extends ScreenController{
 
     private SplashScreen splashScreen;
-    private LoadGameInBackground loadGameInBackground;
 
 
     public SplashScreenController(RoyaleFrame royaleFrame, GameModel gameModel){
@@ -34,8 +33,7 @@ public class SplashScreenController extends ScreenController{
 
         royaleFrame.changeScreen(splashScreen, RoyaleFrame.BackgroundStyle.MENU);
 
-        loadGameInBackground = new LoadGameInBackground();
-        loadGameInBackground.execute();
+        new LoadGameInBackground().execute(); //Start Loading the Game in a Background thread
     }
 
 
