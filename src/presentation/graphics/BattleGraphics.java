@@ -2,6 +2,7 @@ package presentation.graphics;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Random;
@@ -26,6 +27,12 @@ public class BattleGraphics {
     //-------------------------------------------------------------------------------------------------------
     private static Image tile1a, tile1b, tile2, tile3, tile4, tile5, tile6, tile7, tile8, tile9, tileA;
 
+    private static Image fence, fenceRightEnd, fenceLeftEnd;
+    private static Image bridgeFence, bridgeUpperFence, bridgeRightEnd, bridgeLeftEnd, bridgeUpperRightEnd, bridgeUpperLeftEnd;
+    private static Image flowers1, flowers2, flowers3, bush1, bush2;
+    private static Image arrowSign, crossSign, deathSign;
+    private static Image halfTree, stone, barrel, fireplace;
+
     //-------------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------------
 
@@ -47,17 +54,44 @@ public class BattleGraphics {
         //Reading Images -----------------------------------------------------------------------------------
         //-------------------------------------------------------------------------------------------------------
         try{
-            tile1a = ImageIO.read(new File("./resources/sprites/mapTiles/1a.png"));
-            tile1b = ImageIO.read(new File("./resources/sprites/mapTiles/1b.png"));
-            tile2 = ImageIO.read(new File("./resources/sprites/mapTiles/2.png"));
-            tile3 = ImageIO.read(new File("./resources/sprites/mapTiles/3.png"));
-            tile4 = ImageIO.read(new File("./resources/sprites/mapTiles/4.png"));
-            tile5 = ImageIO.read(new File("./resources/sprites/mapTiles/5.png"));
-            tile6 = ImageIO.read(new File("./resources/sprites/mapTiles/6.png"));
-            tile7 = ImageIO.read(new File("./resources/sprites/mapTiles/7.png"));
-            tile8 = ImageIO.read(new File("./resources/sprites/mapTiles/8.png"));
-            tile9 = ImageIO.read(new File("./resources/sprites/mapTiles/9.png"));
-            tileA = ImageIO.read(new File("./resources/sprites/mapTiles/A.png"));
+            tile1a = readImage("./resources/sprites/mapTiles/1a.png");
+            tile1b = readImage("./resources/sprites/mapTiles/1b.png");
+            tile2 = readImage("./resources/sprites/mapTiles/2.png");
+            tile3 = readImage("./resources/sprites/mapTiles/3.png");
+            tile4 = readImage("./resources/sprites/mapTiles/4.png");
+            tile5 = readImage("./resources/sprites/mapTiles/5.png");
+            tile6 = readImage("./resources/sprites/mapTiles/6.png");
+            tile7 = readImage("./resources/sprites/mapTiles/7.png");
+            tile8 = readImage("./resources/sprites/mapTiles/8.png");
+            tile9 = readImage("./resources/sprites/mapTiles/9.png");
+            tileA = readImage("./resources/sprites/mapTiles/A.png");
+
+            fence = readImage("./resources/sprites/mapDecoration/fence.png");
+            fenceRightEnd = readImage("./resources/sprites/mapDecoration/fenceRightEnd.png");
+            fenceLeftEnd = readImage("./resources/sprites/mapDecoration/fenceLeftEnd.png");
+
+            bridgeFence = readImage("./resources/sprites/mapDecoration/bridgeFence.png");
+            bridgeUpperFence = readImage("./resources/sprites/mapDecoration/bridgeUpperFence.png");
+            bridgeRightEnd = readImage("./resources/sprites/mapDecoration/bridgeRightEnd.png");
+            bridgeLeftEnd = readImage("./resources/sprites/mapDecoration/bridgeLeftEnd.png");
+            bridgeUpperRightEnd = readImage("./resources/sprites/mapDecoration/bridgeUpperRightEnd.png");
+            bridgeUpperLeftEnd = readImage("./resources/sprites/mapDecoration/bridgeUpperLeftEnd.png");
+
+            flowers1 = readImage("./resources/sprites/mapDecoration/flowers1.png");
+            flowers2 = readImage("./resources/sprites/mapDecoration/flowers2.png");
+            flowers3 = readImage("./resources/sprites/mapDecoration/flowers3.png");
+            bush1 = readImage("./resources/sprites/mapDecoration/bush1.png");
+            bush2 = readImage("./resources/sprites/mapDecoration/bush2.png");
+
+            crossSign = readImage("./resources/sprites/mapDecoration/crossSign.png");
+            deathSign = readImage("./resources/sprites/mapDecoration/deathSign.png");
+            arrowSign = readImage("./resources/sprites/mapDecoration/arrowSign.png");
+
+
+            barrel = readImage("./resources/sprites/mapDecoration/barrel.png");
+            halfTree = readImage("./resources/sprites/mapDecoration/halfTree.png");
+            stone = readImage("./resources/sprites/mapDecoration/stone.png");
+            fireplace = readImage("./resources/sprites/mapDecoration/fireplace.png");
         }catch(IOException e){
             e.printStackTrace();
         }
@@ -74,21 +108,110 @@ public class BattleGraphics {
     //-------------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------------
 
-    public static Image getMapTile(String tile){
+    /**
+     * Returns a tile image specified by the {@code char} introduced
+     * @param tile The tile we want to be returned
+     * @return A tile image that will depend on the {@code char} specified
+     */
+    public static Image getMapTile(char tile){
         switch(tile){
-            case "1": return new Random().nextBoolean() ? tile1a: tile1b;
-            case "2": return tile2;
-            case "3": return tile3;
-            case "4": return tile4;
-            case "5": return tile5;
-            case "6": return tile6;
-            case "7": return tile7;
-            case "8": return tile8;
-            case "9": return tile9;
-            case "A": return tileA;
+            case '1': return new Random().nextBoolean() ? tile1a: tile1b;
+            case '2': return tile2;
+            case '3': return tile3;
+            case '4': return tile4;
+            case '5': return tile5;
+            case '6': return tile6;
+            case '7': return tile7;
+            case '8': return tile8;
+            case '9': return tile9;
+            case 'A': return tileA;
+            default: return null;
         }
-        return null;
     }
 
 
+    /**
+     * Returns a decoration image specified by the {@code char} introduced
+     * @param image The image we want to be returned
+     * @return An image that will depend on the {@code char} specified
+     */
+    public static Image getDecorationImage(char image){
+        switch(image){
+            case 'F': return fence;
+            case 'R': return fenceRightEnd;
+            case 'L': return fenceLeftEnd;
+
+            case 'A': return bridgeFence;
+            case 'a': return bridgeUpperFence;
+            case 'D': return bridgeRightEnd;
+            case 'd': return bridgeUpperRightEnd;
+            case 'E': return bridgeLeftEnd;
+            case 'e': return bridgeUpperLeftEnd;
+
+            case '1': return flowers1;
+            case '2': return flowers2;
+            case '3': return flowers3;
+            case '5': return bush1;
+            case '6': return bush2;
+
+            case 'C': return crossSign;
+            case 'Z': return deathSign;
+            case 'z': return arrowSign;
+
+            case 'S': return stone;
+            case 'T': return halfTree;
+            case 'B': return barrel;
+            case 'b': return fireplace;
+
+            default: return null;
+        }
+
+    }
+
+
+    /**
+     * Reads an image from the system provided a path
+     * @param path Path of the image to read
+     * @return A system compatible image from the specified path
+     * @throws IOException When the path provided doesn't have any image
+     */
+    private static Image readImage(String path) throws IOException{
+        BufferedImage img = ImageIO.read(new File(path));
+        return toCompatibleImage(img);
+    }
+
+
+    /**
+     * Returns a new image like the one provided but compatible if the provided was not.
+     * @param image Imate to be converted to compatible
+     * @return The compatible image. Returns the same image if the provided image is already compatible
+     */
+    private static Image toCompatibleImage(BufferedImage image)
+    {
+        // obtain the current system graphical settings
+        GraphicsConfiguration gfxConfig = GraphicsEnvironment.
+                getLocalGraphicsEnvironment().getDefaultScreenDevice().
+                getDefaultConfiguration();
+
+        /*
+         * if image is already compatible and optimized for current system
+         * settings, simply return it
+         */
+        if (image.getColorModel().equals(gfxConfig.getColorModel()))
+            return image;
+
+        // image is not optimized, so create a new image that is
+        BufferedImage newImage = gfxConfig.createCompatibleImage(
+                image.getWidth(), image.getHeight(), image.getTransparency());
+
+        // get the graphics context of the new image to draw the old image on
+        Graphics2D g2d = newImage.createGraphics();
+
+        // actually draw the image and dispose of context no longer needed
+        g2d.drawImage(image, 0, 0, null);
+        g2d.dispose();
+
+        // return the new optimized image
+        return newImage;
+    }
 }

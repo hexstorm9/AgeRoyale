@@ -144,6 +144,18 @@ public class MenuGraphics {
     }
 
 
+    /**
+     * Returns a new scaled {@link Image} with the same proportions of the image provided,
+     * but with the width desired.
+     * @param newWidth Width desired of the new image (in px)
+     * @param imgToScale Image that will be scaled
+     * @return New scaled image
+     */
+    public static Image scaleImage(final int newWidth, BufferedImage imgToScale){
+        final float proportions = (float)imgToScale.getHeight() / (float)imgToScale.getWidth();
+        final int newHeight = (int)(newWidth * proportions);
+        return imgToScale.getScaledInstance(newWidth, newHeight, Image.SCALE_DEFAULT);
+    }
 
 
     //Getters to all Images loaded -->
