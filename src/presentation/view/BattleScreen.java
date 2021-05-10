@@ -52,6 +52,7 @@ public class BattleScreen extends JPanel {
             setOpaque(false);
             add(new RoyaleLabel("Battle Screen", RoyaleLabel.LabelType.TITLE), BorderLayout.CENTER);
             add(new RoyaleLabel("Mana", RoyaleLabel.LabelType.TITLE), BorderLayout.SOUTH);
+            add(Box.createRigidArea(new Dimension(50, 175)));
         }
 
     }

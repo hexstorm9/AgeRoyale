@@ -33,6 +33,8 @@ public class BattleGraphics {
     private static Image arrowSign, crossSign, deathSign;
     private static Image halfTree, stone, barrel, fireplace;
 
+    private static Image tree1, tree2, tree3, tree4;
+
     //-------------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------------
 
@@ -92,6 +94,11 @@ public class BattleGraphics {
             halfTree = readImage("./resources/sprites/mapDecoration/halfTree.png");
             stone = readImage("./resources/sprites/mapDecoration/stone.png");
             fireplace = readImage("./resources/sprites/mapDecoration/fireplace.png");
+
+            tree1 = readImage("./resources/sprites/mapDecoration/tree1.png");
+            tree2 = readImage("./resources/sprites/mapDecoration/tree2.png");
+            tree3 = readImage("./resources/sprites/mapDecoration/tree3.png");
+            tree4 = readImage("./resources/sprites/mapDecoration/tree4.png");
         }catch(IOException e){
             e.printStackTrace();
         }
@@ -166,6 +173,24 @@ public class BattleGraphics {
             default: return null;
         }
 
+    }
+
+
+    /**
+     * Returns an outer map decoration image depending on the {@code int} provided.
+     * <p>An outer map decoration image will always be 1:1
+     * @param decoration The decoration that wants to be returned (from 0 to 3, there
+     * are currently 4 different outer decorations).
+     *
+     * @return Decoration image depending on the parameter introduced
+     */
+    public static Image getOuterDecorationImage(int decoration){
+        switch(decoration){
+            case 0: return tree1;
+            case 1: return tree2;
+            case 2: return tree3;
+            default: return tree4;
+        }
     }
 
 

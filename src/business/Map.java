@@ -6,6 +6,7 @@ import presentation.graphics.MenuGraphics;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Random;
 
 
 public class Map {
@@ -41,6 +42,11 @@ public class Map {
 
     private int firstTileColumnXPosition; //The map will be centered on the screen, so we'll need to calculate the firstTileColumnXPosition
 
+    //Almost always the map on the battlePanel will not occupy it fully. The solid background will be seen in the right and left of the map.
+    //That's why we'll have an "outer map". The user won't be able to put cards there, it only is for decoration purposes.
+    //So we'll have an Array of outerMapTiles and another one of outerMapDecoration, initialized and filled on the constructor and painted when drawing the map
+    private ArrayList<Tuple<Image, Vector2>> outerMapTiles;
+    private ArrayList<Tuple<Image, Vector2>> outerMapDecoration;
 
 
     public Map(Dimension battlePanelDimension){
@@ -78,27 +84,73 @@ public class Map {
             }
         }
 
+
+        //Calculate outerMap tile information and put it into the outerMapTiles ArrayList
+        outerMapTiles = new ArrayList<>();
+        int necessaryOuterHorizontalTiles = ((battlePanelDimension.width - mapWidth) / TILE_WIDTH) + 2; //We add always 2 (one to the right and another to the left)
+
+        Image tile = BattleGraphics.getMapTile('1');
+        Image scaledTile = MenuGraphics.scaleImage((BufferedImage) tile, TILE_HEIGHT);
+        for(int i = 0; i < mapTileInfo.length; i++){
+            for(int j = 0; j < necessaryOuterHorizontalTiles/2; j++){ //Fill outer tiles to the right side of the map
+                Vector2 tilePosition = new Vector2(firstTileColumnXPosition + mapWidth + (j * TILE_WIDTH), i * TILE_HEIGHT);
+                outerMapTiles.add(new Tuple<>(scaledTile, tilePosition));
+            }
+            for(int j = 0; j < necessaryOuterHorizontalTiles/2; j++){ //Fill outer tiles to the left side of the map
+                Vector2 tilePosition = new Vector2(firstTileColumnXPosition - TILE_WIDTH - (j * TILE_WIDTH), i * TILE_HEIGHT);
+                outerMapTiles.add(new Tuple<>(tile, tilePosition));
+            }
+        }
+
+
+        //Calculate outerMap decoration information and put it into the outerMapDecoration ArrayList
+        //The outerMapDecoration will only have trees. We'll have 4 types of trees and they'll always occupy 4x4 tiles
+        outerMapDecoration = new ArrayList<>();
+        //if(necessaryOuterHorizontalTiles == 2) necessaryOuterHorizontalTiles = 4; //If we only have only one necessary tile to the right and one to the left,
+                                                                                  // add another one to each side (so as to draw correctly the decorations)
+        for(int i = 0; i < mapTileInfo.length; i++){
+            for(int j = 0; j < necessaryOuterHorizontalTiles/2; j+=2){ //Fill outer decorations to the right side of the map
+                Image decoration = BattleGraphics.getOuterDecorationImage(new Random().nextInt(4));
+                Image scaledDecoration = MenuGraphics.scaleImage((BufferedImage) decoration, TILE_HEIGHT * 2);
+                Vector2 decorationPosition = new Vector2(firstTileColumnXPosition + mapWidth + (j * TILE_WIDTH), i * TILE_HEIGHT);
+                outerMapDecoration.add(new Tuple<>(scaledDecoration, decorationPosition));
+            }
+            for(int j = 0; j < necessaryOuterHorizontalTiles/2; j+=2){ //Fill outer decorations to the left side of the map
+                Image decoration = BattleGraphics.getOuterDecorationImage(new Random().nextInt(4));
+                Image scaledDecoration = MenuGraphics.scaleImage((BufferedImage) decoration, TILE_HEIGHT * 2);
+                Vector2 decorationPosition = new Vector2(firstTileColumnXPosition - 2*TILE_WIDTH - (j * TILE_WIDTH), i * TILE_HEIGHT);
+                outerMapDecoration.add(new Tuple<>(scaledDecoration, decorationPosition));
+            }
+        }
     }
 
 
     public void draw(Graphics g){
-        for(int i = 0; i < battlePanelDimension.width; i++){
-            for(int j = 0; j < battlePanelDimension.height; j++){
-                //We'll draw here to the whole battlePanel, not the map but what's outside the map
-                //g.drawImage(tilesMap[0][0], i * TILE_WIDTH, j * TILE_HEIGHT, null);
-            }
+
+        //Drawing outer map tiles
+        if(!outerMapTiles.isEmpty()) {
+            for (Tuple<Image, Vector2> outerTile : outerMapTiles)
+                g.drawImage(outerTile.firstField, outerTile.secondField.x, outerTile.secondField.y, null);
         }
 
-        for(int i = 0; i < mapTileInfo.length; i++){
-            for(int j = 0; j < mapTileInfo[0].length(); j++){
+        //Drawing outer map decoration
+        if(!outerMapDecoration.isEmpty()){
+            for(Tuple<Image, Vector2> outerDecoration: outerMapDecoration)
+                g.drawImage(outerDecoration.firstField, outerDecoration.secondField.x, outerDecoration.secondField.y, null);
+        }
+
+
+        //Drawing map tiles
+        for(int i = 0; i < mapTileInfo.length; i++) {
+            for(int j = 0; j < mapTileInfo[0].length(); j++) {
                 g.drawImage(mapTiles[i][j], firstTileColumnXPosition + (j * TILE_WIDTH), i * TILE_HEIGHT, null);
             }
         }
 
 
-        for(Tuple<Image, Vector2> decoration: mapDecoration){
+        //Drawing map decoration
+        for(Tuple<Image, Vector2> decoration: mapDecoration)
             g.drawImage(decoration.firstField, decoration.secondField.x, decoration.secondField.y, null);
-        }
     }
 
 
