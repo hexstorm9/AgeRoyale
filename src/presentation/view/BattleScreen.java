@@ -33,6 +33,7 @@ public class BattleScreen extends JPanel {
         return new Dimension(getSize().width, getSize().height - southPanel.getSize().height);
     }
 
+
     private class BattlePanel extends JPanel{
 
 
@@ -52,7 +53,7 @@ public class BattleScreen extends JPanel {
             setOpaque(false);
             add(new RoyaleLabel("Battle Screen", RoyaleLabel.LabelType.TITLE), BorderLayout.CENTER);
             add(new RoyaleLabel("Mana", RoyaleLabel.LabelType.TITLE), BorderLayout.SOUTH);
-            add(Box.createRigidArea(new Dimension(50, 175)));
+            add(Box.createRigidArea(new Dimension(50, 100)));
         }
 
     }
