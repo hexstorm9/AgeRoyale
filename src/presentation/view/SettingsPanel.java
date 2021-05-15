@@ -17,6 +17,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 
+
 public class SettingsPanel extends FrontPanel {
 
 
@@ -36,6 +37,8 @@ public class SettingsPanel extends FrontPanel {
     private CreditsPanel creditsPanel;
     private LanguagePanel languagePanel;
     private DeleteAccountPanel deleteAccountPanel;
+
+    private TroopsGraphic troopsGraphic;
 
 
     public static final String EXIT_BUTTON_ACTION_COMMAND = "exit_button";
@@ -208,6 +211,29 @@ public class SettingsPanel extends FrontPanel {
 
         deleteAccountPanel = new DeleteAccountPanel();
     }
+
+
+    /**
+     * It will add a JPanel with a Graphic showing the number of troops that the user has, and the number of troops that the enemy has
+     * <p>In order to update the stats, the method {@link #changeTroopsStats(int, int)} must be called.
+     */
+    public void addTroopsStats(){
+        troopsGraphic = new TroopsGraphic(PANEL_WIDTH * 30/100);
+        troopsGraphic.setAlignmentX(CENTER_ALIGNMENT);
+        mainPanel.add(troopsGraphic);
+        mainPanel.add(Box.createRigidArea(new Dimension(15, 50)));
+    }
+
+    /**
+     * To be called whenever the troops stats changed. It will update the graphic on the screen
+     * @param playerTroops Number of player troops
+     * @param enemyTroops Number of enemy troops
+     */
+    public void changeTroopsStats(int playerTroops, int enemyTroops){
+        if(troopsGraphic == null) return;
+        troopsGraphic.setStatsAndRepaint(playerTroops, enemyTroops);
+    }
+
 
 
     public char[] getDeleteAccountPasswordFieldText(){
@@ -617,6 +643,79 @@ public class SettingsPanel extends FrontPanel {
             deleteAccountButton.addActionListener(al);
         }
 
+    }
+
+
+
+    private class TroopsGraphic extends JPanel{
+
+        private int playerTroops, enemyTroops;
+        private final int BAR_MAX_WIDTH;
+        private final int BAR_HEIGHT;
+        private final int GRAPHIC_HEIGHT;
+
+
+        public TroopsGraphic(int preferredWidth){
+            playerTroops = 0;
+            enemyTroops = 0;
+            setOpaque(false);
+
+            setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+
+
+            RoyaleLabel troopsLabel = new RoyaleLabel("Troops", RoyaleLabel.LabelType.PARAGRAPH);
+            troopsLabel.setAlignmentX(CENTER_ALIGNMENT);
+            troopsLabel.setForeground(Color.WHITE);
+
+            add(troopsLabel);
+
+
+            BAR_MAX_WIDTH = preferredWidth;
+            BAR_HEIGHT = troopsLabel.getFontMetrics(troopsLabel.getFont()).getHeight()/2;
+            System.out.println(BAR_HEIGHT);
+            GRAPHIC_HEIGHT = getPreferredSize().height + BAR_HEIGHT * 4;
+
+            System.out.println(BAR_MAX_WIDTH);
+            System.out.println(getPreferredSize().height + BAR_HEIGHT);
+
+            setPreferredSize(new Dimension(BAR_MAX_WIDTH, GRAPHIC_HEIGHT));
+            setMaximumSize(new Dimension(BAR_MAX_WIDTH, GRAPHIC_HEIGHT));
+            setMinimumSize(new Dimension(BAR_MAX_WIDTH, GRAPHIC_HEIGHT));
+        }
+
+        public void setStatsAndRepaint(int playerTroops, int enemyTroops){
+            this.playerTroops = playerTroops;
+            this.enemyTroops = enemyTroops;
+            repaint();
+            revalidate();
+        }
+
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            //Let's paint the Graphic below the "Troops" text
+
+            final double maxTroops = playerTroops > enemyTroops ? playerTroops: enemyTroops;
+            final int maxBarWidthWithoutText = BAR_MAX_WIDTH - 50;
+            g.setFont(MenuGraphics.getMainFont());
+
+            g.setColor(Color.BLUE);
+            final int blueBarWidth = playerTroops == 0 ? 1: (int)((playerTroops / maxTroops) * maxBarWidthWithoutText);
+            g.fillRoundRect(0, (int)(GRAPHIC_HEIGHT - BAR_HEIGHT * 2.5), blueBarWidth, BAR_HEIGHT, 10, 10);
+
+            g.setColor(Color.WHITE);
+            g.drawString(Integer.toString(playerTroops), blueBarWidth + 10,(int)(GRAPHIC_HEIGHT - BAR_HEIGHT * 2.5) + this.getFontMetrics(this.getFont()).getHeight());
+
+
+            g.setColor(Color.RED);
+            final int redBarWidth = enemyTroops == 0 ? 1: (int)((enemyTroops / maxTroops) * maxBarWidthWithoutText);
+            g.fillRoundRect(0, GRAPHIC_HEIGHT - BAR_HEIGHT, redBarWidth, BAR_HEIGHT, 10, 10);
+
+            g.setColor(Color.WHITE);
+            g.drawString(Integer.toString(enemyTroops), redBarWidth + 10,GRAPHIC_HEIGHT - BAR_HEIGHT + this.getFontMetrics(this.getFont()).getHeight());
+
+            super.paintComponent(g);
+        }
     }
 
 }

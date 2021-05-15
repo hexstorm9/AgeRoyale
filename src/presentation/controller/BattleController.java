@@ -2,18 +2,23 @@ package presentation.controller;
 
 import business.BattleModel;
 import business.GameModel;
+import business.entities.Cards;
 import business.entities.Songs;
+import business.entities.Sounds;
 import presentation.sound.MusicPlayer;
+import presentation.sound.SoundPlayer;
 import presentation.view.BattleScreen;
 import presentation.view.RoyaleFrame;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 
 
-public class BattleController extends ScreenController implements Runnable, MouseListener {
+public class BattleController extends ScreenController implements Runnable, MouseListener{
 
     private BattleScreen battleScreen;
     private BattleModel battleModel;
@@ -27,7 +32,7 @@ public class BattleController extends ScreenController implements Runnable, Mous
 
 
     public void start(boolean showSettingsPanelOnStart){
-        battleScreen = new BattleScreen(this);
+        battleScreen = new BattleScreen(this, royaleFrame.getHeight());
         setPanelToListenForESCKey(battleScreen);
 
         royaleFrame.changeScreen(battleScreen, RoyaleFrame.BackgroundStyle.MENU);
@@ -37,7 +42,8 @@ public class BattleController extends ScreenController implements Runnable, Mous
 
         MusicPlayer.getInstance().playInLoop(Songs.BATTLE);
 
-        battleModel = new BattleModel(battleScreen.getBattlePanelSize());
+        battleModel = new BattleModel(this, gameModel.getPlayer(), battleScreen.getBattlePanelSize());
+        battleScreen.updateCardsToShow();
 
 
         Thread gameLoop = new Thread(this);
@@ -46,14 +52,11 @@ public class BattleController extends ScreenController implements Runnable, Mous
 
     @Override
     public void buildSettingsPanel(){
+        settingsPanel.addTroopsStats();
         settingsPanel.addCreditsButton();
     }
 
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-
-    }
 
 
     @Override
@@ -107,12 +110,28 @@ public class BattleController extends ScreenController implements Runnable, Mous
 
 
     @Override
-    public void mouseClicked(MouseEvent e) {
+    public void mousePressed(MouseEvent e) {
+        if(e.getSource() instanceof BattleScreen.SouthPanel.CardPanel){
+            BattleScreen.SouthPanel.CardPanel cardClicked = (BattleScreen.SouthPanel.CardPanel) e.getSource();
+            battleScreen.setCardSelected(cardClicked.getCardHolding());
+            SoundPlayer.getInstance().play(Sounds.BUTTON);
+            System.out.println(cardClicked.getCardHolding());
+        }
+        else if(e.getSource() instanceof BattleScreen.BattlePanel){
+            Cards cardToThrow = battleScreen.getCardSelected();
+            if(cardToThrow == null){
+                SoundPlayer.getInstance().play(Sounds.BUTTON);
+                return;
+            }
 
+            boolean cardThrown = battleModel.playerThrowCard(cardToThrow, e.getX(), e.getY());
+            if(!cardThrown) SoundPlayer.getInstance().play(Sounds.BUTTON);
+            else battleScreen.updateCardsToShow(); //Once a card is thrown, let's update cards
+        }
     }
 
     @Override
-    public void mousePressed(MouseEvent e) {}
+    public void mouseClicked(MouseEvent e) {}
 
     @Override
     public void mouseReleased(MouseEvent e) {}
@@ -122,5 +141,39 @@ public class BattleController extends ScreenController implements Runnable, Mous
 
     @Override
     public void mouseExited(MouseEvent e) {}
+
+    @Override
+    public void actionPerformed(ActionEvent e){}
+
+
+    /**
+     * To be called from the BattleModel whenever the gameStats have changed
+     * @param playerTroops Current player troops on the map
+     * @param enemyTroops Current enemy troops on the map
+     */
+    public void gameStatsChanged(int playerTroops, int enemyTroops) {
+        SwingUtilities.invokeLater(
+                () -> settingsPanel.changeTroopsStats(playerTroops, enemyTroops)
+        );
+    }
+
+
+
+    public ArrayList<Cards> getCardsToShow(){
+        return battleModel.getPlayerCurrentCardsToThrow();
+    }
+
+
+
+
+
+    private class LoadGoldOnBackground extends SwingWorker<Void, Void>{
+
+        @Override
+        protected Void doInBackground() throws Exception {
+            return null;
+        }
+    }
+
 
 }

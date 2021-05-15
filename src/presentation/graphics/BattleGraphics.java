@@ -1,10 +1,15 @@
 package presentation.graphics;
 
+import business.Card;
+import business.entities.Cards;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Random;
 
 
@@ -35,6 +40,12 @@ public class BattleGraphics {
 
     private static Image tree1, tree2, tree3, tree4;
 
+    private static Image[] carpiWalking;
+
+    private static HashMap<Cards, Image> cardsImage;
+
+
+    private static Image woodTile;
     //-------------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------------
 
@@ -56,6 +67,8 @@ public class BattleGraphics {
         //Reading Images -----------------------------------------------------------------------------------
         //-------------------------------------------------------------------------------------------------------
         try{
+            woodTile = readImage("./resources/sprites/woodTile.png");
+
             tile1a = readImage("./resources/sprites/mapTiles/1a.png");
             tile1b = readImage("./resources/sprites/mapTiles/1b.png");
             tile2 = readImage("./resources/sprites/mapTiles/2.png");
@@ -99,6 +112,17 @@ public class BattleGraphics {
             tree2 = readImage("./resources/sprites/mapDecoration/tree2.png");
             tree3 = readImage("./resources/sprites/mapDecoration/tree3.png");
             tree4 = readImage("./resources/sprites/mapDecoration/tree4.png");
+
+            carpiWalking = new Image[10];
+            for(int i = 0; i < carpiWalking.length; i++){
+                carpiWalking[i] = readImage("./resources/sprites/cards/carpi/walking" + i + ".png");
+            }
+
+            cardsImage = new HashMap<>();
+            for(Cards c: Cards.values()){
+                cardsImage.put(c, readImage("./resources/sprites/cardImages/" + c.toString() + ".png"));
+            }
+
         }catch(IOException e){
             e.printStackTrace();
         }
@@ -114,6 +138,15 @@ public class BattleGraphics {
     //Getters to all Images loaded -->
     //-------------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------------
+
+    /**
+     * Returns a Wood Tile
+     * @return Wood Tile
+     */
+    public static Image getWoodTile(){
+        return woodTile;
+    }
+
 
     /**
      * Returns a tile image specified by the {@code char} introduced
@@ -195,12 +228,55 @@ public class BattleGraphics {
 
 
     /**
+     * Returns, for every {@link business.Card.Orientation}, array of {@link Image} of the {@link Cards} provided, that will represent its {@link Card.State}
+     *
+     * @param card The card we want the images
+     * @param state The state of that card
+     * @param cardHeight The height of the images (images will be returned scaled)
+     * @return For every {@link business.Card.Orientation}, an array of Images scaled, representing the {@code Cards} and {@code Card.State} provided
+     */
+    public static HashMap<Card.Orientation, Image[]> getSprites(Cards card, Card.State state, int cardHeight){
+        HashMap<Card.Orientation, Image[]> hashMapSprites = new HashMap<>();
+
+        Image[] rightSpritesToBeReturned; //The sprites to be returned looking at the Right
+        Image[] leftSpritesToBeReturned; //The sprites to be returned looking at the Right
+
+        /*switch(card){
+            case CARPI:
+                switch(state){
+                }
+        }*/
+
+        rightSpritesToBeReturned = carpiWalking;
+
+        //Scale images
+        for(int i = 0; i < rightSpritesToBeReturned.length; i++)
+            rightSpritesToBeReturned[i] = MenuGraphics.scaleImage(rightSpritesToBeReturned[i], cardHeight);
+
+        //Save images to the Card.Orientation.RIGHT
+        hashMapSprites.put(Card.Orientation.RIGHT, rightSpritesToBeReturned);
+
+
+        //Fill the leftSpritesToBeReturned
+        leftSpritesToBeReturned = new BufferedImage[rightSpritesToBeReturned.length];
+        for(int i = 0; i < leftSpritesToBeReturned.length; i++)
+            leftSpritesToBeReturned[i] = BattleGraphics.flipImageHorizontally(rightSpritesToBeReturned[i]);
+
+        //Save images to the Card.Orientation.LEFT
+        hashMapSprites.put(Card.Orientation.LEFT, leftSpritesToBeReturned);
+
+
+        return hashMapSprites;
+    }
+
+
+    /**
      * Reads an image from the system provided a path
      * @param path Path of the image to read
      * @return A system compatible image from the specified path
      * @throws IOException When the path provided doesn't have any image
      */
-    private static Image readImage(String path) throws IOException{
+    private static BufferedImage readImage(String path) throws IOException{
         BufferedImage img = ImageIO.read(new File(path));
         return toCompatibleImage(img);
     }
@@ -208,10 +284,10 @@ public class BattleGraphics {
 
     /**
      * Returns a new image like the one provided but compatible if the provided was not.
-     * @param image Imate to be converted to compatible
+     * @param image Image to be converted to compatible
      * @return The compatible image. Returns the same image if the provided image is already compatible
      */
-    private static Image toCompatibleImage(BufferedImage image)
+    private static BufferedImage toCompatibleImage(BufferedImage image)
     {
         // obtain the current system graphical settings
         GraphicsConfiguration gfxConfig = GraphicsEnvironment.
@@ -238,5 +314,40 @@ public class BattleGraphics {
 
         // return the new optimized image
         return newImage;
+    }
+
+
+    /**
+    * Returns a new image like the one provided but flipped horizontally
+    * @param image Image to be flipped horizontally
+    * @return The horizontally flipped image
+    */
+    private static Image flipImageHorizontally(Image img){
+        BufferedImage image = (BufferedImage) img;
+
+        AffineTransform at = new AffineTransform();
+        at.concatenate(AffineTransform.getScaleInstance(-1, 1));
+        at.concatenate(AffineTransform.getTranslateInstance(-image.getWidth(), 0));
+
+        BufferedImage flippedImage = new BufferedImage(
+                image.getWidth(), image.getHeight(),
+                image.getType());
+
+        Graphics2D g = flippedImage.createGraphics();
+        g.transform(at);
+        g.drawImage(image, 0, 0, null);
+        g.dispose();
+
+        return flippedImage;
+    }
+
+
+    /**
+     * Returns the desired Card Sprite (depending on the {@code Cards} provided)
+     * @param c The card that indicates the sprite to return
+     * @return The desired Card Sprite
+     */
+    public static Image getCardSprite(Cards c) {
+        return cardsImage.get(c);
     }
 }

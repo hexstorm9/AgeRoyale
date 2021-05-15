@@ -82,7 +82,7 @@ public class MainMenuController extends ScreenController implements ActionListen
 
 
     @Override
-    public void mouseClicked(MouseEvent e) {
+    public void mousePressed(MouseEvent e) {
         if(e.getSource() instanceof MainMenuScreen.CardsMenuPanel.CardPanel){
             MainMenuScreen.CardsMenuPanel.CardPanel cardPanelClicked = (MainMenuScreen.CardsMenuPanel.CardPanel) e.getSource();
 
@@ -114,7 +114,7 @@ public class MainMenuController extends ScreenController implements ActionListen
     }
 
     @Override
-    public void mousePressed(MouseEvent e) {}
+    public void mouseClicked(MouseEvent e) {}
 
     @Override
     public void mouseReleased(MouseEvent e) {}

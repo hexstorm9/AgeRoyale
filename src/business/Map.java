@@ -64,7 +64,7 @@ public class Map {
             for(int j = 0; j < mapTileInfo[0].length(); j++){
                 char tile = mapTileInfo[i].charAt(j);
                 Image tileImg = BattleGraphics.getMapTile(tile);
-                mapTiles[i][j] = MenuGraphics.scaleImage((BufferedImage)tileImg, TILE_HEIGHT);
+                mapTiles[i][j] = MenuGraphics.scaleImage(tileImg, TILE_HEIGHT);
             }
         }
 
@@ -79,7 +79,7 @@ public class Map {
                 char currentDecoration = mapDecorationInfo[i].charAt(j);
                 if(currentDecoration != '0'){ //If currentDecoration is '0', it means that there is no decoration in that point
                     Image decorationImg = BattleGraphics.getDecorationImage(currentDecoration);
-                    Image scaledDecorationImg = MenuGraphics.scaleImage((BufferedImage)decorationImg, TILE_HEIGHT);
+                    Image scaledDecorationImg = MenuGraphics.scaleImage(decorationImg, TILE_HEIGHT);
                     Vector2 decorationPosition = new Vector2(firstTileColumnXPosition + (j * TILE_WIDTH), i * TILE_HEIGHT);
                     mapDecoration.add(new Tuple<>(scaledDecorationImg, decorationPosition));
                 }
@@ -92,7 +92,7 @@ public class Map {
         int necessaryOuterHorizontalTiles = ((battlePanelDimension.width - mapWidth) / TILE_WIDTH) + 2; //We add always 2 (one to the right and another to the left)
 
         Image tile = BattleGraphics.getMapTile('1');
-        Image scaledTile = MenuGraphics.scaleImage((BufferedImage) tile, TILE_HEIGHT);
+        Image scaledTile = MenuGraphics.scaleImage(tile, TILE_HEIGHT);
         for(int i = 0; i < mapTileInfo.length; i++){
             for(int j = 0; j < necessaryOuterHorizontalTiles/2; j++){ //Fill outer tiles to the right side of the map
                 Vector2 tilePosition = new Vector2(firstTileColumnXPosition + mapWidth + (j * TILE_WIDTH), i * TILE_HEIGHT);
@@ -113,13 +113,13 @@ public class Map {
         for(int i = 0; i < mapTileInfo.length; i++){
             for(int j = 0; j < necessaryOuterHorizontalTiles/2; j+=2){ //Fill outer decorations to the right side of the map
                 Image decoration = BattleGraphics.getOuterDecorationImage(new Random().nextInt(4));
-                Image scaledDecoration = MenuGraphics.scaleImage((BufferedImage) decoration, TILE_HEIGHT * 2);
+                Image scaledDecoration = MenuGraphics.scaleImage(decoration, TILE_HEIGHT * 2);
                 Vector2 decorationPosition = new Vector2(firstTileColumnXPosition + mapWidth + (j * TILE_WIDTH), i * TILE_HEIGHT);
                 outerMapDecoration.add(new Tuple<>(scaledDecoration, decorationPosition));
             }
             for(int j = 0; j < necessaryOuterHorizontalTiles/2; j+=2){ //Fill outer decorations to the left side of the map
                 Image decoration = BattleGraphics.getOuterDecorationImage(new Random().nextInt(4));
-                Image scaledDecoration = MenuGraphics.scaleImage((BufferedImage) decoration, TILE_HEIGHT * 2);
+                Image scaledDecoration = MenuGraphics.scaleImage(decoration, TILE_HEIGHT * 2);
                 Vector2 decorationPosition = new Vector2(firstTileColumnXPosition - 2*TILE_WIDTH - (j * TILE_WIDTH), i * TILE_HEIGHT);
                 outerMapDecoration.add(new Tuple<>(scaledDecoration, decorationPosition));
             }
@@ -156,4 +156,22 @@ public class Map {
     }
 
 
+    /**
+     * Returns whether a {@link Vector2} position is inside or outisde the map bounds
+     * @param position Position to check if it is inside the map
+     * @return Whether the position is inside the map or not
+     */
+    public boolean isPositionInsideTheMap(Vector2 position){
+        //TODO: Modify it
+        return true;
+    }
+
+    /**
+     * Returns the appropriate height of a Card for the current map size
+     * @return Appropriate card height
+     */
+    public int getCardHeight(){
+        //Card height will be the height of a tile + the height of a tile/2
+        return TILE_HEIGHT + TILE_HEIGHT/2;
+    }
 }

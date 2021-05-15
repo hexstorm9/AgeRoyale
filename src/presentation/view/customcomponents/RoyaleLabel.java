@@ -122,14 +122,14 @@ public class RoyaleLabel extends JLabel implements MouseListener{
 
 
     @Override
-    public void mouseClicked(MouseEvent e) {
+    public void mousePressed(MouseEvent e) {
         if(clickable){
             SoundPlayer.getInstance().play(Sounds.BUTTON);
         }
     }
 
     @Override
-    public void mousePressed(MouseEvent e) {}
+    public void mouseClicked(MouseEvent e) {}
 
     @Override
     public void mouseReleased(MouseEvent e) {}

@@ -47,7 +47,7 @@ public abstract class FrontPanelController implements ActionListener, MouseListe
 
     //We need to capture all mouse events so as not to let the user allow to click behind the SettingsPanel
     @Override
-    public void mouseClicked(MouseEvent e) {
+    public void mousePressed(MouseEvent e) {
         //If somebody has clicked directly in the FrontPanel (not the panels above
         //the FrontPanel) let's hide the panel
         if(e.getSource() instanceof FrontPanel){
@@ -57,7 +57,7 @@ public abstract class FrontPanelController implements ActionListener, MouseListe
 
 
     @Override
-    public void mousePressed(MouseEvent e) {}
+    public void mouseClicked(MouseEvent e) {}
 
     @Override
     public void mouseReleased(MouseEvent e) {}

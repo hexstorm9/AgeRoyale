@@ -137,10 +137,19 @@ public class MenuGraphics {
      * @param newHeight Height desired of the new image (in px)
      * @return New scaled image
      */
-    public static Image scaleImage(BufferedImage imgToScale, final int newHeight){
-        final float proportions = (float)imgToScale.getWidth() / (float)imgToScale.getHeight();
+    public static BufferedImage scaleImage(Image imgToScale, final int newHeight){
+        final float proportions = (float)imgToScale.getWidth(null) / (float)imgToScale.getHeight(null);
         final int newWidth = (int)((float)newHeight * proportions);
-        return imgToScale.getScaledInstance(newWidth, newHeight, Image.SCALE_DEFAULT);
+
+        Image scaledToolkitImage = imgToScale.getScaledInstance(newWidth, newHeight, Image.SCALE_DEFAULT);
+
+        BufferedImage scaledBufferedImage = new BufferedImage(newWidth, newHeight,
+                BufferedImage.TYPE_INT_ARGB);
+        Graphics g = scaledBufferedImage.getGraphics();
+        g.drawImage(scaledToolkitImage, 0, 0, null);
+        g.dispose();
+
+        return scaledBufferedImage;
     }
 
 

@@ -5,6 +5,7 @@ import persistence.PlayerDAO;
 import java.sql.SQLException;
 import java.util.HashMap;
 
+
 public class Player {
 
     private String name;
@@ -12,7 +13,7 @@ public class Player {
     private int battleWins;
     private int battlePlays;
 
-    private HashMap<Cards, Integer> cardsHashMap;
+    private HashMap<Cards, Integer> playerCards;
 
 
     private PlayerDAO playerDAO;
@@ -35,6 +36,16 @@ public class Player {
         crowns = 143;
         battleWins = 9;
         battlePlays = 13;
+
+        playerCards = new HashMap<>();
+        playerCards.put(Cards.CARPI, 2);
+        playerCards.put(Cards.CANO, 1);
+        playerCards.put(Cards.ADAMS, 1);
+        playerCards.put(Cards.DAVID, 1);
+        playerCards.put(Cards.MALÉ, 1);
+        playerCards.put(Cards.RAFA, 1);
+        playerCards.put(Cards.SAULA, 1);
+        playerCards.put(Cards.TRUMP, 1);
     }
 
 
@@ -51,5 +62,7 @@ public class Player {
         if(crowns < 300) return 1;
         else return 2;
     }
+
+    public HashMap<Cards, Integer> getPlayerCards(){ return playerCards;}
 
 }

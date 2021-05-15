@@ -3,6 +3,7 @@ package presentation.view.customcomponents;
 import presentation.graphics.MenuGraphics;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * RoyaleProgressBar is the custom JProgressBar of the application.
@@ -17,6 +18,6 @@ public class RoyaleProgressBar extends JProgressBar {
     public RoyaleProgressBar(){
         super();
         setCursor(MenuGraphics.getDefaultCursor());
-    }
+   }
 
 }

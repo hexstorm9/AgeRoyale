@@ -85,7 +85,7 @@ public class PasswordForgottenScreenController extends ScreenController implemen
 
 
     @Override
-    public void mouseClicked(MouseEvent e){
+    public void mousePressed(MouseEvent e){
         if(e.getSource() instanceof RoyaleLabel) {
             RoyaleLabel labelClicked = (RoyaleLabel) e.getSource();
             if(labelClicked.getActionCommand().equals(PasswordForgottenScreen.RETURN_LOGIN_LABEL_ACTION_COMMAND)){
@@ -96,7 +96,7 @@ public class PasswordForgottenScreenController extends ScreenController implemen
     }
 
     @Override
-    public void mousePressed(MouseEvent e) {}
+    public void mouseClicked(MouseEvent e) {}
 
     @Override
     public void mouseReleased(MouseEvent e) {}

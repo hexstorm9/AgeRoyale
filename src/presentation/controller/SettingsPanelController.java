@@ -68,8 +68,8 @@ public class SettingsPanelController extends FrontPanelController implements Cha
 
 
     @Override
-    public void mouseClicked(MouseEvent e) {
-        super.mouseClicked(e);
+    public void mousePressed(MouseEvent e) {
+        super.mousePressed(e);
 
         if(e.getSource() instanceof RoyaleLabel){
             RoyaleLabel labelClicked = (RoyaleLabel) e.getSource();

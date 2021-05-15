@@ -58,7 +58,7 @@ public class LoginScreenController extends ScreenController implements ActionLis
     }
 
     @Override
-    public void mouseClicked(MouseEvent e) {
+    public void mousePressed(MouseEvent e) {
         if(e.getSource() instanceof RoyaleLabel){
             RoyaleLabel labelClicked = (RoyaleLabel) e.getSource();
 
@@ -76,7 +76,7 @@ public class LoginScreenController extends ScreenController implements ActionLis
 
 
     @Override
-    public void mousePressed(MouseEvent e) {}
+    public void mouseClicked(MouseEvent e) {}
 
     @Override
     public void mouseReleased(MouseEvent e) {}
