@@ -6,7 +6,6 @@ import presentation.graphics.BattleGraphics;
 import presentation.graphics.MenuGraphics;
 import presentation.view.customcomponents.RoyaleGoldProgressBar;
 import presentation.view.customcomponents.RoyaleLabel;
-import presentation.view.customcomponents.RoyaleProgressBar;
 
 import javax.swing.*;
 import java.awt.*;

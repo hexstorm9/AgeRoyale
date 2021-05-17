@@ -8,12 +8,15 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 
+
 public class BattleModel {
 
     private BattleController battleController; //The battleController that controls this battleModel
 
     private ArrayList<Card> playerCards;
     private ArrayList<Card> enemyCards;
+
+
     private Map map;
 
     private PhysicsSystem physicsSystem;
@@ -34,6 +37,8 @@ public class BattleModel {
         playerCards = new ArrayList<>();
         playerGold = 100;
 
+        physicsSystem = new PhysicsSystem(this, map);
+
         playerCurrentCardsToThrow = new ArrayList<>();
         for(int i = 0; i < PLAYER_CURRENT_CARDS; i++) generateNewCardToThrow();
     }
@@ -41,8 +46,14 @@ public class BattleModel {
 
 
     public void update(){
-        for(Card c: playerCards) c.update();
-        for(Card c: enemyCards) c.update();
+        for(int i = 0; i < playerCards.size(); i++){
+            if(playerCards.get(i).isAlive()) playerCards.get(i).update();
+            else playerCards.remove(playerCards.get(i));
+        }
+        for(int i = 0; i < enemyCards.size(); i++){
+            if(enemyCards.get(i).isAlive()) enemyCards.get(i).update();
+            else enemyCards.remove(enemyCards.get(i));
+        }
     }
 
 
@@ -54,30 +65,39 @@ public class BattleModel {
 
 
     /**
-     * To be called whenever the player wants to throw (invoke) a Card to the map
-     * @param c The Card the player is throwing
+     * To be called whenever the player or the bot want to throw (invoke) a Card to the map
+     * @param c The Card to be thrown
+     * @param cardStatus The state of the card
      * @param xPos The initial X position of the Card
      * @param yPos The initial Y position of the Card
      *
      * @return Boolean telling whether the Card has been thrown or not (if not, it means
      * the x and y pos were not inside the map or the player had no enough gold)
      */
-    public boolean playerThrowCard(Cards c, int xPos, int yPos){
+    public synchronized boolean throwCard(Cards c, Card.Status cardStatus, int xPos, int yPos){
         Vector2 cardPosition = new Vector2(xPos, yPos);
 
-        //If the position introduced is outside the map, return false
-        if(!map.isPositionInsideTheMap(cardPosition)) return false;
+        if(cardStatus == Card.Status.PLAYER){
+            //If the position introduced is outside the map, return false
+            if(!map.isPositionOnTheLeftMap(cardPosition)) return false;
 
-        //If the player has no enough gold to invoke that card, return false
-        if(playerGold < c.getGoldCost()) return false;
+            //If the player has no enough gold to invoke that card, return false
+            if(playerGold < c.getGoldCost()) return false;
 
 
-        //If the position is correct and the player has enough gold, let's invoke a new Card and update playerCurrentCardsToThrow
-        playerCards.add(new Card(c, player.getPlayerCards().get(c), cardPosition, map.getCardHeight()));
-        playerGold -= c.getGoldCost();
+            //If the position is correct and the player has enough gold, let's invoke a new Card and update playerCurrentCardsToThrow
+            playerCards.add(new Card(c, player.getPlayerCards().get(c), Card.Status.PLAYER, cardPosition, map.getCardHeight(), physicsSystem));
+            playerGold -= c.getGoldCost();
 
-        playerCurrentCardsToThrow.remove(c);
-        generateNewCardToThrow();
+            playerCurrentCardsToThrow.remove(c);
+            generateNewCardToThrow();
+        }
+        else if(cardStatus == Card.Status.ENEMY){
+            //If the position introduced is outside the map, return false
+            if(!map.isPositionOnTheRightMap(cardPosition)) return false;
+            enemyCards.add(new Card(c, 1, Card.Status.ENEMY, cardPosition, map.getCardHeight(), physicsSystem));
+        }
+
         battleController.gameStatsChanged(playerCards.size(), enemyCards.size());
         return true;
     }
@@ -123,6 +143,10 @@ public class BattleModel {
         playerCurrentCardsToThrow.add(newCard);
         System.out.println(newCard.toString());
     }
+
+
+    public ArrayList<Card> getPlayerCards(){ return playerCards;}
+    public ArrayList<Card> getEnemyCards(){ return enemyCards;}
 
 
 }

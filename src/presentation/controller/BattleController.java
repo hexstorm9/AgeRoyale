@@ -1,6 +1,8 @@
 package presentation.controller;
 
+import business.BattleBot;
 import business.BattleModel;
+import business.Card;
 import business.GameModel;
 import business.entities.Cards;
 import business.entities.Songs;
@@ -45,6 +47,8 @@ public class BattleController extends ScreenController implements Runnable, Mous
         battleModel = new BattleModel(this, gameModel.getPlayer(), battleScreen.getBattlePanelSize());
         battleScreen.updateCardsToShow();
 
+        BattleBot battleBot = new BattleBot(battleModel, battleScreen.getBattlePanelSize());
+        battleBot.startBot();
 
         Thread gameLoop = new Thread(this);
         gameLoop.start();
@@ -92,7 +96,7 @@ public class BattleController extends ScreenController implements Runnable, Mous
 
 
             if(System.currentTimeMillis() - timer >= 1000){
-                System.out.println("UPS --> " + updates + ".  FPS --> " + frames);
+                //System.out.println("UPS --> " + updates + ".  FPS --> " + frames);
                 updates = 0;
                 frames = 0;
                 timer += 1000;
@@ -115,7 +119,6 @@ public class BattleController extends ScreenController implements Runnable, Mous
             BattleScreen.SouthPanel.CardPanel cardClicked = (BattleScreen.SouthPanel.CardPanel) e.getSource();
             battleScreen.setCardSelected(cardClicked.getCardHolding());
             SoundPlayer.getInstance().play(Sounds.BUTTON);
-            System.out.println(cardClicked.getCardHolding());
         }
         else if(e.getSource() instanceof BattleScreen.BattlePanel){
             Cards cardToThrow = battleScreen.getCardSelected();
@@ -124,7 +127,7 @@ public class BattleController extends ScreenController implements Runnable, Mous
                 return;
             }
 
-            boolean cardThrown = battleModel.playerThrowCard(cardToThrow, e.getX(), e.getY());
+            boolean cardThrown = battleModel.throwCard(cardToThrow, Card.Status.PLAYER, e.getX(), e.getY());
             if(!cardThrown) SoundPlayer.getInstance().play(Sounds.BUTTON);
             else battleScreen.updateCardsToShow(); //Once a card is thrown, let's update cards
         }
@@ -158,7 +161,10 @@ public class BattleController extends ScreenController implements Runnable, Mous
     }
 
 
-
+    /**
+     * Returns an ArrayList with the current cards that the player can throw (cards to show)
+     * @return ArrayList of Cards to show
+     */
     public ArrayList<Cards> getCardsToShow(){
         return battleModel.getPlayerCurrentCardsToThrow();
     }

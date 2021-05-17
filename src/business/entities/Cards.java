@@ -1,20 +1,19 @@
 package business.entities;
 
-import java.util.Arrays;
 import java.util.Locale;
 
 /**
  * The Cards {@code enum} will contain all the Cards information of the game
  */
 public enum Cards {
-    ADAMS(2, new int[]{70, 120, 160}, new int[]{20, 30, 40}, 4, 10, 10),
-    TRUMP(2, new int[]{70, 120, 160}, new int[]{20, 30, 40}, 4, 10, 10),
-    DAVID(2, new int[]{70, 120, 160}, new int[]{20, 30, 40}, 4, 10, 10),
-    RAFA(2, new int[]{70, 120, 160}, new int[]{20, 30, 40}, 4, 10, 10),
-    SAULA(2, new int[]{70, 120, 160}, new int[]{20, 30, 40}, 4, 10, 10),
-    CANO(2, new int[]{70, 120, 160}, new int[]{20, 30, 40}, 4, 10, 10),
-    MALÉ(2, new int[]{70, 120, 160}, new int[]{20, 30, 40}, 4, 10, 10),
-    CARPI(2, new int[]{70, 120, 160}, new int[]{20, 30, 40}, 4, 10, 10);
+    ADAMS(3, new int[]{250, 280, 320}, new int[]{20, 25, 30}, 4, 10, 0),
+    TRUMP(4, new int[]{250, 280, 320}, new int[]{30, 40, 50}, 2, 6, 10),
+    DAVID(5, new int[]{250, 280, 320}, new int[]{60, 90, 120}, 1, 7, 4),
+    RAFA(4, new int[]{250, 280, 320}, new int[]{20, 30, 40}, 3, 8, 7),
+    SAULA(4, new int[]{250, 280, 320}, new int[]{20, 25, 30}, 5, 10, 0),
+    CANO(2, new int[]{250, 280, 320}, new int[]{20, 30, 40}, 4, 8, 8),
+    MALÉ(2, new int[]{250, 280, 320}, new int[]{25, 35, 45}, 3, 15, 12),
+    CARPI(6, new int[]{250, 280, 320}, new int[]{50, 60, 70}, 4, 10, 4);
 
     private int goldCost;
     private int[] maxHealth; //Will vary depending on the level

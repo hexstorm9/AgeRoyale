@@ -5,6 +5,7 @@ import presentation.graphics.BattleGraphics;
 
 import java.awt.*;
 import java.util.HashMap;
+import java.util.Locale;
 
 
 /**
@@ -31,7 +32,12 @@ public class Card {
         /**
          * The {@code Card} will move to the next spot, constantly checking for enemies in range (to start attacking them)
          */
-        MOVING
+        WALKING;
+
+        @Override
+        public String toString() {
+            return this.name().toLowerCase(Locale.ROOT);
+        }
     }
 
     /**
@@ -59,6 +65,10 @@ public class Card {
     private int currentSpriteIndex; //Current index of the Image[] array
 
 
+    private int updatesWalking; //Counter for walking updates
+    private int updatesAttacking; //Counter for attacking updates
+
+
     public enum Orientation{
         RIGHT,
         LEFT
@@ -66,34 +76,45 @@ public class Card {
     private Orientation currentOrientation;
 
 
+    public enum Status{
+        PLAYER,
+        ENEMY
+    }
+    private Status cardStatus;
+
+
     protected final int CARD_HEIGHT;
 
     protected int goldCost;
-    protected Vector2 position;
+    protected Vector2 position; //The position of a Card will be its bottom-right point's position
     protected int health;
     protected int damage;
     protected int range;
     protected int attackingVelocity;
     protected int movingVelocity;
 
-    protected Image currentSprite; //The sprite that will be drawn on the draw() method
 
+    protected Image currentSprite; //The sprite that will be drawn on the draw() method
+    private PhysicsSystem physicsSystem; //The physics system that the card will use to move, find enemies, etc.
 
     private Card currentlyAttackingCard;
 
 
 
-    public Card(Cards cardType, int level, Vector2 initialPosition, final int CARD_HEIGHT){
+    public Card(Cards cardType, int level, Status cardStatus, Vector2 initialPosition, final int CARD_HEIGHT,
+                PhysicsSystem physicsSystem){
         this.CARD_HEIGHT = CARD_HEIGHT;
         position = initialPosition;
+        this.cardStatus = cardStatus;
+        this.physicsSystem = physicsSystem;
         initializeAttributes(cardType, level);
 
+        currentOrientation = cardStatus == Status.PLAYER ? Orientation.RIGHT: Orientation.LEFT;
         changeState(initialState);
-        currentOrientation = Orientation.RIGHT;
 
-        updatesToNextIdleSprite = movingVelocity;
+        updatesToNextIdleSprite = attackingVelocity/2;
         updatesToNextMovingSprite = movingVelocity;
-        updatesToNextAttackingSprite = attackingVelocity;
+        updatesToNextAttackingSprite = attackingVelocity * 2;
     }
 
 
@@ -105,6 +126,10 @@ public class Card {
     public final void update(){
         if(currentState == State.IDLE){
             //If the card is idling, it will only check for enemies in range (and switch to the ATTACKING state if an enemy is in range)
+            if((currentlyAttackingCard = physicsSystem.getEnemyInRange(this, position, range)) != null){
+                changeState(State.ATTACKING);
+                return;
+            }
 
             //Changing CurrentSprite
             if(updatesWithCurrentSprite >= updatesToNextIdleSprite){
@@ -116,8 +141,18 @@ public class Card {
             else updatesWithCurrentSprite++;
 
         }
-        else if(currentState == State.MOVING){
+        else if(currentState == State.WALKING){
             //If the card is moving, it will move and check for enemies in range (and switch to the ATTACKING state if an enemy is in range)
+            if((currentlyAttackingCard = physicsSystem.getEnemyInRange(this, position, range)) != null){
+                changeState(State.ATTACKING);
+                return;
+            }
+
+            if(updatesWalking >= 1/movingVelocity){
+                position = physicsSystem.move(this, position);
+                updatesWalking = 0;
+            }
+            else updatesWalking++;
 
             //Changing CurrentSprite
             if(updatesWithCurrentSprite >= updatesToNextMovingSprite){
@@ -131,6 +166,15 @@ public class Card {
         }
         else if(currentState == State.ATTACKING){
             //If the card is attacking, it will attack its enemy until it is dead (enemy card life == 0) and return to the initialState
+            if(updatesAttacking >= (1/(double)attackingVelocity)*200){
+                //Let's attack. Once the attack() returns false (meaning the enemy is now dead) let's change state again
+                if(attack() == false){
+                    changeState(initialState);
+                    return;
+                }
+                updatesAttacking = 0;
+            }
+            else updatesAttacking++;
 
             //Changing CurrentSprite
             if(updatesWithCurrentSprite >= updatesToNextAttackingSprite){
@@ -139,9 +183,9 @@ public class Card {
                 currentSpriteIndex++;
                 updatesWithCurrentSprite = 0; //Reset updatesWithCurrentAttackingSprite
             }
-
+            else updatesWithCurrentSprite++;
         }
-        else updatesWithCurrentSprite++;
+
     }
 
 
@@ -151,7 +195,7 @@ public class Card {
      * @param g Graphics object in which we'll draw {@code this}.
      */
     public final void draw(Graphics g){
-        g.drawImage(currentSprite, position.x, position.y, null);
+        g.drawImage(currentSprite, (int)position.x, (int)(position.y - CARD_HEIGHT), null);
     }
 
 
@@ -181,11 +225,12 @@ public class Card {
         range = cardType.getRange();
         attackingVelocity = cardType.getAttackingVelocity();
         movingVelocity = cardType.getMovingVelocity();
+
         if(movingVelocity == 0) initialState = State.IDLE;
-        else initialState = State.MOVING;
+        else initialState = State.WALKING;
 
         idleSprites = BattleGraphics.getSprites(cardType, State.IDLE, CARD_HEIGHT);
-        movingSprites = BattleGraphics.getSprites(cardType, State.MOVING, CARD_HEIGHT);
+        movingSprites = BattleGraphics.getSprites(cardType, State.WALKING, CARD_HEIGHT);
         attackingSprites = BattleGraphics.getSprites(cardType, State.ATTACKING, CARD_HEIGHT);
     }
 
@@ -196,18 +241,56 @@ public class Card {
      */
     private final void changeState(State newState){
         currentState = newState;
+        updatesWalking = 0;
+        updatesAttacking = 0;
+
+        if(newState == State.IDLE) currentSprite = idleSprites.get(currentOrientation)[0];
+        else if(newState == State.ATTACKING) currentSprite = attackingSprites.get(currentOrientation)[0];
+        else if(newState == State.WALKING) currentSprite = movingSprites.get(currentOrientation)[0];
+
         updatesWithCurrentSprite = 0;
-        currentSpriteIndex = 0;
+        currentSpriteIndex = 1;
     }
 
-    public void attack(){
 
+    /**
+     * Uses the attribute {@link #currentlyAttackingCard} to start damaging the enemy card.
+     * <p>Once the enemy card has 0 life, the method will return false (it has ended attacking)
+     *
+     * @return true if it's still attacking, and false if the enemy card has died (life = 0)
+     */
+    public boolean attack(){
+        if(currentlyAttackingCard == null) return false;
+
+        boolean enemyAlive = currentlyAttackingCard.receiveDamage(damage);
+        if(!enemyAlive) currentlyAttackingCard = null;
+
+        return enemyAlive;
     }
 
 
     public int getGoldCost(){ return goldCost; }
 
 
-    public int getCurrentHealth(){ return health > 0 ? health: 0;}
+    public boolean isAlive(){ return health > 0;}
+
+
+    /**
+     * Subtracts life from this card
+     * @param damage The damage the card will take
+     * @return true if this card is still alive. False if health is 0 (it has died)
+     */
+    public boolean receiveDamage(int damage){
+        health -= damage;
+        return isAlive();
+    }
+
+
+    public Status getStatus(){ return cardStatus;}
+
+    public void setOrientation(Orientation orientation){
+        this.currentOrientation = orientation;
+    }
+
 
 }

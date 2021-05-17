@@ -4,7 +4,6 @@ import presentation.graphics.BattleGraphics;
 import presentation.graphics.MenuGraphics;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -132,13 +131,13 @@ public class Map {
         //Drawing outer map tiles
         if(!outerMapTiles.isEmpty()) {
             for (Tuple<Image, Vector2> outerTile : outerMapTiles)
-                g.drawImage(outerTile.firstField, outerTile.secondField.x, outerTile.secondField.y, null);
+                g.drawImage(outerTile.firstField, (int)outerTile.secondField.x, (int)outerTile.secondField.y, null);
         }
 
         //Drawing outer map decoration
         if(!outerMapDecoration.isEmpty()){
             for(Tuple<Image, Vector2> outerDecoration: outerMapDecoration)
-                g.drawImage(outerDecoration.firstField, outerDecoration.secondField.x, outerDecoration.secondField.y, null);
+                g.drawImage(outerDecoration.firstField, (int)outerDecoration.secondField.x, (int)outerDecoration.secondField.y, null);
         }
 
 
@@ -152,21 +151,64 @@ public class Map {
 
         //Drawing map decoration
         for(Tuple<Image, Vector2> decoration: mapDecoration)
-            g.drawImage(decoration.firstField, decoration.secondField.x, decoration.secondField.y, null);
+            g.drawImage(decoration.firstField, (int)decoration.secondField.x, (int)decoration.secondField.y, null);
     }
 
 
-    /**
-     * Returns whether a {@link Vector2} position is inside or outisde the map bounds
-     * @param position Position to check if it is inside the map
-     * @return Whether the position is inside the map or not
-     */
-    public boolean isPositionInsideTheMap(Vector2 position){
-        //TODO: Modify it
-        return true;
+    public Vector2 getTopLeftBridgeAccess(){
+        int topLeftBridgeAccess = 1; //We want the first A
+        return getBridgeAccess(topLeftBridgeAccess);
     }
 
-    /**
+    public Vector2 getTopRightBridgeAccess(){
+        int topLeftBridgeAccess = 2; //We want the second A
+        return getBridgeAccess(topLeftBridgeAccess);
+    }
+
+    public Vector2 getBottomLeftBridgeAccess(){
+        int topLeftBridgeAccess = 3; //We want the third A
+        return getBridgeAccess(topLeftBridgeAccess);
+    }
+
+    public Vector2 getBottomRightBridgeAccess(){
+        int topLeftBridgeAccess = 4; //We want the fourth A
+        return getBridgeAccess(topLeftBridgeAccess);
+    }
+
+    private Vector2 getBridgeAccess(int bridgeAccess){
+        int bridgesCounter = 0;
+
+        for(int i = 0; i < mapTileInfo.length; i++){
+            for(int j = 0; j < mapTileInfo[i].length(); j++){
+                if(mapTileInfo[i].charAt(j) == 'A'){
+                    bridgesCounter++;
+                    if(bridgesCounter == bridgeAccess){
+                        final int x = j * TILE_WIDTH;
+                        final int y = i * TILE_HEIGHT + TILE_HEIGHT/2;
+                        return new Vector2(x + firstTileColumnXPosition, y);
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+
+    public boolean isPositionOnTheLeftMap(Vector2 position){
+        return position.x < firstTileColumnXPosition + (mapTileInfo[0].length()/2 - 1) * TILE_WIDTH
+                && position.x > firstTileColumnXPosition;
+
+    }
+
+    public boolean isPositionOnTheRightMap(Vector2 position){
+        return position.x > firstTileColumnXPosition + (mapTileInfo[0].length()/2 + 1) * TILE_WIDTH
+                && position.x < firstTileColumnXPosition + mapTileInfo[0].length() * TILE_WIDTH;
+    }
+
+
+
+     /**
      * Returns the appropriate height of a Card for the current map size
      * @return Appropriate card height
      */

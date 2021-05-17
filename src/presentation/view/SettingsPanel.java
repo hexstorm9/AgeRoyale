@@ -672,11 +672,7 @@ public class SettingsPanel extends FrontPanel {
 
             BAR_MAX_WIDTH = preferredWidth;
             BAR_HEIGHT = troopsLabel.getFontMetrics(troopsLabel.getFont()).getHeight()/2;
-            System.out.println(BAR_HEIGHT);
             GRAPHIC_HEIGHT = getPreferredSize().height + BAR_HEIGHT * 4;
-
-            System.out.println(BAR_MAX_WIDTH);
-            System.out.println(getPreferredSize().height + BAR_HEIGHT);
 
             setPreferredSize(new Dimension(BAR_MAX_WIDTH, GRAPHIC_HEIGHT));
             setMaximumSize(new Dimension(BAR_MAX_WIDTH, GRAPHIC_HEIGHT));
@@ -694,11 +690,13 @@ public class SettingsPanel extends FrontPanel {
         @Override
         protected void paintComponent(Graphics g) {
             //Let's paint the Graphic below the "Troops" text
+            //-->
 
             final double maxTroops = playerTroops > enemyTroops ? playerTroops: enemyTroops;
             final int maxBarWidthWithoutText = BAR_MAX_WIDTH - 50;
             g.setFont(MenuGraphics.getMainFont());
 
+            //Painting the Blue Bar (player troops)
             g.setColor(Color.BLUE);
             final int blueBarWidth = playerTroops == 0 ? 1: (int)((playerTroops / maxTroops) * maxBarWidthWithoutText);
             g.fillRoundRect(0, (int)(GRAPHIC_HEIGHT - BAR_HEIGHT * 2.5), blueBarWidth, BAR_HEIGHT, 10, 10);
@@ -707,12 +705,14 @@ public class SettingsPanel extends FrontPanel {
             g.drawString(Integer.toString(playerTroops), blueBarWidth + 10,(int)(GRAPHIC_HEIGHT - BAR_HEIGHT * 2.5) + this.getFontMetrics(this.getFont()).getHeight());
 
 
+            //Painting the Red Bar (enemy troops)
             g.setColor(Color.RED);
             final int redBarWidth = enemyTroops == 0 ? 1: (int)((enemyTroops / maxTroops) * maxBarWidthWithoutText);
             g.fillRoundRect(0, GRAPHIC_HEIGHT - BAR_HEIGHT, redBarWidth, BAR_HEIGHT, 10, 10);
 
             g.setColor(Color.WHITE);
             g.drawString(Integer.toString(enemyTroops), redBarWidth + 10,GRAPHIC_HEIGHT - BAR_HEIGHT + this.getFontMetrics(this.getFont()).getHeight());
+
 
             super.paintComponent(g);
         }

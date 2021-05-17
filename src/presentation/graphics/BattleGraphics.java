@@ -9,6 +9,8 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -40,7 +42,7 @@ public class BattleGraphics {
 
     private static Image tree1, tree2, tree3, tree4;
 
-    private static Image[] carpiWalking;
+    private static HashMap<Cards, HashMap<Card.State, ArrayList<Image>>> cardSprites;
 
     private static HashMap<Cards, Image> cardsImage;
 
@@ -113,10 +115,31 @@ public class BattleGraphics {
             tree3 = readImage("./resources/sprites/mapDecoration/tree3.png");
             tree4 = readImage("./resources/sprites/mapDecoration/tree4.png");
 
-            carpiWalking = new Image[10];
-            for(int i = 0; i < carpiWalking.length; i++){
-                carpiWalking[i] = readImage("./resources/sprites/cards/carpi/walking" + i + ".png");
+
+            //Load the sprites of all cards
+            final String path = "./resources/sprites/cards/";
+            cardSprites = new HashMap<>();
+            for(Cards c: Cards.values()){
+
+                HashMap<Card.State, ArrayList<Image>> currentCardSprites = new HashMap<>();
+
+                for(Card.State state: Card.State.values()){
+
+                    ArrayList<Image> currentStateImages = new ArrayList<>();
+                    for(int i = 0; true; i++){
+                        try{
+                            currentStateImages.add(readImage(path + c.toString() + "/" + state.toString() + i + ".png"));
+                        }catch(IOException e){
+                            break;
+                        }
+                    }
+
+                    currentCardSprites.put(state, currentStateImages);
+                }
+
+                cardSprites.put(c, currentCardSprites);
             }
+
 
             cardsImage = new HashMap<>();
             for(Cards c: Cards.values()){
@@ -241,13 +264,8 @@ public class BattleGraphics {
         Image[] rightSpritesToBeReturned; //The sprites to be returned looking at the Right
         Image[] leftSpritesToBeReturned; //The sprites to be returned looking at the Right
 
-        /*switch(card){
-            case CARPI:
-                switch(state){
-                }
-        }*/
+        rightSpritesToBeReturned = Arrays.copyOf(cardSprites.get(card).get(state).toArray(), cardSprites.get(card).get(state).toArray().length, Image[].class);
 
-        rightSpritesToBeReturned = carpiWalking;
 
         //Scale images
         for(int i = 0; i < rightSpritesToBeReturned.length; i++)
@@ -258,7 +276,7 @@ public class BattleGraphics {
 
 
         //Fill the leftSpritesToBeReturned
-        leftSpritesToBeReturned = new BufferedImage[rightSpritesToBeReturned.length];
+        leftSpritesToBeReturned = new Image[rightSpritesToBeReturned.length];
         for(int i = 0; i < leftSpritesToBeReturned.length; i++)
             leftSpritesToBeReturned[i] = BattleGraphics.flipImageHorizontally(rightSpritesToBeReturned[i]);
 
