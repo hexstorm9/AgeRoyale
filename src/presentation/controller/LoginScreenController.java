@@ -1,7 +1,9 @@
 package presentation.controller;
 
 import business.GameModel;
+import business.LoginException;
 import business.entities.LanguageManager;
+import business.entities.Player;
 import business.entities.Sentences;
 import presentation.sound.MusicPlayer;
 import business.entities.Songs;
@@ -14,7 +16,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-
+import java.sql.SQLException;
 
 
 public class LoginScreenController extends ScreenController implements ActionListener, MouseListener {
@@ -94,12 +96,7 @@ public class LoginScreenController extends ScreenController implements ActionLis
         @Override
         protected String doInBackground(){
 
-            //TODO: Remove the comments!! It's intended only for direct access to the MainMenu when developing it
             try{
-                gameModel.getPlayer().initialize(null); //TODO: Remove this too
-            }catch(Exception e){}
-
-            /*try{
                 gameModel.checkLoginAndLoadUser(loginScreen.getTextUsernameTextField(), loginScreen.getTextPasswordTextField());
             }catch(LoginException e){
                 switch(e.getExceptionCause()){
@@ -113,14 +110,14 @@ public class LoginScreenController extends ScreenController implements ActionLis
             }catch(SQLException e){
                 e.printStackTrace();
                 return LanguageManager.getSentence(Sentences.DATABASE_ERROR);
-            }*/
+            }
 
             return null;
         }
 
         @Override
         protected void done() {
-            String errorMessage = null;
+            String errorMessage;
             try{
                 errorMessage = get();
             }catch(Exception e){

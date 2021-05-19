@@ -2,6 +2,7 @@ package business;
 
 import business.entities.Player;
 import persistence.JDBCConnector;
+import persistence.PlayerDAO;
 import persistence.UserDAO;
 
 import java.io.IOException;
@@ -17,12 +18,10 @@ import java.sql.SQLException;
 public class GameModel {
 
     private Player player;
-
     private UserDAO userDAO;
 
 
     public GameModel() {
-        player = new Player();
         userDAO = new UserDAO();
     }
 
@@ -56,8 +55,8 @@ public class GameModel {
         final String hash = SecurityUtility.getHashAndDeletePassword(password);
         final boolean isMailProvided = SecurityUtility.checkIfEmailIsCorrect(usernameOrMail);
 
-        userDAO.checkUserLogin(usernameOrMail, hash, isMailProvided);
-        player.initialize(usernameOrMail);
+        String username = userDAO.checkUserLogin(usernameOrMail, hash, isMailProvided);
+        player = new Player(username);
     }
 
 
@@ -92,7 +91,7 @@ public class GameModel {
         userDAO.createNewUser(username, mail, hash);
 
         //Now that the user has been created, let's load all its values from the database into our player
-        player.initialize(username);
+        player = new Player(username);
     }
 
 
@@ -142,15 +141,49 @@ public class GameModel {
     }
 
 
-
+    /**
+     * Returns the player that the {@code GameModel} holds
+     * @return
+     */
    public Player getPlayer(){
         return player;
    }
 
+
+    /**
+     * Forgets the current player saved in RAM.
+     */
    public void forgetPlayer(){
-        //Delete the reference to the current player (let the GC do its job) and create a new empty one
+        //Delete the reference to the current player (let the GC do its job)
         player = null;
-        player = new Player();
    }
+
+
+    /**
+     * Returns an array of {@link Player} objects (the array size will be determined by the param introduced) ordered
+     * by Win Rate.
+     * <p>They'll hold information about themselves.
+     *
+     * @return An array of {@link Player} ordered by Win Rate
+     * @throws SQLException If a connection to the database can't be established or queries are wrong
+     */
+   public Player[] getPlayersByWinRate(int numberOfPlayersToBeReturned) throws SQLException{
+       PlayerDAO playerDAO = new PlayerDAO();
+       return playerDAO.getPlayersByWinRate(numberOfPlayersToBeReturned);
+   }
+
+    /**
+     * Returns an array of {@link Player} objects (the array size will be determined by the param introduced) ordered
+     * by Crowns.
+     * <p>They'll hold information about themselves.
+     *
+     * @return An array of {@link Player} ordered by Crowns
+     * @throws SQLException If a connection to the database can't be established or queries are wrong
+     */
+    public Player[] getPlayersByCrowns(int numberOfPlayersToBeReturned) throws SQLException{
+        PlayerDAO playerDAO = new PlayerDAO();
+        return playerDAO.getPlayersByCrowns(numberOfPlayersToBeReturned);
+    }
+
 
 }

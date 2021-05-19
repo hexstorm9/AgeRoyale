@@ -63,9 +63,9 @@ public class BattleBot implements Runnable{
                     Cards cardToThrow = botCards[r.nextInt(botCards.length)];
                     xPos = r.nextInt(battlePanelSize.width);
                     yPos = r.nextInt(battlePanelSize.height);
-                    correctPosition = battleModel.throwCard(cardToThrow, Card.Status.ENEMY, xPos, yPos);
-                    if(cardToThrow.isTower()) correctPosition = false;
+                    if(cardToThrow.isTower()) continue; //If it's tower, let's repeat the loop
 
+                    correctPosition = battleModel.throwCard(cardToThrow, Card.Status.ENEMY, xPos, yPos);
                     if(correctPosition) System.out.println("Bot card thrown --> " + cardToThrow.toString() + " in " + xPos + "x " + yPos + "y");
                 }
 

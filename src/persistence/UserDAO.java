@@ -6,6 +6,9 @@ import business.RegistrationException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+/**
+ * Data Access Object for retrieving/updating information from the User.
+ */
 public class UserDAO {
 
     /**
@@ -52,20 +55,32 @@ public class UserDAO {
      * @param nameOrMail Name or mail of the user
      * @param hash Hash of the user
      * @param isEmail Whether the first field 'name' is an email or not (if it's not, it will be the name of the user)
+     * @return A string with the name of the user
+     *
      * @throws LoginException When the user does not match any user in the database, or the hash is not correct for that user
      */
-    public void checkUserLogin(String nameOrMail, String hash, boolean isEmail) throws LoginException, SQLException {
-        String getHashQuery = null;
+    public String checkUserLogin(String nameOrMail, String hash, boolean isEmail) throws LoginException, SQLException {
+        final String getHashQuery;
         if(isEmail) getHashQuery = "SELECT hash FROM user WHERE mail = '" + nameOrMail + "';";
         else getHashQuery = "SELECT hash FROM user WHERE name = '" + nameOrMail + "';";
 
-        ArrayList<Object> informationList = JDBCConnector.getInstance().queryDatabase(getHashQuery);
+        ArrayList<Object> informationList;
+        informationList = JDBCConnector.getInstance().queryDatabase(getHashQuery);
 
         if(informationList.isEmpty() && isEmail) throw new LoginException(LoginException.LoginExceptionCause.EMAIL_DOES_NOT_EXIST); //If nothing has been returned and an email was introduced
         else if(informationList.isEmpty()) throw new LoginException(LoginException.LoginExceptionCause.NAME_DOES_NOT_EXIST); //If nothing has been returned and an username was introduced
 
-        String userCorrectHash = (String) informationList.get(0); //We only queried for a single field, the hash of that user/mail
+        String userCorrectHash = (String)informationList.get(0); //We only queried for a single field, the hash of that user/mail
         if(!userCorrectHash.equals(hash)) throw new LoginException(LoginException.LoginExceptionCause.INCORRECT_PASSWORD); //If both hashes aren't equals, the password has been introduced incorrectly
+
+
+        //If no exception has been thrown until now, let's return the name of the player
+        if(!isEmail) return nameOrMail; //If the nameOrMail provided is already the name, let's return it
+                                        //If not, let's query the database to ask for the name
+        final String getNameFromMailQuery = "SELECT name FROM user WHERE mail = '" + nameOrMail + "';";
+
+        informationList = JDBCConnector.getInstance().queryDatabase(getNameFromMailQuery);
+        return (String)informationList.get(0);
     }
 
 
