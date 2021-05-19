@@ -20,6 +20,14 @@ import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 
+/**
+ * BattleController is the Controller class for the {@link BattleScreen}.
+ * <p>It will be linking both the {@link BattleScreen} and {@link BattleModel}.
+ *
+ * @see BattleScreen
+ * @see BattleModel
+ * @version 1.0
+ */
 public class BattleController extends ScreenController implements Runnable, MouseListener{
 
     private BattleScreen battleScreen;
@@ -28,11 +36,23 @@ public class BattleController extends ScreenController implements Runnable, Mous
     private boolean gameRunning = true;
 
 
+    /**
+     * Default BattleController Constructor.
+     * @param royaleFrame The RoyaleFrame this controller will control
+     * @param gameModel The GameModel this controller will control
+     */
     public BattleController(RoyaleFrame royaleFrame, GameModel gameModel){
         super(royaleFrame, gameModel);
     }
 
 
+    /**
+     * Called when the BattleController is created.
+     * <p>Creates the view for this BattleController ({@link BattleScreen}) and puts it onto the {@link RoyaleFrame}
+     * this controller controls.
+     * <p>Also, starts the {@link BattleBot} Thread and the {@code Game Loop} Thread (this)
+     * @param showSettingsPanelOnStart Whether you want to show the settings panel on start or not
+     */
     public void start(boolean showSettingsPanelOnStart){
         battleScreen = new BattleScreen(this, royaleFrame.getHeight());
         setPanelToListenForESCKey(battleScreen);
@@ -54,6 +74,10 @@ public class BattleController extends ScreenController implements Runnable, Mous
         gameLoop.start();
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void buildSettingsPanel(){
         settingsPanel.addTroopsStats();
@@ -61,8 +85,10 @@ public class BattleController extends ScreenController implements Runnable, Mous
     }
 
 
-
-
+    /**
+     * Automatically called when the new thread of this class starts.
+     * <p>It starts the GameLoop of the game, running both Updates() and Paints() at a controlled interval of time.
+     */
     @Override
     public void run(){
         final int MAX_FRAMES_PER_SECOND = 60;
@@ -110,7 +136,6 @@ public class BattleController extends ScreenController implements Runnable, Mous
    public void paintBattle(Graphics g){
         battleModel.draw(g);
    }
-
 
 
     @Override

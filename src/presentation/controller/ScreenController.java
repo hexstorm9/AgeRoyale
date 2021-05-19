@@ -2,7 +2,6 @@ package presentation.controller;
 
 import business.GameModel;
 import presentation.view.FrontPanel;
-import presentation.view.LoadingBattleScreen;
 import presentation.view.RoyaleFrame;
 import presentation.view.SettingsPanel;
 

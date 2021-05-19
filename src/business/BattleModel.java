@@ -85,7 +85,7 @@ public class BattleModel {
 
         if(cardStatus == Card.Status.PLAYER){
             //If the position introduced is outside the map, return false
-            if(!map.isPositionOnTheLeftMap(cardPosition)) return false;
+            if(!map.canCardBeThrownToTheLeftMap(cardPosition)) return false;
 
             //If the player has no enough gold to invoke that card, return false
             if(playerGold < c.getGoldCost()) return false;
@@ -100,7 +100,7 @@ public class BattleModel {
         }
         else if(cardStatus == Card.Status.ENEMY){
             //If the position introduced is outside the map, return false
-            if(!map.isPositionOnTheRightMap(cardPosition)) return false;
+            if(!map.canCardBeThrownToTheRightMap(cardPosition)) return false;
             enemyCards.add(new Card(c, 1, Card.Status.ENEMY, cardPosition, map.getCardHeight(), physicsSystem));
         }
 

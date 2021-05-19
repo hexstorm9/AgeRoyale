@@ -10,10 +10,19 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.Locale;
 
+/**
+ * Data Access Object for retrieving/updating information from the {@code languages.json} file.
+ */
 public class LanguageDAO {
 
     private static final String FILE_PATH = "./resources/languages.json";
 
+    /**
+     * Updates the preferred language in the {@code languages.json}
+     * @param newLanguage New preferred language
+     * @throws JsonSyntaxException When the file has possibly been modified from outside the program and can't be read/modified
+     * @throws IOException When the file can't be found
+     */
     public void updatePreferredLanguage(Language newLanguage) throws JsonSyntaxException, IOException{
         BufferedReader br = new BufferedReader(new FileReader(FILE_PATH));
         Gson gson = new Gson();
@@ -32,17 +41,30 @@ public class LanguageDAO {
     }
 
 
-    class Sentence{
-        String key;
-        String[] values;
-    }
-
-    class LanguageFile{
+    /**
+     * Inner class matching the whole {@code languages.json} so as to read with Gson
+     */
+    private class LanguageFile{
         String language;
         Sentence[] sentences;
     }
 
+    /**
+     * Inner class matching each Sentence on the json so as to read with Gson
+     */
+    private class Sentence{
+        String key;
+        String[] values;
+    }
 
+
+    /**
+     * Reads all the Sentences from {@code languages.json} and returns a {@code HashMap}, where each {@link Sentence} maps its
+     * correct {@code String} depending on the language of the user.
+     * @return {@code HashMap} where each {@link Sentence} maps a {@code String}
+     * @throws JsonSyntaxException
+     * @throws IOException
+     */
     public HashMap<Sentences, String> readSentences() throws JsonSyntaxException, IOException {
         Language currentLanguage = null;
         BufferedReader br = new BufferedReader(new FileReader(FILE_PATH));

@@ -1,6 +1,5 @@
 package persistence;
 
-import business.DatabaseInfo;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;

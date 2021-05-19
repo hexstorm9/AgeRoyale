@@ -156,56 +156,77 @@ public class Map {
     }
 
 
-    public Vector2 getTopLeftBridgeAccess(){
-        int topLeftBridgeAccess = 1; //We want the first A
-        return getBridgeAccess(topLeftBridgeAccess);
-    }
-
-    public Vector2 getTopRightBridgeAccess(){
-        int topLeftBridgeAccess = 2; //We want the second A
-        return getBridgeAccess(topLeftBridgeAccess);
-    }
-
-    public Vector2 getBottomLeftBridgeAccess(){
-        int topLeftBridgeAccess = 3; //We want the third A
-        return getBridgeAccess(topLeftBridgeAccess);
-    }
-
-    public Vector2 getBottomRightBridgeAccess(){
-        int topLeftBridgeAccess = 4; //We want the fourth A
-        return getBridgeAccess(topLeftBridgeAccess);
-    }
-
-    private Vector2 getBridgeAccess(int bridgeAccess){
-        int bridgesCounter = 0;
+    /**
+     * Returns the position (in px) of the Bridge accesses.
+     * <p>The array returned will be formatted:
+     * <ul>
+     *     <li>Position 0 -> Top-Left bridge access</li>
+     *     <li>Position 1 -> Top-Right bridge access</li>
+     *     <li>Position 2 -> Bottom-Left bridge access</li>
+     *     <li>Position 3 -> Bottom-Right bridge access</li>
+     * </ul>
+     *
+     * @return Position of the bridge accesses
+     */
+    public Vector2[] getBridgeAccesses(){
+        ArrayList<Vector2> bridgeAccesses = new ArrayList<>();
 
         for(int i = 0; i < mapTileInfo.length; i++){
             for(int j = 0; j < mapTileInfo[i].length(); j++){
                 if(mapTileInfo[i].charAt(j) == 'A'){
-                    bridgesCounter++;
-                    if(bridgesCounter == bridgeAccess){
-                        final int x = j * TILE_WIDTH;
-                        final int y = i * TILE_HEIGHT + TILE_HEIGHT/2;
-                        return new Vector2(x + firstTileColumnXPosition, y);
-                    }
+                    final int x = (j * TILE_WIDTH) + (bridgeAccesses.size()%2 == 0 ? -TILE_WIDTH/2: TILE_WIDTH*3/2);
+                    final int y = (i * TILE_HEIGHT) + (TILE_HEIGHT/2);
+                    bridgeAccesses.add(new Vector2(x + firstTileColumnXPosition , y));
                 }
             }
         }
 
-        return null;
+        return bridgeAccesses.toArray(new Vector2[bridgeAccesses.size()]);
     }
 
 
+    /**
+     * Check whether a position is inside the Left Map or not
+     * @param position Position to check
+     * @return Whether it is inside the left map or not
+     */
     public boolean isPositionOnTheLeftMap(Vector2 position){
         return position.x < firstTileColumnXPosition + (mapTileInfo[0].length()/2 - 1) * TILE_WIDTH
                 && position.x > firstTileColumnXPosition;
-
     }
 
+    /**
+     * Check whether a position is inside the Right Map or not
+     * @param position Position to check
+     * @return Whether it is inside the Right map or not
+     */
     public boolean isPositionOnTheRightMap(Vector2 position){
         return position.x > firstTileColumnXPosition + (mapTileInfo[0].length()/2 + 1) * TILE_WIDTH
                 && position.x < firstTileColumnXPosition + mapTileInfo[0].length() * TILE_WIDTH;
     }
+
+
+    /**
+     * Tells whether a Card can be thrown to the Left Map or not
+     * @param position Position of the Card
+     * @return Whether it can be thrown to the Left Map or not
+     */
+    public boolean canCardBeThrownToTheLeftMap(Vector2 position){
+        return position.x < firstTileColumnXPosition + (mapTileInfo[0].length()/2 - 2) * TILE_WIDTH
+                && position.x > firstTileColumnXPosition && position.y > getCardHeight();
+    }
+
+    /**
+     * Tells whether a Card can be thrown to the right map or not
+     * @param position Position of the Card
+     * @return Whether it can be thrown to the Right Map or not
+     */
+    public boolean canCardBeThrownToTheRightMap(Vector2 position){
+        return position.x > firstTileColumnXPosition + (mapTileInfo[0].length()/2 + 1) * TILE_WIDTH
+                && position.x < firstTileColumnXPosition + (mapTileInfo[0].length() - 1) * TILE_WIDTH
+                && position.y > getCardHeight();
+    }
+
 
 
     /**

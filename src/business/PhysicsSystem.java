@@ -16,10 +16,11 @@ public class PhysicsSystem {
         this.battleModel = battleModel;
         this.map = map;
 
-        topLeftBridgeAccess = map.getTopLeftBridgeAccess();
-        topRightBridgeAccess = map.getTopRightBridgeAccess();
-        bottomLeftBridgeAccess = map.getBottomLeftBridgeAccess();
-        bottomRightBridgeAccess = map.getBottomRightBridgeAccess();
+        Vector2[] bridgeAccesses = map.getBridgeAccesses();
+        topLeftBridgeAccess = bridgeAccesses[0];
+        topRightBridgeAccess = bridgeAccesses[1];
+        bottomLeftBridgeAccess = bridgeAccesses[2];
+        bottomRightBridgeAccess = bridgeAccesses[3];
 
         DISTANCE_TO_MOVE_EACH_TIME = map.getCardHeight() / 150.0;
         RANGE_UNIT = map.getCardHeight() / 2;
@@ -70,6 +71,17 @@ public class PhysicsSystem {
             Vector2 closestObjectivePosition = new Vector2(0, 0);
 
             if(card.getStatus() == Card.Status.PLAYER){ //If the Card is a Player card, then we'll go to the closest bridgePoint or enemy in the left map
+
+                //*******
+                //Check if the card is within the bounds of the topLeft bridge access. If it is, move forward
+                if(position.x > topLeftBridgeAccess.x && (position.y + 2 > topLeftBridgeAccess.y && position.y - 2 < topLeftBridgeAccess.y))
+                    return new Vector2(position.x + DISTANCE_TO_MOVE_EACH_TIME, position.y);
+
+                //Check if the card is within the bounds of the bottomLeft bridge access. If it is, move forward
+                if(position.x > bottomLeftBridgeAccess.x && (position.y + 2 > bottomLeftBridgeAccess.y && position.y - 2 < bottomLeftBridgeAccess.y))
+                    return new Vector2(position.x + DISTANCE_TO_MOVE_EACH_TIME, position.y);
+                //*******
+
 
                 //Let's calculate distance to enemies in this map
                 for(Card enemyCard: battleModel.getEnemyCards()){
@@ -143,6 +155,17 @@ public class PhysicsSystem {
                 }
             }
             else if(card.getStatus() == Card.Status.ENEMY){ //If the card is an Enemy card, then we'll go to the closest bridgePoint or enemy in the map
+
+                //*******
+                //Check if the card is within the bounds of the bottomRight bridge access. If it is, move forward
+                if(position.x < topRightBridgeAccess.x && (position.y + 2 > topRightBridgeAccess.y && position.y - 2 < topRightBridgeAccess.y))
+                    return new Vector2(position.x - DISTANCE_TO_MOVE_EACH_TIME, position.y);
+
+                //Check if the card is within the bounds of the bottomRight bridge access. If it is, move forward
+                if(position.x < bottomRightBridgeAccess.x && (position.y + 2 > bottomRightBridgeAccess.y && position.y - 2 < bottomRightBridgeAccess.y))
+                    return new Vector2(position.x - DISTANCE_TO_MOVE_EACH_TIME, position.y);
+                //*******
+
 
                 //Let's calculate distance to players in this map
                 for(Card playerCard: battleModel.getPlayerCards()){
