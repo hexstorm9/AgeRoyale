@@ -1,7 +1,5 @@
 package presentation.controller;
 
-import business.LoginException;
-import business.RegistrationException;
 import business.entities.Language;
 import business.entities.LanguageManager;
 import business.entities.Sentences;
@@ -17,10 +15,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
-import java.lang.reflect.Array;
 import java.sql.SQLException;
 import java.util.Arrays;
-import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 
@@ -41,6 +37,9 @@ public class SettingsPanelController extends FrontPanelController implements Cha
     public void actionPerformed(ActionEvent e) {
         switch(e.getActionCommand()){
             case SettingsPanel.EXIT_BUTTON_ACTION_COMMAND:
+                if(screenController instanceof BattleController)
+                    ((SettingsPanel)frontPanel).showConfirmationBeforeExitingGame(true);
+                else
                     System.exit(0);
                 break;
             case SettingsPanel.CHANGE_LANGUAGE_BUTTON_ACTION_COMMAND:
@@ -50,10 +49,12 @@ public class SettingsPanelController extends FrontPanelController implements Cha
                 ((SettingsPanel)frontPanel).showCreditsPanel();
                 break;
             case SettingsPanel.LOG_OUT_BUTTON_ACTION_COMMAND:
-                //It can only be called from the MainMenuController.
+                //It can only be called from the MainMenuController or the BattleController
                 //Else, do nothing
                 if(screenController instanceof MainMenuController)
                     ((MainMenuController)screenController).logOut();
+                else if(screenController instanceof BattleController)
+                    ((SettingsPanel)frontPanel).showConfirmationBeforeExitingGame(false);
                 break;
             case SettingsPanel.DELETE_ACCOUNT_BUTTON_ACTION_COMMAND:
                 ((SettingsPanel)frontPanel).showDeleteAccountPanel();
@@ -62,6 +63,17 @@ public class SettingsPanelController extends FrontPanelController implements Cha
                 ((SettingsPanel)frontPanel).clearDeleteAccountError();
                 ((SettingsPanel)frontPanel).pauseAllDeleteAccountComponents();
                 new DeleteAccountOnBackground().execute(); //Run this task in background
+                break;
+            case SettingsPanel.CONFIRM_NEGATIVE_BUTTON_ACTION_COMMAND:
+                ((SettingsPanel)frontPanel).showMainPanel();
+                break;
+            case SettingsPanel.CONFIRM_POSITIVE_EXIT_BUTTON_ACTION_COMMAND:
+                if(screenController instanceof BattleController)
+                    ((BattleController)screenController).endGameAndExit();
+                break;
+            case SettingsPanel.CONFIRM_POSITIVE_LOGOUT_BUTTON_ACTION_COMMAND:
+                if(screenController instanceof BattleController)
+                    ((BattleController)screenController).endGameAndLogOut();
                 break;
         }
     }

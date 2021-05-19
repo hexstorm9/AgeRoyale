@@ -2,7 +2,6 @@ package presentation.view;
 
 import business.entities.LanguageManager;
 import business.entities.Sentences;
-import presentation.controller.SettingsPanelController;
 import presentation.graphics.MenuGraphics;
 import presentation.sound.MusicPlayer;
 import presentation.sound.SoundPlayer;
@@ -18,10 +17,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 
 
+/**
+ *
+ */
 public class SettingsPanel extends FrontPanel {
-
-
-    private SettingsPanelController settingsPanelController; //The controller that all buttons will be registered with
 
 
     //There will be multiple panels in this Settings Panel -->
@@ -37,8 +36,10 @@ public class SettingsPanel extends FrontPanel {
     private CreditsPanel creditsPanel;
     private LanguagePanel languagePanel;
     private DeleteAccountPanel deleteAccountPanel;
+    private ConfirmationBeforeExitingPanel confirmationBeforeExitingPanel;
 
     private TroopsGraphic troopsGraphic;
+
 
 
     public static final String EXIT_BUTTON_ACTION_COMMAND = "exit_button";
@@ -58,11 +59,14 @@ public class SettingsPanel extends FrontPanel {
     public static final String DELETE_ACCOUNT_BUTTON_ACTION_COMMAND = "delete_account_button";
     public static final String CONFIRM_DELETE_ACCOUNT_BUTTON_ACTION_COMMAND = "confirm_delete_account";
 
+    public static final String CONFIRM_NEGATIVE_BUTTON_ACTION_COMMAND = "negative_button";
+    public static final String CONFIRM_POSITIVE_LOGOUT_BUTTON_ACTION_COMMAND = "positive_logout_button";
+    public static final String CONFIRM_POSITIVE_EXIT_BUTTON_ACTION_COMMAND = "positive_exit_button";
+
 
 
     public SettingsPanel(int panelWidth, int panelHeight){
         super(panelWidth, panelHeight);
-        addMouseListener(settingsPanelController); //We need to capture all mouse events so as not to let the user allow to click behind the SettingsPanel
 
         final int CENTER_PANEL_HEIGHT = (int) (PANEL_HEIGHT * 0.6);
         final int CENTER_PANEL_WIDTH = setWoodTableVisible(CENTER_PANEL_HEIGHT);
@@ -94,6 +98,7 @@ public class SettingsPanel extends FrontPanel {
         }
 
         if(deleteAccountPanel != null) deleteAccountPanel.addButtonsListener(al);
+        if(confirmationBeforeExitingPanel != null) confirmationBeforeExitingPanel.addButtonsListener(al);
     }
 
 
@@ -109,30 +114,53 @@ public class SettingsPanel extends FrontPanel {
     }
 
 
+    /**
+     * Shows the Change Languages Panel
+     */
     public void showLanguagesPanel(){
         if(languagePanel != null) scrollPaneCentered.setViewportView(languagePanel);
         repaint();
         revalidate();
     }
 
+    /**
+     * Shows the Credits Panel
+     */
     public void showCreditsPanel(){
         scrollPaneCentered.setViewportView(creditsPanel);
         repaint();
         revalidate();
     }
 
+    /**
+     * Shows the Main Panel
+     */
     public void showMainPanel(){
         scrollPaneCentered.setViewportView(mainPanel);
         repaint();
         revalidate();
     }
 
+    /**
+     * Shows the Delete Account Panel
+     */
     public void showDeleteAccountPanel(){
         scrollPaneCentered.setViewportView(deleteAccountPanel);
         repaint();
         revalidate();
     }
 
+    /**
+     * Shows the Panel that asks for confirmation before exiting the game
+     * @param exitGameOrLogOut Whether when clicked YES, the System is exited or only Logged out.
+     * {@code true} if you want to exit the game, {@code false} otherwise.
+     */
+    public void showConfirmationBeforeExitingGame(boolean exitGameOrLogOut){
+        confirmationBeforeExitingPanel.modifyPanel(exitGameOrLogOut ? "Exiting": "Logging Out", exitGameOrLogOut);
+        scrollPaneCentered.setViewportView(confirmationBeforeExitingPanel);
+        repaint();
+        revalidate();
+    }
 
 
      /**
@@ -211,6 +239,18 @@ public class SettingsPanel extends FrontPanel {
 
         deleteAccountPanel = new DeleteAccountPanel();
     }
+
+
+    /**
+     * Before exiting the game or logging out, asks the user whether he is sure of its decision or not.
+     * If it is, that means he'll loose the game.
+     * <p>Note that this method should only be called when the {@link SettingsPanel} belongs to a
+     * {@link presentation.controller.BattleController}
+     */
+    public void addConfirmationBeforeExiting(){
+        confirmationBeforeExitingPanel = new ConfirmationBeforeExitingPanel();
+    }
+
 
 
     /**
@@ -535,6 +575,9 @@ public class SettingsPanel extends FrontPanel {
     }
 
 
+
+
+
     private class DeleteAccountPanel extends JPanel{
 
         //This one will go on the MainPanel CENTER directly, with GridBagLayout and default constraints
@@ -647,6 +690,82 @@ public class SettingsPanel extends FrontPanel {
 
 
 
+
+
+    private class ConfirmationBeforeExitingPanel extends JPanel{
+
+        //This one will go on the MainPanel CENTER directly, with GridBagLayout and default constraints
+        private JPanel panelOnTheCenterOne;
+
+        //This one will go on top of the panelOnTheCenterOne, and it will be centered thanks to the GridBagLayout
+        //It will have a BoxLayout Y_Axis so as to add components to it.
+        private JPanel panelOnTheCenterTwo;
+
+        private RoyaleButton noButton, yesButton;
+        private RoyaleLabel titleLabel;
+
+
+        private ConfirmationBeforeExitingPanel(){
+            setLayout(new BorderLayout());
+            setOpaque(false);
+            setBorder(BorderFactory.createEmptyBorder(40, 0, 40, 0));
+
+            panelOnTheCenterOne = new JPanel();
+            panelOnTheCenterOne.setLayout(new GridBagLayout());
+            panelOnTheCenterOne.setOpaque(false);
+
+            panelOnTheCenterTwo = new JPanel();
+            panelOnTheCenterTwo.setLayout(new BoxLayout(panelOnTheCenterTwo, BoxLayout.Y_AXIS));
+            panelOnTheCenterTwo.setOpaque(false);
+
+
+            titleLabel = new RoyaleLabel("Logging Out", RoyaleLabel.LabelType.TITLE);
+
+            RoyaleLabel confirmationMessage = new RoyaleLabel("Are you sure you want to exit? You'll loose the Game", RoyaleLabel.LabelType.PARAGRAPH);
+            confirmationMessage.setAlignmentX(CENTER_ALIGNMENT);
+
+            JPanel yesOrNoPanel = new JPanel();
+            yesOrNoPanel.setOpaque(false);
+            yesOrNoPanel.setAlignmentX(CENTER_ALIGNMENT);
+            yesOrNoPanel.setLayout(new BoxLayout(yesOrNoPanel, BoxLayout.X_AXIS));
+            noButton = new RoyaleButton("No");
+            yesButton = new RoyaleButton("Yes");
+            yesOrNoPanel.add(noButton);
+            yesOrNoPanel.add(Box.createRigidArea(new Dimension(80, 30)));
+            yesOrNoPanel.add(yesButton);
+
+            panelOnTheCenterTwo.add(confirmationMessage);
+            panelOnTheCenterTwo.add(Box.createRigidArea(new Dimension(30, 50)));
+            panelOnTheCenterTwo.add(yesOrNoPanel);
+
+
+            panelOnTheCenterOne.add(panelOnTheCenterTwo, new GridBagConstraints());
+            add(titleLabel, BorderLayout.NORTH);
+            add(panelOnTheCenterOne, BorderLayout.CENTER);
+
+
+            noButton.setActionCommand(CONFIRM_NEGATIVE_BUTTON_ACTION_COMMAND);
+            yesButton.setActionCommand(CONFIRM_POSITIVE_LOGOUT_BUTTON_ACTION_COMMAND);
+        }
+
+        private void modifyPanel(String title, boolean exitGameOrLogOutOnYesPressed){
+            titleLabel.setText(title);
+            if(exitGameOrLogOutOnYesPressed) //If we want to exit the game on YES pressed
+                yesButton.setActionCommand(CONFIRM_POSITIVE_EXIT_BUTTON_ACTION_COMMAND);
+            else //If we want to log out on YES pressed
+                yesButton.setActionCommand(CONFIRM_POSITIVE_LOGOUT_BUTTON_ACTION_COMMAND);
+        }
+
+        private void addButtonsListener(ActionListener al){
+            noButton.addActionListener(al);
+            yesButton.addActionListener(al);
+        }
+    }
+
+
+
+
+
     private class TroopsGraphic extends JPanel{
 
         private int playerTroops, enemyTroops;
@@ -655,7 +774,7 @@ public class SettingsPanel extends FrontPanel {
         private final int GRAPHIC_HEIGHT;
 
 
-        public TroopsGraphic(int preferredWidth){
+        private TroopsGraphic(int preferredWidth){
             playerTroops = 0;
             enemyTroops = 0;
             setOpaque(false);

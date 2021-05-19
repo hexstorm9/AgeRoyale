@@ -81,7 +81,10 @@ public class BattleController extends ScreenController implements Runnable, Mous
     @Override
     public void buildSettingsPanel(){
         settingsPanel.addTroopsStats();
+        settingsPanel.addLogOutButton();
         settingsPanel.addCreditsButton();
+
+        settingsPanel.addConfirmationBeforeExiting();
     }
 
 
@@ -194,8 +197,20 @@ public class BattleController extends ScreenController implements Runnable, Mous
         return battleModel.getPlayerCurrentCardsToThrow();
     }
 
+    /**
+     * Ends the Game and Exits the application
+     */
+    public void endGameAndExit() {
+        System.exit(0);
+    }
 
-
+    /**
+     * Ends the Game and Logs Out
+     */
+    public void endGameAndLogOut(){
+        gameModel.forgetPlayer();
+        goToScreen(Screen.LOGIN_SCREEN, false);
+    }
 
 
     private class LoadGoldOnBackground extends SwingWorker<Void, Void>{
