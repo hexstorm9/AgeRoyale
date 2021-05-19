@@ -41,17 +41,23 @@ public class BattleModel {
 
         playerCurrentCardsToThrow = new ArrayList<>();
         for(int i = 0; i < PLAYER_CURRENT_CARDS; i++) generateNewCardToThrow();
+
+        //Let's create both towers
+        playerCards.add(new Card(Cards.TOWER, 1, Card.Status.PLAYER, map.getTowerPosition(Card.Status.PLAYER),
+                map.getTowerHeight(), physicsSystem));
+        enemyCards.add(new Card(Cards.TOWER, 1, Card.Status.ENEMY, map.getTowerPosition(Card.Status.ENEMY),
+                map.getTowerHeight(), physicsSystem));
     }
 
 
 
     public void update(){
         for(int i = 0; i < playerCards.size(); i++){
-            if(playerCards.get(i).isAlive()) playerCards.get(i).update();
+            if(!playerCards.get(i).isTotallyDead()) playerCards.get(i).update();
             else playerCards.remove(playerCards.get(i));
         }
         for(int i = 0; i < enemyCards.size(); i++){
-            if(enemyCards.get(i).isAlive()) enemyCards.get(i).update();
+            if(!enemyCards.get(i).isTotallyDead()) enemyCards.get(i).update();
             else enemyCards.remove(enemyCards.get(i));
         }
     }
@@ -138,10 +144,9 @@ public class BattleModel {
         Random r = new Random();
         do{
             newCard = Cards.values()[r.nextInt(Cards.values().length)];
-        }while(playerCurrentCardsToThrow.contains(newCard));
+        }while(playerCurrentCardsToThrow.contains(newCard) || newCard.isTower());
 
         playerCurrentCardsToThrow.add(newCard);
-        System.out.println(newCard.toString());
     }
 
 

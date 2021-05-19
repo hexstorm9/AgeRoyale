@@ -49,6 +49,7 @@ public class BattleBot implements Runnable{
         botThread.interrupt();
     }
 
+
     @Override
     public void run() {
         while(true){
@@ -57,14 +58,17 @@ public class BattleBot implements Runnable{
             int xPos = 0, yPos = 0;
 
             try{
-                Thread.sleep(20000);
-                Cards cardToThrow = botCards[r.nextInt(botCards.length)];
+                Thread.sleep(10000);
                 while(!correctPosition){
+                    Cards cardToThrow = botCards[r.nextInt(botCards.length)];
                     xPos = r.nextInt(battlePanelSize.width);
                     yPos = r.nextInt(battlePanelSize.height);
                     correctPosition = battleModel.throwCard(cardToThrow, Card.Status.ENEMY, xPos, yPos);
+                    if(cardToThrow.isTower()) correctPosition = false;
+
+                    if(correctPosition) System.out.println("Bot card thrown --> " + cardToThrow.toString() + " in " + xPos + "x " + yPos + "y");
                 }
-                System.out.println("Bot card thrown --> " + cardToThrow.toString() + " in " + xPos + "x " + yPos + "y");
+
             }catch(Exception e){e.printStackTrace();}
         }
     }

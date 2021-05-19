@@ -60,6 +60,7 @@ public class BattleScreen extends JPanel {
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
+            //TODO: Drawable[] drawables = battleController.getDrawables();
             battleController.paintBattle(g);
         }
 

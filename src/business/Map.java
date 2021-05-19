@@ -1,5 +1,6 @@
 package business;
 
+import business.entities.Player;
 import presentation.graphics.BattleGraphics;
 import presentation.graphics.MenuGraphics;
 
@@ -207,8 +208,39 @@ public class Map {
     }
 
 
+    /**
+     * Returns where the tower should go depending on the {@link Card.Status} provided@link Card.Status} provided.
+     * @param status The status of the tower we want the position for
+     * @return The position of the tower
+     *
+     * @see Card.Status
+     */
+    public Vector2 getTowerPosition(Card.Status status){
+        Vector2 towerPosition = new Vector2(0, 0);
+        if(status == Card.Status.PLAYER){
+            towerPosition.x = firstTileColumnXPosition + TILE_WIDTH/2;
+            towerPosition.y = TILE_HEIGHT * 3;
+        }
+        else if(status  == Card.Status.ENEMY){
+            towerPosition.x = firstTileColumnXPosition + ((TILE_WIDTH * (mapTileInfo[0].length() - 2)) - TILE_WIDTH/2);
+            towerPosition.y = TILE_HEIGHT * 3;
+        }
 
-     /**
+        return towerPosition;
+    }
+
+
+
+    /**
+     * Returns the appropriate height of a Tower Card for the current map size
+     * @return Appropriate tower card height
+     */
+    public int getTowerHeight(){
+        //Card height will be the height of a tile + the height of a tile/2
+        return TILE_HEIGHT * 4;
+    }
+
+    /**
      * Returns the appropriate height of a Card for the current map size
      * @return Appropriate card height
      */

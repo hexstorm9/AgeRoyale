@@ -143,6 +143,7 @@ public class BattleGraphics {
 
             cardsImage = new HashMap<>();
             for(Cards c: Cards.values()){
+                if(c.isTower()) continue; //If the card is a tower, don't read its card image
                 cardsImage.put(c, readImage("./resources/sprites/cardImages/" + c.toString() + ".png"));
             }
 

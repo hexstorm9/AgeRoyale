@@ -32,7 +32,14 @@ public class Card {
         /**
          * The {@code Card} will move to the next spot, constantly checking for enemies in range (to start attacking them)
          */
-        WALKING;
+        WALKING,
+
+        /**
+         * Once the card's life reaches 0, it will go to the state of DYING
+         * (it can't be attacked by other cards, and the dying Card won't do anything,
+         * only reproduce the dying effect)
+         */
+        DYING;
 
         @Override
         public String toString() {
@@ -61,6 +68,10 @@ public class Card {
     private HashMap<Orientation, Image[]> attackingSprites;
     private final int updatesToNextAttackingSprite;
 
+    private HashMap<Orientation, Image[]> dyingSprites;
+    private final int updatesToNextDyingSprite;
+
+
     private int updatesWithCurrentSprite; //To count when we'll need to change to the next sprite from the Image[] array
     private int currentSpriteIndex; //Current index of the Image[] array
 
@@ -86,12 +97,14 @@ public class Card {
     protected final int CARD_HEIGHT;
 
     protected int goldCost;
-    protected Vector2 position; //The position of a Card will be its bottom-right point's position
+    protected Vector2 position; //The position of a Card will be its bottom-left point's position (not its upper-left).
     protected int health;
     protected int damage;
     protected int range;
     protected int attackingVelocity;
     protected int movingVelocity;
+    private boolean totallyDead; //Once the health of a Card reaches 0, it will enter the DYING state and
+                                 //reproduce the dying animation. When the animation is ended, totallyDead will become true
 
 
     protected Image currentSprite; //The sprite that will be drawn on the draw() method
@@ -111,10 +124,12 @@ public class Card {
 
         currentOrientation = cardStatus == Status.PLAYER ? Orientation.RIGHT: Orientation.LEFT;
         changeState(initialState);
+        totallyDead = false;
 
-        updatesToNextIdleSprite = attackingVelocity/2;
+        updatesToNextIdleSprite = attackingVelocity / 2;
         updatesToNextMovingSprite = movingVelocity;
         updatesToNextAttackingSprite = attackingVelocity * 2;
+        updatesToNextDyingSprite = attackingVelocity / 4;
     }
 
 
@@ -124,6 +139,14 @@ public class Card {
      * (i.e. see if it can attack another card, update its position, etc.)
      */
     public final void update(){
+
+        //Check if our health is bigger than 0. If not, we're dead and we'll start the DYING state
+        if(!isAlive() && currentState != State.DYING && currentState != null){
+            changeState(State.DYING);
+            return;
+        }
+
+
         if(currentState == State.IDLE){
             //If the card is idling, it will only check for enemies in range (and switch to the ATTACKING state if an enemy is in range)
             if((currentlyAttackingCard = physicsSystem.getEnemyInRange(this, position, range)) != null){
@@ -185,6 +208,24 @@ public class Card {
             }
             else updatesWithCurrentSprite++;
         }
+        else if(currentState == State.DYING){
+            //If the card is dying, it won't do anything (only reproduce the dying animation). Once the animation
+            //is finished, the Card will enable its totallyDied boolean.
+
+            //Changing CurrentSprite
+            if(updatesWithCurrentSprite >= updatesToNextDyingSprite){
+                //If we've already shown all dying sprites of the array, let's end DYING
+                if(currentSpriteIndex >= dyingSprites.get(currentOrientation).length){
+                    changeState(null); //We'll enter a null state (do nothing until the BattleModel kills us)
+                    totallyDead = true;
+                    return;
+                }
+                currentSprite = dyingSprites.get(currentOrientation)[currentSpriteIndex]; //Add 1 to currentAttackingSprite, and assign it to the currentSprite
+                currentSpriteIndex++;
+                updatesWithCurrentSprite = 0; //Reset updatesWithCurrentAttackingSprite
+            }
+            else updatesWithCurrentSprite++;
+        }
 
     }
 
@@ -195,7 +236,8 @@ public class Card {
      * @param g Graphics object in which we'll draw {@code this}.
      */
     public final void draw(Graphics g){
-        g.drawImage(currentSprite, (int)position.x, (int)(position.y - CARD_HEIGHT), null);
+        //As the position of the card is its bottom-left corner, to obtain the Y of the card we'll subtract CARD_HEIGHT
+        g.drawImage(currentSprite, (int)position.x, (int)position.y - CARD_HEIGHT, null);
     }
 
 
@@ -232,6 +274,7 @@ public class Card {
         idleSprites = BattleGraphics.getSprites(cardType, State.IDLE, CARD_HEIGHT);
         movingSprites = BattleGraphics.getSprites(cardType, State.WALKING, CARD_HEIGHT);
         attackingSprites = BattleGraphics.getSprites(cardType, State.ATTACKING, CARD_HEIGHT);
+        dyingSprites = BattleGraphics.getSprites(cardType, State.DYING, CARD_HEIGHT);
     }
 
 
@@ -244,9 +287,15 @@ public class Card {
         updatesWalking = 0;
         updatesAttacking = 0;
 
+        //Let's load the first sprite immediately, don't wait for the next update to come
         if(newState == State.IDLE) currentSprite = idleSprites.get(currentOrientation)[0];
         else if(newState == State.ATTACKING) currentSprite = attackingSprites.get(currentOrientation)[0];
         else if(newState == State.WALKING) currentSprite = movingSprites.get(currentOrientation)[0];
+        else if(newState == State.DYING){
+            System.out.println(cardStatus);
+            System.out.println(attackingVelocity);
+            currentSprite = dyingSprites.get(currentOrientation)[0];
+        }
 
         updatesWithCurrentSprite = 0;
         currentSpriteIndex = 1;
@@ -271,7 +320,10 @@ public class Card {
 
     public int getGoldCost(){ return goldCost; }
 
-
+    /**
+     * Returns whether the card is totally alive or not
+     * @return If the card is alive or not
+     */
     public boolean isAlive(){ return health > 0;}
 
 
@@ -292,5 +344,16 @@ public class Card {
         this.currentOrientation = orientation;
     }
 
+
+    /**
+     * Returns whether the card is totally dead or not.
+     * <p>Once a card is dead (life < 0), it changes its state to DYING. When this state ends,
+     * totallyDead will become true.
+     *
+     * @return Whether the card is totally dead or not
+     */
+    public boolean isTotallyDead(){
+        return totallyDead;
+    }
 
 }

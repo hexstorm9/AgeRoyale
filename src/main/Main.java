@@ -35,24 +35,21 @@ public class Main {
 
     public static void main(String[] args) {
 
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
+        SwingUtilities.invokeLater(() -> {
 
-                //Let's load the Graphics of the Menu
-                try{
-                    MenuGraphics.load(); //Load graphics before creating the screen
-                }catch(IOException | FontFormatException e){
-                    System.err.println("Can't load graphics. Please, reinstall the game.");
-                    e.printStackTrace();
-                    System.exit(1); //Exit the application
-                }
-
-                GameModel gameModel = new GameModel(); //Create the Model
-                RoyaleFrame royaleFrame = new RoyaleFrame(); //Create the View
-                SplashScreenController splashScreenController = new SplashScreenController(royaleFrame, gameModel); //Create controller and link together model, view and controller
-                splashScreenController.start(false); //Start the controller and the whole project
+            //Let's load the Graphics of the Menu
+            try{
+                MenuGraphics.load(); //Load graphics before creating the screen
+            }catch(IOException | FontFormatException e){
+                System.err.println("Can't load graphics. Please, reinstall the game.");
+                e.printStackTrace();
+                System.exit(1); //Exit the application
             }
+
+            GameModel gameModel = new GameModel(); //Create the Model
+            RoyaleFrame royaleFrame = new RoyaleFrame(); //Create the View
+            SplashScreenController splashScreenController = new SplashScreenController(royaleFrame, gameModel); //Create controller and link together model, view and controller
+            splashScreenController.start(false); //Start the controller and the whole project
         });
 
     }
