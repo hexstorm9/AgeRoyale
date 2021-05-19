@@ -291,11 +291,7 @@ public class Card {
         if(newState == State.IDLE) currentSprite = idleSprites.get(currentOrientation)[0];
         else if(newState == State.ATTACKING) currentSprite = attackingSprites.get(currentOrientation)[0];
         else if(newState == State.WALKING) currentSprite = movingSprites.get(currentOrientation)[0];
-        else if(newState == State.DYING){
-            System.out.println(cardStatus);
-            System.out.println(attackingVelocity);
-            currentSprite = dyingSprites.get(currentOrientation)[0];
-        }
+        else if(newState == State.DYING) currentSprite = dyingSprites.get(currentOrientation)[0];
 
         updatesWithCurrentSprite = 0;
         currentSpriteIndex = 1;

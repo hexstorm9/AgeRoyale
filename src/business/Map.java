@@ -219,11 +219,11 @@ public class Map {
         Vector2 towerPosition = new Vector2(0, 0);
         if(status == Card.Status.PLAYER){
             towerPosition.x = firstTileColumnXPosition + TILE_WIDTH/2;
-            towerPosition.y = TILE_HEIGHT * 3;
+            towerPosition.y = getTowerHeight() + (TILE_HEIGHT * 3);
         }
         else if(status  == Card.Status.ENEMY){
             towerPosition.x = firstTileColumnXPosition + ((TILE_WIDTH * (mapTileInfo[0].length() - 2)) - TILE_WIDTH/2);
-            towerPosition.y = TILE_HEIGHT * 3;
+            towerPosition.y = getTowerHeight() + (TILE_HEIGHT * 3);
         }
 
         return towerPosition;

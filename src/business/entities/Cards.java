@@ -15,7 +15,7 @@ public enum Cards {
     MALÉ(2, new int[]{250, 280, 320}, new int[]{25, 35, 45}, 3, 15, 12),
     CARPI(6, new int[]{250, 280, 320}, new int[]{50, 60, 70}, 4, 10, 4),
 
-    TOWER(true, 1000, new int[]{800, 1000, 1200}, new int[]{20, 30, 40}, 6, 15, 0);
+    TOWER(true, 1000, new int[]{800, 1000, 1200}, new int[]{10, 15, 20}, 4, 10, 0);
 
 
     private int goldCost;
