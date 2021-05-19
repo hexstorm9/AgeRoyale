@@ -26,6 +26,16 @@ public enum Cards {
     private int movingVelocity;
     private boolean isTower;
 
+    /**
+     * Default Cards Constructor
+     * @param isTower Whether the Card is a tower or not
+     * @param goldCost Its gold cost
+     * @param maxHealth Its max health
+     * @param damage Its damage
+     * @param range Its range
+     * @param attackingVelocity Its attacking velocity
+     * @param movingVelocity Its moving velocity
+     */
     Cards(boolean isTower, int goldCost, int[] maxHealth, int[] damage, int range, int attackingVelocity, int movingVelocity){
         this.goldCost = goldCost;
         this.maxHealth = maxHealth;
@@ -36,6 +46,15 @@ public enum Cards {
         this.isTower = isTower;
     }
 
+    /**
+     * Shorter Cards Constructor. The Cards won't be a Tower
+     * @param goldCost Its gold cost
+     * @param maxHealth Its max health
+     * @param damage Its damage
+     * @param range Its range
+     * @param attackingVelocity Its attacking velocity
+     * @param movingVelocity Its moving velocity
+     */
     Cards(int goldCost, int[] maxHealth, int[] damage, int range, int attackingVelocity, int movingVelocity){
         this(false, goldCost, maxHealth, damage, range, attackingVelocity, movingVelocity);
     }
@@ -48,6 +67,10 @@ public enum Cards {
     public int getDamage(int level){ return level >= damage.length ? damage[damage.length-1]: damage[level]; }
     public boolean isTower(){ return isTower;}
 
+    /**
+     * Returns the String representing that Cards (its name, but in lowercase)
+     * @return String representing that Cards (its name, but in lowercase)
+     */
     @Override
     public String toString() {
         return this.name().toLowerCase(Locale.ROOT);

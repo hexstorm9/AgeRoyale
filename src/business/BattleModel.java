@@ -47,6 +47,9 @@ public class BattleModel {
                 map.getTowerHeight(), physicsSystem));
         enemyCards.add(new Card(Cards.TOWER, 1, Card.Status.ENEMY, map.getTowerPosition(Card.Status.ENEMY),
                 map.getTowerHeight(), physicsSystem));
+
+        //Update Game Stats
+        battleController.gameStatsChanged(playerCards.size(), enemyCards.size());
     }
 
 
@@ -54,11 +57,17 @@ public class BattleModel {
     public void update(){
         for(int i = 0; i < playerCards.size(); i++){
             if(!playerCards.get(i).isTotallyDead()) playerCards.get(i).update();
-            else playerCards.remove(playerCards.get(i));
+            else{
+                playerCards.remove(playerCards.get(i));
+                battleController.gameStatsChanged(playerCards.size(), enemyCards.size());
+            }
         }
         for(int i = 0; i < enemyCards.size(); i++){
             if(!enemyCards.get(i).isTotallyDead()) enemyCards.get(i).update();
-            else enemyCards.remove(enemyCards.get(i));
+            else{
+                enemyCards.remove(enemyCards.get(i));
+                battleController.gameStatsChanged(playerCards.size(), enemyCards.size());
+            }
         }
     }
 

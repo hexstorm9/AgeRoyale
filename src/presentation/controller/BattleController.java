@@ -183,6 +183,7 @@ public class BattleController extends ScreenController implements Runnable, Mous
      * @param enemyTroops Current enemy troops on the map
      */
     public void gameStatsChanged(int playerTroops, int enemyTroops) {
+        //The method can sometimes be called from other threads, so we'll make sure to pass the duty to the EDT
         SwingUtilities.invokeLater(
                 () -> settingsPanel.changeTroopsStats(playerTroops, enemyTroops)
         );
