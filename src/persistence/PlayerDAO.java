@@ -52,6 +52,9 @@ public class PlayerDAO {
     public void updateCrowns(String playerName, int diff) throws SQLException{
         int playerCrowns = ((int)readPlayer(playerName)[1] + diff);
 
+        //If playerCrowns given the difference is negative, let's assure a minimum value of 0
+        if(playerCrowns < 0) playerCrowns = 0;
+
         final String updatePlayerCrownsQuery = "UPDATE player SET crowns = " + playerCrowns + " WHERE name = '" + playerName + "';";
         JDBCConnector.getInstance().updateDatabase(updatePlayerCrownsQuery);
     }

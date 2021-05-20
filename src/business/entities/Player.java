@@ -126,4 +126,22 @@ public class Player {
     public HashMap<Cards, Integer> getPlayerCards(){ return playerCards;}
 
 
+
+    /**
+     * Updates the Player information after a battle (both locally and remotely)
+     * <p>Do not call the method from the EDT, it would block it.
+     *
+     * @param crownsDiff The difference of crowns
+     * @param won Whether the battle was won or not
+     */
+    public void updateAfterBattlePlayed(int crownsDiff, boolean won){
+        crowns += crownsDiff;
+        battlePlays++;
+        battleWins += won ? 1: 0;
+        try{
+            playerDAO.updateCrowns(name, crownsDiff);
+            playerDAO.addBattlePlayed(name, won);
+        }catch(SQLException e){ e.printStackTrace();}
+    }
+
 }

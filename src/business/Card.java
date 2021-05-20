@@ -105,6 +105,7 @@ public class Card {
     protected int movingVelocity;
     private boolean totallyDead; //Once the health of a Card reaches 0, it will enter the DYING state and
                                  //reproduce the dying animation. When the animation is ended, totallyDead will become true
+    private Cards cardType;
 
 
     protected Image currentSprite; //The sprite that will be drawn on the draw() method
@@ -116,6 +117,7 @@ public class Card {
 
     public Card(Cards cardType, int level, Status cardStatus, Vector2 initialPosition, final int CARD_HEIGHT,
                 PhysicsSystem physicsSystem){
+        this.cardType = cardType;
         this.CARD_HEIGHT = CARD_HEIGHT;
         position = initialPosition;
         this.cardStatus = cardStatus;
@@ -352,4 +354,12 @@ public class Card {
         return totallyDead;
     }
 
+
+    /**
+     * Returns the {@link Cards} of this Card (telling the type of the Card it is).
+     * @return {@link Cards} of this Card
+     */
+    public Cards getCardType(){
+        return cardType;
+    }
 }

@@ -20,8 +20,15 @@ public abstract class FrontPanelController implements ActionListener, MouseListe
     private RoyaleFrame royaleFrame;
 
     private boolean isFrontPanelVisible;
+    private boolean canHideFrontPanel; //By default, if the user clicks outside the front panel, it will hide.
+                                       //This behaviour can be modified toggling this attribute to false
 
 
+    /**
+     * Default FrontPanelController constructor.
+     * @param frontPanel The frontPanel it will control.
+     * @param royaleFrame The royaleFrame that the frontPanel will be put in.
+     */
     public FrontPanelController(FrontPanel frontPanel, RoyaleFrame royaleFrame){
         this.frontPanel = frontPanel;
         this.royaleFrame = royaleFrame;
@@ -29,6 +36,7 @@ public abstract class FrontPanelController implements ActionListener, MouseListe
         frontPanel.addMouseListener(this);
 
         isFrontPanelVisible = false;
+        canHideFrontPanel = true;
     }
 
 
@@ -51,7 +59,7 @@ public abstract class FrontPanelController implements ActionListener, MouseListe
         //If somebody has clicked directly in the FrontPanel (not the panels above
         //the FrontPanel) let's hide the panel
         if(e.getSource() instanceof FrontPanel){
-            setFrontPanelVisibility(false);
+            if(canHideFrontPanel) setFrontPanelVisibility(false);
         }
     }
 
@@ -69,8 +77,21 @@ public abstract class FrontPanelController implements ActionListener, MouseListe
     public void mouseExited(MouseEvent e) {}
 
 
+    /**
+     * Returns whether the FrontPanel is currently visible or not
+     * @return Whether the FrontPanel is currently visible or not
+     */
     public boolean isFrontPanelVisible(){
         return isFrontPanelVisible;
+    }
+
+    /**
+     * It tells to the FrontPanel whether it can be hidden (clicking outside of it) or not.
+     * <p>By default, a FrontPanel can be hidden
+     * @param canBeHidden Whether the FrontPanel can be hidden or not.
+     */
+    public void canBeHidden(boolean canBeHidden){
+        canHideFrontPanel = canBeHidden;
     }
 
 }

@@ -68,6 +68,11 @@ public class BattleModel {
         for(int i = 0; i < playerCards.size(); i++){
             if(!playerCards.get(i).isTotallyDead()) playerCards.get(i).update();
             else{
+                //If that player card that just died is the tower, let's end the game (the enemy won)
+                if(playerCards.get(i).getCardType().isTower()){
+                    endGame(Card.Status.ENEMY);
+                    return;
+                }
                 playerCards.remove(playerCards.get(i));
                 addGold(Card.Status.ENEMY, amountOfGoldEveryEnemyKilled); //For every player death, add gold to the enemy
                 battleController.gameStatsChanged(playerCards.size(), enemyCards.size());
@@ -76,6 +81,11 @@ public class BattleModel {
         for(int i = 0; i < enemyCards.size(); i++){
             if(!enemyCards.get(i).isTotallyDead()) enemyCards.get(i).update();
             else{
+                //If that enemy card that just died is the tower, let's end the game (the player won)
+                if(playerCards.get(i).getCardType().isTower()){
+                    endGame(Card.Status.PLAYER);
+                    return;
+                }
                 enemyCards.remove(enemyCards.get(i));
                 addGold(Card.Status.PLAYER, amountOfGoldEveryEnemyKilled); //For every enemy death, add gold to the player
                 battleController.gameStatsChanged(playerCards.size(), enemyCards.size());
@@ -107,6 +117,25 @@ public class BattleModel {
         map.draw(g);
         for(Card c: playerCards) c.draw(g);
         for(Card c: enemyCards) c.draw(g);
+    }
+
+
+    /**
+     * Ends the Battle completely.
+     * <p>To be called whenever the Tower has died.
+     *
+     * @param winner The winner of the game (either the Player or the Enemy)
+     */
+    private void endGame(Card.Status winner){
+        Random r = new Random();
+        final int crownsOfTheBattle = 20 + r.nextInt(15); //The crowns a player looses/wins can be ranged from 20 to 35
+
+        //Create a new thread to update the Player information (so as not to block this thread)
+        Thread updatePlayerThread = new Thread(() ->
+                player.updateAfterBattlePlayed(winner == Card.Status.PLAYER ? crownsOfTheBattle : -crownsOfTheBattle, winner == Card.Status.PLAYER));
+        updatePlayerThread.start();
+
+        battleController.endGame(crownsOfTheBattle);
     }
 
 

@@ -9,6 +9,7 @@ import business.entities.Songs;
 import business.entities.Sounds;
 import presentation.sound.MusicPlayer;
 import presentation.sound.SoundPlayer;
+import presentation.view.BattleEndedFrontPanel;
 import presentation.view.BattleScreen;
 import presentation.view.RoyaleFrame;
 
@@ -32,6 +33,8 @@ public class BattleController extends ScreenController implements Runnable{
     private BattleModel battleModel;
 
     private boolean gameRunning = true;
+
+    private BattleBot battleBot;
 
 
     /**
@@ -65,7 +68,7 @@ public class BattleController extends ScreenController implements Runnable{
         battleModel = new BattleModel(this, gameModel.getPlayer(), battleScreen.getBattlePanelSize());
         battleScreen.updateCardsToShow();
 
-        BattleBot battleBot = new BattleBot(battleModel, battleScreen.getBattlePanelSize());
+        battleBot = new BattleBot(battleModel, battleScreen.getBattlePanelSize());
         battleBot.startBot();
 
         Thread gameLoop = new Thread(this);
@@ -128,7 +131,6 @@ public class BattleController extends ScreenController implements Runnable{
                 frames = 0;
                 timer += 1000;
             }
-
         }
    }
 
@@ -193,6 +195,7 @@ public class BattleController extends ScreenController implements Runnable{
         return battleModel.getPlayerCurrentCardsToThrow();
     }
 
+
     /**
      * Ends the current Game and Exits the application
      */
@@ -208,6 +211,26 @@ public class BattleController extends ScreenController implements Runnable{
         goToScreen(Screens.LOGIN_SCREEN, false);
     }
 
+    /**
+     * To be called from the Model whenever the battle has ended.
+     * <p>It stops the GameLoop and everything related to the battle.
+     *
+     * @param playerCrowns The crowns that the user has won/lost
+     */
+    public void endGame(int playerCrowns){
+        //This method will be called from the gameLoop Thread, and we want to stop that thread.
+        //That's why we'll do it from the EDT
+        gameRunning = false;
+        battleBot.stopBot();
 
+        //As this method will be called from the gameLoopThread, let's use the EDT to modify the View
+        SwingUtilities.invokeLater(() -> {
+            BattleEndedFrontPanel frontPanel = new BattleEndedFrontPanel(royaleFrame.getWidth(), royaleFrame.getHeight(), playerCrowns);
+
+            BattleEndedFrontPanelController battleEndedFrontPanelController = new BattleEndedFrontPanelController(frontPanel, royaleFrame);
+            battleEndedFrontPanelController.setFrontPanelVisibility(true);
+            battleEndedFrontPanelController.canBeHidden(false);
+        });
+    }
 
 }

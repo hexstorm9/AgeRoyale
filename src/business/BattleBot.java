@@ -69,7 +69,10 @@ public class BattleBot implements Runnable{
                     if(correctPosition) System.out.println("Bot card thrown --> " + cardToThrow.toString() + " in " + xPos + "x " + yPos + "y");
                 }
 
-            }catch(Exception e){e.printStackTrace();}
+            }catch(InterruptedException e){
+                break; //Whenever an InterruptedException occurs, break from the infinite loop (as the thread has
+                        //been interrupted)
+            }
         }
     }
 
