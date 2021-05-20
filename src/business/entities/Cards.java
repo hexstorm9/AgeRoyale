@@ -7,7 +7,7 @@ import java.util.Locale;
  */
 public enum Cards {
     ADAMS(3, new int[]{250, 280, 320}, new int[]{20, 25, 30}, 4, 10, 0),
-    TRUMP(4, new int[]{250, 280, 320}, new int[]{30, 40, 50}, 2, 6, 10),
+    TRUMP(3, new int[]{250, 280, 320}, new int[]{30, 40, 50}, 2, 6, 10),
     DAVID(5, new int[]{250, 280, 320}, new int[]{60, 90, 120}, 1, 7, 4),
     RAFA(4, new int[]{250, 280, 320}, new int[]{20, 30, 40}, 3, 8, 7),
     SAULA(4, new int[]{250, 280, 320}, new int[]{20, 25, 30}, 6, 10, 0),
@@ -37,7 +37,7 @@ public enum Cards {
      * @param movingVelocity Its moving velocity
      */
     Cards(boolean isTower, int goldCost, int[] maxHealth, int[] damage, int range, int attackingVelocity, int movingVelocity){
-        this.goldCost = goldCost;
+        this.goldCost = goldCost * 10; //Internally, the gold cost will go from 0 to 100 instead of 0 to 10
         this.maxHealth = maxHealth;
         this.damage = damage;
         this.range = range;

@@ -23,9 +23,13 @@ public class BattleModel {
 
 
     private Player player;
-    private int playerGold; //From 0 to 10
     private ArrayList<Cards> playerCurrentCardsToThrow; //There will only be 4 cards to throw at a time
     private final int PLAYER_CURRENT_CARDS = 4;
+
+    private double playerGold; //From 0 to 100
+    private double enemyGold; //From 0 to 100
+    private final double amountOfGoldEveryUpdate; //Tells the amount of gold that will be increased in every update
+    private final double amountOfGoldEveryEnemyKilled; //Tells the amount of gold that will be increased in every enemy killed
 
 
     public BattleModel(BattleController battleController, Player player, Dimension battlePanelDimension){
@@ -35,7 +39,6 @@ public class BattleModel {
         map = new Map(battlePanelDimension);
         enemyCards = new ArrayList<>();
         playerCards = new ArrayList<>();
-        playerGold = 100;
 
         physicsSystem = new PhysicsSystem(this, map);
 
@@ -50,15 +53,23 @@ public class BattleModel {
 
         //Update Game Stats
         battleController.gameStatsChanged(playerCards.size(), enemyCards.size());
+
+        //Define Gold
+        playerGold = 0;
+        enemyGold = 0;
+        amountOfGoldEveryUpdate = 0.08;
+        amountOfGoldEveryEnemyKilled = 5;
     }
 
 
 
     public void update(){
+        //Update all Cards
         for(int i = 0; i < playerCards.size(); i++){
             if(!playerCards.get(i).isTotallyDead()) playerCards.get(i).update();
             else{
                 playerCards.remove(playerCards.get(i));
+                addGold(Card.Status.ENEMY, amountOfGoldEveryEnemyKilled); //For every player death, add gold to the enemy
                 battleController.gameStatsChanged(playerCards.size(), enemyCards.size());
             }
         }
@@ -66,8 +77,28 @@ public class BattleModel {
             if(!enemyCards.get(i).isTotallyDead()) enemyCards.get(i).update();
             else{
                 enemyCards.remove(enemyCards.get(i));
+                addGold(Card.Status.PLAYER, amountOfGoldEveryEnemyKilled); //For every enemy death, add gold to the player
                 battleController.gameStatsChanged(playerCards.size(), enemyCards.size());
             }
+        }
+
+        //Update Player and Enemy gold
+        addGold(Card.Status.PLAYER, amountOfGoldEveryUpdate);
+        addGold(Card.Status.ENEMY, amountOfGoldEveryUpdate);
+    }
+
+
+    /**
+     * Updates the gold either of the enemy or the player
+     * @param status Tells to which player (enemy or player) the gold should be updated
+     * @param amount The amount of gold to increase
+     */
+    public void addGold(Card.Status status, double amount){
+        if(status == Card.Status.PLAYER){
+            playerGold = playerGold + amount > 100? 100: playerGold + amount;
+        }
+        else if(status == Card.Status.ENEMY){
+            enemyGold = enemyGold + amount > 100? 100: enemyGold + amount;
         }
     }
 
@@ -87,7 +118,7 @@ public class BattleModel {
      * @param yPos The initial Y position of the Card
      *
      * @return Boolean telling whether the Card has been thrown or not (if not, it means
-     * the x and y pos were not inside the map or the player had no enough gold)
+     * the x and y pos were not inside the map or the player/enemy had no enough gold)
      */
     public synchronized boolean throwCard(Cards c, Card.Status cardStatus, int xPos, int yPos){
         Vector2 cardPosition = new Vector2(xPos, yPos);
@@ -110,7 +141,12 @@ public class BattleModel {
         else if(cardStatus == Card.Status.ENEMY){
             //If the position introduced is outside the map, return false
             if(!map.canCardBeThrownToTheRightMap(cardPosition)) return false;
+
+            //If the enemy has no enough gold to invoke that card, return false
+            if(enemyGold < c.getGoldCost()) return false;
+
             enemyCards.add(new Card(c, 1, Card.Status.ENEMY, cardPosition, map.getCardHeight(), physicsSystem));
+            enemyGold -= c.getGoldCost();
         }
 
         battleController.gameStatsChanged(playerCards.size(), enemyCards.size());
@@ -119,23 +155,22 @@ public class BattleModel {
 
 
 
+
     /**
-     * When called, it will add 1 gold to the player's gold
-     * <p>The {@link presentation.controller.BattleController} increases the gold of the player through a visible
-     * loading bar, and it will call this method when necessary.
+     * Returns a {@code Double} from 0 to 100 indicating the current Gold that the Player Has
+     * @return {@code Double} from 0 to 100 indicating the current Gold that the Player Has
      */
-    public void addPlayerGold(){
-        if(playerGold >= 10) return;
-        playerGold++;
+    public double getPlayerCurrentGold(){
+        return playerGold;
     }
 
 
     /**
-     * Returns the current gold of the player
-     * @return current gold of the player
+     * Returns a {@code Double} from 0 to 100 indicating the current Gold that the enemy has
+     * @return {@code Double} from 0 to 100 indicating the current Gold that the enemy has
      */
-    public int getCurrentGold(){
-        return playerGold;
+    public double getEnemyCurrentGold() {
+        return enemyGold;
     }
 
 

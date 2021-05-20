@@ -14,9 +14,7 @@ import presentation.view.RoyaleFrame;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 
@@ -28,7 +26,7 @@ import java.util.ArrayList;
  * @see BattleModel
  * @version 1.0
  */
-public class BattleController extends ScreenController implements Runnable, MouseListener{
+public class BattleController extends ScreenController implements Runnable{
 
     private BattleScreen battleScreen;
     private BattleModel battleModel;
@@ -112,13 +110,13 @@ public class BattleController extends ScreenController implements Runnable, Mous
             startTime = currentTime;
 
             if(uDeltaTime >= uOPTIMAL_TIME){
-                battleModel.update();
+                battleModel.update(); //Update MAX_UPDATES_PER_SECOND times per second the physics of the game
                 updates++;
                 uDeltaTime -= uOPTIMAL_TIME;
             }
 
             if(fDeltaTime >= fOPTIMAL_TIME){
-                battleScreen.getBattlePanel().repaint();
+                battleScreen.draw(); //Draw MAX_FRAMES_PER_SECOND times per second the BattleScreen
                 frames++;
                 fDeltaTime -= fOPTIMAL_TIME;
             }
@@ -141,8 +139,19 @@ public class BattleController extends ScreenController implements Runnable, Mous
    }
 
 
+    /**
+    * Returns an {@code Double} from 0 to 100 indicating the current Gold that the Player Has
+    * @return {@code Double} from 0 to 100 indicating the current Gold that the Player Has
+    */
+    public double getPlayerCurrentGold(){
+       return battleModel.getPlayerCurrentGold();
+    }
+
+
     @Override
     public void mousePressed(MouseEvent e) {
+        super.mousePressed(e);
+
         if(e.getSource() instanceof BattleScreen.SouthPanel.CardPanel){
             BattleScreen.SouthPanel.CardPanel cardClicked = (BattleScreen.SouthPanel.CardPanel) e.getSource();
             battleScreen.setCardSelected(cardClicked.getCardHolding());
@@ -150,7 +159,7 @@ public class BattleController extends ScreenController implements Runnable, Mous
         }
         else if(e.getSource() instanceof BattleScreen.BattlePanel){
             Cards cardToThrow = battleScreen.getCardSelected();
-            if(cardToThrow == null){
+            if(cardToThrow == null){ //If no card has been selected
                 SoundPlayer.getInstance().play(Sounds.BUTTON);
                 return;
             }
@@ -161,20 +170,6 @@ public class BattleController extends ScreenController implements Runnable, Mous
         }
     }
 
-    @Override
-    public void mouseClicked(MouseEvent e) {}
-
-    @Override
-    public void mouseReleased(MouseEvent e) {}
-
-    @Override
-    public void mouseEntered(MouseEvent e) {}
-
-    @Override
-    public void mouseExited(MouseEvent e) {}
-
-    @Override
-    public void actionPerformed(ActionEvent e){}
 
 
     /**
@@ -199,28 +194,20 @@ public class BattleController extends ScreenController implements Runnable, Mous
     }
 
     /**
-     * Ends the Game and Exits the application
+     * Ends the current Game and Exits the application
      */
     public void endGameAndExit() {
         System.exit(0);
     }
 
     /**
-     * Ends the Game and Logs Out
+     * Ends the current Game and Logs Out the current user.
      */
     public void endGameAndLogOut(){
         gameModel.forgetPlayer();
         goToScreen(Screens.LOGIN_SCREEN, false);
     }
 
-
-    private class LoadGoldOnBackground extends SwingWorker<Void, Void>{
-
-        @Override
-        protected Void doInBackground() throws Exception {
-            return null;
-        }
-    }
 
 
 }

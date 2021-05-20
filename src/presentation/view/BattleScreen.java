@@ -4,7 +4,6 @@ import business.entities.Cards;
 import presentation.controller.BattleController;
 import presentation.graphics.BattleGraphics;
 import presentation.graphics.MenuGraphics;
-import presentation.view.customcomponents.RoyaleGoldProgressBar;
 import presentation.view.customcomponents.RoyaleLabel;
 
 import javax.swing.*;
@@ -25,6 +24,8 @@ public class BattleScreen extends Screen {
 
     private BattlePanel battlePanel;
     private SouthPanel southPanel;
+
+
 
 
     /**
@@ -51,10 +52,17 @@ public class BattleScreen extends Screen {
 
 
     /**
-     * Returns a {@link JPanel} that represents the BattlePanel inside this {@code BattleScreen}
-     * @return A {@link JPanel} that represents the BattlePanel inside this {@code BattleScreen}
+     * Draws again this {@link Screen} with updated information (asks for that updated information to the
+     * {@link BattleController}.
+     * <p>It should be called from the GameLoop, and it will determine the FPS at which the game runs.
+     *
+     * <p>It is not necessary to call this method from the Event-Dispatch Thread (EDT). It is thread-safe.
      */
-    public JPanel getBattlePanel(){ return battlePanel;}
+    public void draw(){
+        battlePanel.repaint();
+        southPanel.goldProgressBar.repaint();
+    }
+
 
     /**
      * Notifies the Screen that the Player cards shown need to be updated
@@ -62,11 +70,9 @@ public class BattleScreen extends Screen {
     public void updateCardsToShow (){ southPanel.updateCardsToShow();}
 
 
-    public void updateGoldProgressBar(int value){ southPanel.updateGoldProgressBar(value);}
-
 
     /**
-     * Returns the current card selected by the player
+     * Returns the current card selected by the player. Null if there is no selected card
      * @return Card selected by the Player
      */
     public Cards getCardSelected(){ return southPanel.getCardSelected(); }
@@ -94,14 +100,20 @@ public class BattleScreen extends Screen {
      */
     public class BattlePanel extends JPanel{
 
+        private BattlePanel(){
+            setOpaque(false);
+        }
+
         @Override
         protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
             //TODO: Drawable[] drawables = battleController.getDrawables();
             battleController.paintBattle(g);
+            super.paintComponent(g);
         }
 
     }
+
+
 
 
     /**
@@ -114,7 +126,7 @@ public class BattleScreen extends Screen {
 
         private JPanel centerPanel;
         private JPanel cardsPanel;
-        private JPanel goldPanel;
+        private GoldProgressBar goldProgressBar;
 
         private Image woodTile; //The background tile
         private int verticalWoodTiles, horizontalWoodTiles;
@@ -135,30 +147,21 @@ public class BattleScreen extends Screen {
             cardsPanel.setOpaque(false);
 
 
-            goldPanel = new JPanel();
-            goldPanel.setLayout(new BoxLayout(goldPanel, BoxLayout.X_AXIS));
-            goldPanel.setOpaque(false);
-
-            RoyaleLabel goldText = new RoyaleLabel("10", RoyaleLabel.LabelType.PARAGRAPH);
-            goldText.setForeground(Color.YELLOW);
-            FontMetrics goldTextFontMetrics = goldText.getFontMetrics(goldText.getFont());
-            RoyaleGoldProgressBar goldProgressBar = new RoyaleGoldProgressBar(goldTextFontMetrics.getHeight());
-            goldPanel.add(goldProgressBar);
-            goldPanel.add(goldText);
-
+            goldProgressBar = new GoldProgressBar(getPreferredSize().height * 20/100,500, getPreferredSize().height * 7/100);
 
             centerPanel.add(cardsPanel);
-            centerPanel.add(goldPanel);
+            centerPanel.add(goldProgressBar);
             add(centerPanel, new GridBagConstraints());
         }
 
 
         private void updateCardsToShow(){
             cardsPanel.removeAll();
+            cardsPanel.setPreferredSize(new Dimension(cardsPanel.getPreferredSize().width, getPreferredSize().height * 75/100));
             cardsToShow = battleController.getCardsToShow();
 
             for(Cards c: cardsToShow){
-                CardPanel cp = new CardPanel(c, getPreferredSize().height * 65/100);
+                CardPanel cp = new CardPanel(c, getPreferredSize().height * 65/100, getPreferredSize().height * 75/100);
                 cp.addMouseListener(battleController);
                 cardsPanel.add(cp);
             }
@@ -167,10 +170,6 @@ public class BattleScreen extends Screen {
             revalidate();
         }
 
-
-        private void updateGoldProgressBar(int value){
-
-        }
 
 
         private void setCardSelected(Cards c){
@@ -226,11 +225,13 @@ public class BattleScreen extends Screen {
 
             private Image cardImage;
             private final int CARD_HEIGHT;
+            private final int CARD_HEIGHT_SELECTED;
 
 
-            private CardPanel(Cards c, int cardHeight){
+            private CardPanel(Cards c, int cardHeight, int cardHeightSelected){
                 cardHolding = c;
                 CARD_HEIGHT = cardHeight;
+                CARD_HEIGHT_SELECTED = cardHeightSelected;
 
                 setLayout(new BorderLayout());
                 setOpaque(false);
@@ -243,7 +244,7 @@ public class BattleScreen extends Screen {
             private void setSelected(boolean selected){
                 this.selected = selected;
 
-                if(selected) cardImage = MenuGraphics.scaleImage(BattleGraphics.getCardSprite(cardHolding), CARD_HEIGHT + CARD_HEIGHT*20/100);
+                if(selected) cardImage = MenuGraphics.scaleImage(BattleGraphics.getCardSprite(cardHolding), CARD_HEIGHT_SELECTED);
                 else cardImage = MenuGraphics.scaleImage(BattleGraphics.getCardSprite(cardHolding), CARD_HEIGHT);
 
                 removeAll();
@@ -263,6 +264,56 @@ public class BattleScreen extends Screen {
                 return cardHolding;
             }
         }
+
+
+        private class GoldProgressBar extends JPanel{
+
+            private final int BAR_HEIGHT, BAR_WIDTH;
+            private final int PANEL_HEIGHT, PANEL_WIDTH;
+
+            private final int PROGRESS_BAR_Y_POS;
+
+            private final Color barBackground = new Color(0 , 0, 0, 100);
+            private final Color barForeground = new Color(255, 203, 0);
+
+            private Font goldFont;
+            private final int FONT_WIDTH, FONT_HEIGHT;
+
+            private GoldProgressBar(int panelHeight, int panelWidth, int barHeight){
+                PANEL_WIDTH = panelWidth;
+                PANEL_HEIGHT = panelHeight;
+
+                goldFont = MenuGraphics.getMainFont();
+                FONT_WIDTH = getFontMetrics(goldFont).getWidths()[0] * 3;
+                FONT_HEIGHT = getFontMetrics(goldFont).getHeight();
+
+                BAR_HEIGHT = barHeight;
+                BAR_WIDTH = PANEL_WIDTH - FONT_WIDTH;
+
+                setOpaque(false);
+                setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
+                setMinimumSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
+                setMaximumSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
+
+                PROGRESS_BAR_Y_POS = (PANEL_HEIGHT/2) - (BAR_HEIGHT/2);
+            }
+
+            @Override
+            protected void paintComponent(Graphics g) {
+                double currentGold = battleController.getPlayerCurrentGold(); //CurrentGold can range from 0 to 100
+
+                g.setColor(barBackground);
+                g.fillRoundRect(0, PROGRESS_BAR_Y_POS, BAR_WIDTH, BAR_HEIGHT, 20, 20);
+
+                g.setColor(barForeground);
+                g.fillRoundRect(0, PROGRESS_BAR_Y_POS, (int)(currentGold*((double)BAR_WIDTH/100)), BAR_HEIGHT, 20, 20);
+
+                g.setFont(goldFont);
+                g.drawString(Integer.toString((int)(currentGold/10)), BAR_WIDTH + FONT_WIDTH/3, PROGRESS_BAR_Y_POS + FONT_HEIGHT/2);
+                super.paintComponent(g);
+            }
+        }
+
     }
 
 

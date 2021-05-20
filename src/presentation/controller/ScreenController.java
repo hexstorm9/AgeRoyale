@@ -184,6 +184,10 @@ public abstract class ScreenController implements ActionListener, MouseListener{
     }
 
 
+    /**
+     * Returns the GameModel from this Controller.
+     * @return The GameModel that this controller has
+     */
     public GameModel getGameModel(){
         return gameModel;
     }
