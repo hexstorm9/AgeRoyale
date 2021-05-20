@@ -9,14 +9,15 @@ import java.awt.*;
 
 
 /**
- * The LoadingBattleScreen class will be a simple JPanel showing the logo and a ProgressBar ({@link RoyaleProgressBar})
+ * The LoadingBattleScreen class will be a simple {@link Screen} showing the logo and a ProgressBar ({@link RoyaleProgressBar})
  * controlled through its controller ({@link presentation.controller.LoadingBattleScreenController})
+ * <p>It is shown whenever the program loads the resources before entering a Battle.
  *
  * @see presentation.controller.LoadingBattleScreenController
  * @see RoyaleProgressBar
  * @version 1.0
  */
-public class LoadingBattleScreen extends JPanel {
+public class LoadingBattleScreen extends Screen {
 
     private Image imageLogo;
     private RoyaleProgressBar royaleProgressBar;
@@ -29,6 +30,8 @@ public class LoadingBattleScreen extends JPanel {
      * @see RoyaleProgressBar
      */
     public LoadingBattleScreen(int screenHeight){
+        super(screenHeight);
+
         imageLogo = MenuGraphics.getLogo();
         royaleProgressBar = new RoyaleProgressBar();
 

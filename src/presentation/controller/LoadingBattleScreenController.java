@@ -8,7 +8,6 @@ import presentation.view.LoadingBattleScreen;
 import presentation.view.RoyaleFrame;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.List;
 import java.util.Random;
@@ -45,8 +44,7 @@ public class LoadingBattleScreenController extends ScreenController{
     }
 
 
-    @Override
-    public void actionPerformed(ActionEvent e) {}
+
 
 
     private class LoadBattleResourcesInBackground extends SwingWorker<String, Integer> {
@@ -111,7 +109,7 @@ public class LoadingBattleScreenController extends ScreenController{
                 e.printStackTrace();
             }
 
-            if (errorMessage == null) goToScreen(Screen.BATTLE); //If everything has been loaded correctly, let's go to the BATTLE Screen
+            if (errorMessage == null) goToScreen(Screens.BATTLE); //If everything has been loaded correctly, let's go to the BATTLE Screen
             else royaleFrame.showCriticalErrorAndExitApplication(errorMessage);
         }
     }

@@ -21,7 +21,7 @@ import java.awt.event.MouseListener;
 import java.sql.SQLException;
 import java.util.Arrays;
 
-public class PasswordForgottenScreenController extends ScreenController implements MouseListener{
+public class PasswordForgottenScreenController extends ScreenController{
 
     private PasswordForgottenScreen passwordForgottenScreen;
 
@@ -54,7 +54,6 @@ public class PasswordForgottenScreenController extends ScreenController implemen
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
         if(e.getActionCommand().equals(PasswordForgottenScreen.SEND_EMAIL_ACTION_COMMAND)){
             passwordForgottenScreen.pauseAllComponents();
             passwordForgottenScreen.emptyEmailErrorMessage();
@@ -80,32 +79,23 @@ public class PasswordForgottenScreenController extends ScreenController implemen
             passwordForgottenScreen.emptyPasswordsErrorMessage();
             new ChangeUserPasswordInBackground().execute();
         }
-
     }
+
 
 
     @Override
     public void mousePressed(MouseEvent e){
+        super.mousePressed(e);
+
         if(e.getSource() instanceof RoyaleLabel) {
             RoyaleLabel labelClicked = (RoyaleLabel) e.getSource();
             if(labelClicked.getActionCommand().equals(PasswordForgottenScreen.RETURN_LOGIN_LABEL_ACTION_COMMAND)){
                 passwordForgottenScreen.pauseAllComponents();
-                goToScreen(Screen.LOGIN_SCREEN);
+                goToScreen(Screens.LOGIN_SCREEN);
             }
         }
     }
 
-    @Override
-    public void mouseClicked(MouseEvent e) {}
-
-    @Override
-    public void mouseReleased(MouseEvent e) {}
-
-    @Override
-    public void mouseEntered(MouseEvent e) {}
-
-    @Override
-    public void mouseExited(MouseEvent e) {}
 
 
 
@@ -199,7 +189,7 @@ public class PasswordForgottenScreenController extends ScreenController implemen
                 passwordForgottenScreen.setPasswordsErrorMessage(errorMessage);
                 passwordForgottenScreen.enableAllComponents();
             }
-            else goToScreen(Screen.SPLASH_SCREEN); //If everything has gone OK, return to the splash screen
+            else goToScreen(Screens.SPLASH_SCREEN); //If everything has gone OK, return to the splash screen
         }
     }
 

@@ -8,14 +8,14 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * The SplashScreen class will be a simple JPanel showing the logo and a ProgressBar ({@link RoyaleProgressBar})
+ * The SplashScreen class is a simple {@link Screen} showing the logo and a ProgressBar ({@link RoyaleProgressBar})
  * controlled through its controller ({@link presentation.controller.SplashScreenController})
  *
  * @see presentation.controller.SplashScreenController
  * @see RoyaleProgressBar
  * @version 1.0
  */
-public class SplashScreen extends JPanel {
+public class SplashScreen extends Screen {
 
     private Image imageLogo;
     private RoyaleProgressBar royaleProgressBar;
@@ -28,6 +28,8 @@ public class SplashScreen extends JPanel {
      * @see RoyaleProgressBar
      */
     public SplashScreen(int screenHeight){
+        super(screenHeight);
+
         imageLogo = MenuGraphics.getLogo();
         royaleProgressBar = new RoyaleProgressBar();
 

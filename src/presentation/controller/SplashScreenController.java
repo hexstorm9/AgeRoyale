@@ -10,7 +10,6 @@ import presentation.view.RoyaleFrame;
 import presentation.view.SplashScreen;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
@@ -49,8 +48,6 @@ public class SplashScreenController extends ScreenController{
     }
 
 
-    @Override
-    public void actionPerformed(ActionEvent e) {}
 
 
     private class LoadGameInBackground extends SwingWorker<String, Integer>{
@@ -129,7 +126,7 @@ public class SplashScreenController extends ScreenController{
                 e.printStackTrace();
             }
 
-            if (errorMessage == null) goToScreen(Screen.LOGIN_SCREEN);
+            if (errorMessage == null) goToScreen(Screens.LOGIN_SCREEN);
             else royaleFrame.showCriticalErrorAndExitApplication(errorMessage);
         }
     }

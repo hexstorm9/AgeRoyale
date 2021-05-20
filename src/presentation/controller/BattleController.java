@@ -210,7 +210,7 @@ public class BattleController extends ScreenController implements Runnable, Mous
      */
     public void endGameAndLogOut(){
         gameModel.forgetPlayer();
-        goToScreen(Screen.LOGIN_SCREEN, false);
+        goToScreen(Screens.LOGIN_SCREEN, false);
     }
 
 

@@ -91,15 +91,15 @@ public class SettingsPanelController extends FrontPanelController implements Cha
             }
             else if(labelClicked.getActionCommand().equals(SettingsPanel.CHANGE_LANGUAGE_TO_ENGLISH_ACTION_COMMAND)){
                 LanguageManager.changePreferredLanguage(Language.ENGLISH);
-                screenController.goToScreen(ScreenController.Screen.SPLASH_SCREEN);
+                screenController.goToScreen(ScreenController.Screens.SPLASH_SCREEN);
             }
             else if(labelClicked.getActionCommand().equals(SettingsPanel.CHANGE_LANGUAGE_TO_SPANISH_ACTION_COMMAND)){
                 LanguageManager.changePreferredLanguage(Language.SPANISH);
-                screenController.goToScreen(ScreenController.Screen.SPLASH_SCREEN);
+                screenController.goToScreen(ScreenController.Screens.SPLASH_SCREEN);
             }
             else if(labelClicked.getActionCommand().equals(SettingsPanel.CHANGE_LANGUAGE_TO_CATALAN_ACTION_COMMAND)){
                 LanguageManager.changePreferredLanguage(Language.CATALAN);
-                screenController.goToScreen(ScreenController.Screen.SPLASH_SCREEN);
+                screenController.goToScreen(ScreenController.Screens.SPLASH_SCREEN);
             }
         }
     }
@@ -161,7 +161,7 @@ public class SettingsPanelController extends FrontPanelController implements Cha
                 ((SettingsPanel)frontPanel).enableAllDeleteAccountComponents();
             }
             else{ //If the account has been deleted successfully, log out
-                screenController.goToScreen(ScreenController.Screen.SPLASH_SCREEN);
+                screenController.goToScreen(ScreenController.Screens.SPLASH_SCREEN);
             }
         }
     }

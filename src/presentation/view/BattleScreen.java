@@ -12,18 +12,31 @@ import java.awt.*;
 import java.util.ArrayList;
 
 
-public class BattleScreen extends JPanel {
+/**
+ * {@code BattleScreen} is the {@link Screen} that shows the whole Battle.
+ * <p>It has to be controlled and listened through a {@link BattleController}
+ *
+ * @version 1.0
+ * @see BattleController
+ */
+public class BattleScreen extends Screen {
 
     private BattleController battleController;
 
     private BattlePanel battlePanel;
     private SouthPanel southPanel;
 
-    private final int SCREEN_HEIGHT;
 
-
+    /**
+     * Default BattleScreen Constructor.
+     * <p>In order to paint itself, a reference to the {@link BattleController} that controls the {@code Screen} is needed.
+     *
+     * @param battleController The BattleController that controls this Screen
+     * @param screenHeight The height that this Screen will have
+     */
     public BattleScreen(BattleController battleController, int screenHeight){
-        SCREEN_HEIGHT = screenHeight;
+        super(screenHeight);
+
         this.battleController = battleController;
 
         setLayout(new BorderLayout());
@@ -37,24 +50,48 @@ public class BattleScreen extends JPanel {
     }
 
 
-
+    /**
+     * Returns a {@link JPanel} that represents the BattlePanel inside this {@code BattleScreen}
+     * @return A {@link JPanel} that represents the BattlePanel inside this {@code BattleScreen}
+     */
     public JPanel getBattlePanel(){ return battlePanel;}
 
+    /**
+     * Notifies the Screen that the Player cards shown need to be updated
+     */
     public void updateCardsToShow (){ southPanel.updateCardsToShow();}
+
 
     public void updateGoldProgressBar(int value){ southPanel.updateGoldProgressBar(value);}
 
+
+    /**
+     * Returns the current card selected by the player
+     * @return Card selected by the Player
+     */
     public Cards getCardSelected(){ return southPanel.getCardSelected(); }
 
+    /**
+     * Sets the card selected by the Player (in order to apply an special effect to it)
+     * @param c Card selected by the Player
+     */
     public void setCardSelected(Cards c){ southPanel.setCardSelected(c); }
 
 
+    /**
+     * Returns the {@link Dimension} of the BattlePanel (the {@link JPanel} where the battle will take place)
+     * @return {@link Dimension} representing the width and height of the BattlePanel
+     *
+     * @see Dimension
+     */
     public Dimension getBattlePanelSize(){
         return new Dimension(getSize().width, getSize().height - southPanel.getSize().height);
     }
 
 
-
+    /**
+     * A JPanel inside the {@link BattleScreen} that will paint the whole Battle.
+     */
     public class BattlePanel extends JPanel{
 
         @Override
@@ -67,7 +104,10 @@ public class BattleScreen extends JPanel {
     }
 
 
-
+    /**
+     * A JPanel inside the {@link BattleScreen} that will hold information regarding to
+     * the User Cards and User Gold
+     */
     public class SouthPanel extends JPanel{
 
         private ArrayList<Cards> cardsToShow;
@@ -113,7 +153,7 @@ public class BattleScreen extends JPanel {
         }
 
 
-        public void updateCardsToShow(){
+        private void updateCardsToShow(){
             cardsPanel.removeAll();
             cardsToShow = battleController.getCardsToShow();
 
@@ -176,6 +216,9 @@ public class BattleScreen extends JPanel {
         }
 
 
+        /**
+         * A JPanel inside the {@link SouthPanel} that holds a single Card the user can throw.
+         */
         public class CardPanel extends JPanel{
 
             private Cards cardHolding;
@@ -212,14 +255,14 @@ public class BattleScreen extends JPanel {
 
             private boolean getSelected(){ return selected; }
 
+            /**
+             * Returns the {@link Cards} that this JPanel is holding
+             * @return {@link Cards} associated to this JPanel
+             */
             public Cards getCardHolding(){
                 return cardHolding;
             }
-
-
-
         }
-
     }
 
 

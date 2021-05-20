@@ -26,7 +26,7 @@ import java.awt.event.MouseListener;
  * @see RoyaleFrame
  * @version 1.0
  */
-public class LoginScreen extends JPanel {
+public class LoginScreen extends Screen {
 
     private RoyaleButton loginButton;
     private RoyaleTextField usernameTextField;
@@ -44,6 +44,8 @@ public class LoginScreen extends JPanel {
      * @param screenHeight Height of the Frame that will add this Screen
      */
     public LoginScreen(int screenHeight){
+        super(screenHeight);
+
         setLayout(new GridBagLayout());
 
         RoyaleLabel logoImage = new RoyaleLabel(new ImageIcon(MenuGraphics.getLogo()));
@@ -96,15 +98,15 @@ public class LoginScreen extends JPanel {
         centerPane.setOpaque(false);
 
         centerPane.add(logoImage);
-        centerPane.add(Box.createRigidArea(new Dimension(100,(int)(screenHeight*0.05))));
+        centerPane.add(Box.createRigidArea(new Dimension(100,(int)(SCREEN_HEIGHT*0.05))));
         centerPane.add(loginText);
-        centerPane.add(Box.createRigidArea(new Dimension(100,(int)(screenHeight*0.03))));
+        centerPane.add(Box.createRigidArea(new Dimension(100,(int)(SCREEN_HEIGHT*0.03))));
         centerPane.add(groupTextFieldsPanel);
-        centerPane.add(Box.createRigidArea(new Dimension(100,(int)(screenHeight*0.01))));
+        centerPane.add(Box.createRigidArea(new Dimension(100,(int)(SCREEN_HEIGHT*0.01))));
         centerPane.add(errorLabel);
-        centerPane.add(Box.createRigidArea(new Dimension(100,(int)(screenHeight*0.02))));
+        centerPane.add(Box.createRigidArea(new Dimension(100,(int)(SCREEN_HEIGHT*0.02))));
         centerPane.add(loginButton);
-        centerPane.add(Box.createRigidArea(new Dimension(100,(int)(screenHeight*0.1))));
+        centerPane.add(Box.createRigidArea(new Dimension(100,(int)(SCREEN_HEIGHT*0.1))));
         centerPane.add(forgetPasswordLabel);
         centerPane.add(registerLabel);
 

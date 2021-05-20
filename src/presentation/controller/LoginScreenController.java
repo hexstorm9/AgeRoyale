@@ -3,7 +3,6 @@ package presentation.controller;
 import business.GameModel;
 import business.LoginException;
 import business.entities.LanguageManager;
-import business.entities.Player;
 import business.entities.Sentences;
 import presentation.sound.MusicPlayer;
 import business.entities.Songs;
@@ -13,13 +12,11 @@ import presentation.view.customcomponents.RoyaleLabel;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.sql.SQLException;
 
 
-public class LoginScreenController extends ScreenController implements ActionListener, MouseListener {
+public class LoginScreenController extends ScreenController {
 
     private LoginScreen loginScreen;
 
@@ -50,6 +47,8 @@ public class LoginScreenController extends ScreenController implements ActionLis
     }
 
 
+
+
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getActionCommand().equals(LoginScreen.LOGIN_BUTTON_ACTION_COMMAND)){
@@ -61,33 +60,22 @@ public class LoginScreenController extends ScreenController implements ActionLis
 
     @Override
     public void mousePressed(MouseEvent e) {
+        super.mousePressed(e);
+
         if(e.getSource() instanceof RoyaleLabel){
             RoyaleLabel labelClicked = (RoyaleLabel) e.getSource();
 
             if(labelClicked.getActionCommand().equals(LoginScreen.FORGOT_PASSWORD_LABEL_ACTION_COMMAND)){
                 loginScreen.pauseAllComponents();
-                goToScreen(Screen.PASSWORD_FORGOTTEN_SCREEN);
+                goToScreen(Screens.PASSWORD_FORGOTTEN_SCREEN);
             }
             else if(labelClicked.getActionCommand().equals(LoginScreen.REGISTER_LABEL_ACTION_COMMAND)){
                 loginScreen.pauseAllComponents();
-                goToScreen(Screen.REGISTER_SCREEN);
+                goToScreen(Screens.REGISTER_SCREEN);
             }
 
         }
     }
-
-
-    @Override
-    public void mouseClicked(MouseEvent e) {}
-
-    @Override
-    public void mouseReleased(MouseEvent e) {}
-
-    @Override
-    public void mouseEntered(MouseEvent e) {}
-
-    @Override
-    public void mouseExited(MouseEvent e) {}
 
 
 
@@ -130,7 +118,7 @@ public class LoginScreenController extends ScreenController implements ActionLis
                 loginScreen.setErrorMessage(errorMessage);
                 loginScreen.enableAllComponents();
             }
-            else goToScreen(Screen.MAIN_MENU); //If there is no error, let's go to the main menu
+            else goToScreen(Screens.MAIN_MENU); //If there is no error, let's go to the main menu
         }
     }
 

@@ -18,7 +18,15 @@ import java.awt.event.MouseListener;
 
 
 /**
+ * {@code SettingsPanel} is a {@link FrontPanel} that represents the Settings for a determined {@link Screen}.
+ * <p>It must be created and listened through its controller, a {@link presentation.controller.SettingsPanelController}
  *
+ * <p><b>This class can be customized.</b> Initially, only the Exit button and music/sound sliders are shown.
+ * Calling its {@code add()} methods, will make appear other things such as the Change Languages button,
+ * Log Out button, etc.
+ *
+ * @version 1.0
+ * @see presentation.controller.SettingsPanelController
  */
 public class SettingsPanel extends FrontPanel {
 
@@ -64,7 +72,11 @@ public class SettingsPanel extends FrontPanel {
     public static final String CONFIRM_POSITIVE_EXIT_BUTTON_ACTION_COMMAND = "positive_exit_button";
 
 
-
+    /**
+     * Default SettingsPanel Constructor.
+     * @param panelWidth Width that this panel will have.
+     * @param panelHeight Height that this panel will have.
+     */
     public SettingsPanel(int panelWidth, int panelHeight){
         super(panelWidth, panelHeight);
 
@@ -91,6 +103,10 @@ public class SettingsPanel extends FrontPanel {
 
 
 
+    /**
+     * To be called whenever the {@link FrontPanel} is created , so as to add a listener to its buttons
+     * @param al The listener of the Buttons
+     */
     public void addButtonsListener(ActionListener al){
         mainPanel.addButtonsListener(al);
         for(Component c: mainPanel.getComponents()){
@@ -102,6 +118,10 @@ public class SettingsPanel extends FrontPanel {
     }
 
 
+    /**
+     * To be called whenever the {@link FrontPanel} is created, so as to add a listener to its clickable labels
+     * @param ml The listener of the clickable labels
+     */
     public void addLabelsListener(MouseListener ml){
         if(creditsPanel != null) creditsPanel.addLabelsListener(ml);
         if(languagePanel != null) languagePanel.addLabelsListener(ml);
@@ -109,6 +129,10 @@ public class SettingsPanel extends FrontPanel {
     }
 
 
+    /**
+     * To be called whenever the {@link FrontPanel} is created, so as to add a listener to its sliders
+     * @param cl The listener of the sliders
+     */
     public void addSlidersListener(ChangeListener cl){
         mainPanel.addSlidersListener(cl);
     }
@@ -153,7 +177,7 @@ public class SettingsPanel extends FrontPanel {
     /**
      * Shows the Panel that asks for confirmation before exiting the game
      * @param exitGameOrLogOut Whether when clicked YES, the System is exited or only Logged out.
-     * {@code true} if you want to exit the game, {@code false} otherwise.
+     * {@code true} if you want to exit the game, {@code false} if your want to log out.
      */
     public void showConfirmationBeforeExitingGame(boolean exitGameOrLogOut){
         confirmationBeforeExitingPanel.modifyPanel(exitGameOrLogOut ? "Exiting": "Logging Out", exitGameOrLogOut);
@@ -162,6 +186,10 @@ public class SettingsPanel extends FrontPanel {
         revalidate();
     }
 
+
+
+    //-------------------------------------------------------------------------------------
+    //add() methods -----------------------------------------------------------------------
 
      /**
      * Adds player information to the settings panel
@@ -264,6 +292,11 @@ public class SettingsPanel extends FrontPanel {
         mainPanel.add(Box.createRigidArea(new Dimension(15, 50)));
     }
 
+    //-------------------------------------------------------------------------------------
+    //-------------------------------------------------------------------------------------
+
+
+
     /**
      * To be called whenever the troops stats changed. It will update the graphic on the screen
      * @param playerTroops Number of player troops
@@ -275,23 +308,40 @@ public class SettingsPanel extends FrontPanel {
     }
 
 
-
+    /**
+     * Returns the char[] inside the DeleteAccount Password TextField
+     * @return char[] inside the DeleteAccount Password TextField
+     */
     public char[] getDeleteAccountPasswordFieldText(){
         return deleteAccountPanel.passwordTextField.getPassword();
     }
 
+    /**
+     * Returns the char[] inside the DeleteAccount Confirm Password TextField
+     * @return char[] inside the DeleteAccount Confirm Password TextField
+     */
     public char[] getDeleteAccountConfirmPasswordFieldText(){
         return deleteAccountPanel.confirmPasswordTextField.getPassword();
     }
 
+    /**
+     * Sets an error message below the DeleteAccount passwords TextFields
+     * @param error The error message to show
+     */
     public void setDeleteAccountError(String error){
         deleteAccountPanel.errorLabel.setText(error);
     }
 
+    /**
+     * Clears the DeleteAccount passwords Error Message
+     */
     public void clearDeleteAccountError(){
         deleteAccountPanel.errorLabel.setText("   ");
     }
 
+    /**
+     * Pauses all components so as the user is not able to click anything or carry out any action
+     */
     public void pauseAllDeleteAccountComponents(){
         deleteAccountPanel.passwordTextField.setEnabled(false);
         deleteAccountPanel.confirmPasswordTextField.setEnabled(false);
@@ -299,12 +349,18 @@ public class SettingsPanel extends FrontPanel {
         deleteAccountPanel.returnToSettingsLabel.setClickable(false);
     }
 
+    /**
+     * Enables all components so as the user can carry out actions again
+     */
     public void enableAllDeleteAccountComponents(){
         deleteAccountPanel.passwordTextField.setEnabled(true);
         deleteAccountPanel.confirmPasswordTextField.setEnabled(true);
         deleteAccountPanel.deleteAccountButton.setEnabled(true);
         deleteAccountPanel.returnToSettingsLabel.setClickable(true);
     }
+
+
+
 
 
     private class MainPanel extends JPanel{
@@ -320,7 +376,7 @@ public class SettingsPanel extends FrontPanel {
         private RoyaleSlider musicSlider, soundSlider;
 
 
-        public MainPanel(){
+        private MainPanel(){
             setLayout(new BorderLayout());
             setOpaque(false);
             setBorder(BorderFactory.createEmptyBorder(40, 0, 40, 0));
@@ -402,7 +458,7 @@ public class SettingsPanel extends FrontPanel {
             return panelOnTheCenterTwo.add(comp, index);
         }
 
-        public void addButtonsListener(ActionListener al){
+        private void addButtonsListener(ActionListener al){
             exitButton.addActionListener(al);
             if(panelOnTheCenterTwo.getComponents() == null) return;
 
@@ -412,12 +468,14 @@ public class SettingsPanel extends FrontPanel {
         }
 
 
-        public void addSlidersListener(ChangeListener cl){
+        private void addSlidersListener(ChangeListener cl){
             soundSlider.addChangeListener(cl);
             musicSlider.addChangeListener(cl);
         }
 
     }
+
+
 
 
 
@@ -434,7 +492,7 @@ public class SettingsPanel extends FrontPanel {
         private RoyaleLabel englishLabel, spanishLabel, catalanLabel;
 
 
-        public LanguagePanel(){
+        private LanguagePanel(){
             setLayout(new BorderLayout());
             setOpaque(false);
             setBorder(BorderFactory.createEmptyBorder(40, 0, 40, 0));
@@ -494,7 +552,7 @@ public class SettingsPanel extends FrontPanel {
             add(returnToSettingsLabel, BorderLayout.SOUTH);
         }
 
-        public void addLabelsListener(MouseListener ml){
+        private void addLabelsListener(MouseListener ml){
             returnToSettingsLabel.addMouseListener(ml);
             englishLabel.addMouseListener(ml);
             spanishLabel.addMouseListener(ml);
@@ -502,6 +560,9 @@ public class SettingsPanel extends FrontPanel {
         }
 
     }
+
+
+
 
 
     private class CreditsPanel extends JPanel{
@@ -515,7 +576,7 @@ public class SettingsPanel extends FrontPanel {
 
         private RoyaleLabel returnToSettingsLabel;
 
-        public CreditsPanel(){
+        private CreditsPanel(){
             setLayout(new BorderLayout());
             setOpaque(false);
             setBorder(BorderFactory.createEmptyBorder(40, 0, 40, 0));
@@ -578,6 +639,7 @@ public class SettingsPanel extends FrontPanel {
 
 
 
+
     private class DeleteAccountPanel extends JPanel{
 
         //This one will go on the MainPanel CENTER directly, with GridBagLayout and default constraints
@@ -594,7 +656,7 @@ public class SettingsPanel extends FrontPanel {
         private RoyaleLabel errorLabel;
 
 
-        public DeleteAccountPanel(){
+        private DeleteAccountPanel(){
             setLayout(new BorderLayout());
             setOpaque(false);
             setBorder(BorderFactory.createEmptyBorder(40, 0, 40, 0));
@@ -678,15 +740,15 @@ public class SettingsPanel extends FrontPanel {
             add(returnToSettingsLabel, BorderLayout.SOUTH);
         }
 
-        public void addLabelsListener(MouseListener ml){
+        private void addLabelsListener(MouseListener ml){
             returnToSettingsLabel.addMouseListener(ml);
         }
 
-        public void addButtonsListener(ActionListener al){
+        private void addButtonsListener(ActionListener al){
             deleteAccountButton.addActionListener(al);
         }
-
     }
+
 
 
 
@@ -798,7 +860,7 @@ public class SettingsPanel extends FrontPanel {
             setMinimumSize(new Dimension(BAR_MAX_WIDTH, GRAPHIC_HEIGHT));
         }
 
-        public void setStatsAndRepaint(int playerTroops, int enemyTroops){
+        private void setStatsAndRepaint(int playerTroops, int enemyTroops){
             this.playerTroops = playerTroops;
             this.enemyTroops = enemyTroops;
             repaint();

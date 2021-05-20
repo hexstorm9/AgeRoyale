@@ -13,7 +13,15 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 
-public class RegisterScreen extends JPanel {
+/**
+ * The {@code RegisterScreen} class will be a Screen that allows users to register themselves to the game.
+ * <p>It will provide {@code textfields} for the name, email, password and verify password.
+ * <p>A {@link presentation.controller.RegisterScreenController} must create this screen and call the methods to control it.
+ *
+ * @version 1.0
+ * @see presentation.controller.RegisterScreenController
+ */
+public class RegisterScreen extends Screen {
 
     private RoyaleButton registerButton;
     private RoyaleTextField usernameTextField, mailTextField;
@@ -25,7 +33,13 @@ public class RegisterScreen extends JPanel {
     public static final String REGISTER_BUTTON_ACTION_COMMAND = "register_button";
 
 
+    /**
+     * Default RegisterScreen Constructor
+     * @param screenHeight Height of the Screen constructed
+     */
     public RegisterScreen(int screenHeight){
+        super(screenHeight);
+
         setLayout(new GridBagLayout());
 
         RoyaleLabel logoImage = new RoyaleLabel(new ImageIcon(MenuGraphics.getLogo()));
@@ -84,25 +98,33 @@ public class RegisterScreen extends JPanel {
         centerPane.setOpaque(false);
 
         centerPane.add(logoImage);
-        centerPane.add(Box.createRigidArea(new Dimension(100,(int)(screenHeight*0.03))));
+        centerPane.add(Box.createRigidArea(new Dimension(100,(int)(SCREEN_HEIGHT*0.03))));
         centerPane.add(registerText);
-        centerPane.add(Box.createRigidArea(new Dimension(100,(int)(screenHeight*0.03))));
+        centerPane.add(Box.createRigidArea(new Dimension(100,(int)(SCREEN_HEIGHT*0.03))));
         centerPane.add(groupTextFieldsPanel);
-        centerPane.add(Box.createRigidArea(new Dimension(100,(int)(screenHeight*0.01))));
+        centerPane.add(Box.createRigidArea(new Dimension(100,(int)(SCREEN_HEIGHT*0.01))));
         centerPane.add(errorLabel);
-        centerPane.add(Box.createRigidArea(new Dimension(100,(int)(screenHeight*0.02))));
+        centerPane.add(Box.createRigidArea(new Dimension(100,(int)(SCREEN_HEIGHT*0.02))));
         centerPane.add(registerButton);
-        centerPane.add(Box.createRigidArea(new Dimension(100,(int)(screenHeight*0.1))));
+        centerPane.add(Box.createRigidArea(new Dimension(100,(int)(SCREEN_HEIGHT*0.1))));
         centerPane.add(haveAccount);
 
         add(centerPane, new GridBagConstraints());
     }
 
+    /**
+     * To be called whenever the {@code Screen} is created, so as to add a listener to its buttons
+     * @param al The listener of the Buttons
+     */
     public void addButtonListener(ActionListener al){
         registerButton.addActionListener(al);
         registerButton.setActionCommand(REGISTER_BUTTON_ACTION_COMMAND);
     }
 
+    /**
+     * To be called whenever the {@code Screen} is created, so as to add a listener to its clickable labels
+     * @param ml The listener of the clickable labels
+     */
     public void addLabelsListener(MouseListener ml){
         haveAccount.addMouseListener(ml);
         haveAccount.setActionCommand(LOGIN_LABEL_ACTION_COMMAND);
@@ -152,18 +174,34 @@ public class RegisterScreen extends JPanel {
     }
 
 
+    /**
+     * Returns the text inside the Username TextField
+     * @return Text inside the username TextField
+     */
     public String getTextUsernameTextField() {
         return usernameTextField.getText();
     }
 
+    /**
+     * Returns the text inside the Mail TextField
+     * @return Text inside the Mail TextField
+     */
     public String getTextMailTextField() {
         return mailTextField.getText();
     }
 
+    /**
+     * Returns the char[] inside the Password TextField
+     * @return char[] inside the Password TextField
+     */
     public char[] getTextPasswordTextField() {
         return passwordTextField.getPassword();
     }
 
+    /**
+     * Returns the char[] inside the Confirm Password TextField
+     * @return char[] inside the Confirm Password TextField
+     */
     public char[] getTextConfirmPasswordTextField() {
         return confirmPasswordTextField.getPassword();
     }

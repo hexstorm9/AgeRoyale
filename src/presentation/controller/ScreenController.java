@@ -9,7 +9,16 @@ import javax.swing.*;
 import java.awt.event.*;
 
 
-public abstract class ScreenController implements ActionListener{
+/**
+ * Parent class of all {@code ScreenControllers} of the Game.
+ * <p>It controls a {@link presentation.view.Screen}, and puts it onto the {@link RoyaleFrame} of the Game.
+ * <p>Defines and declares all basic functionality of a {@code ScreenController}, and forces sub-classes to implement some
+ * methods that all {@code ScreenControllers} must have.
+ *
+ * @version 1.0
+ * @see presentation.view.Screen
+ */
+public abstract class ScreenController implements ActionListener, MouseListener{
 
     protected RoyaleFrame royaleFrame;
     protected GameModel gameModel;
@@ -21,7 +30,10 @@ public abstract class ScreenController implements ActionListener{
     private FrontPanelController currentFrontPanelController;
 
 
-    public enum Screen{
+    /**
+     * Defines all the Screens of the Game
+     */
+    public enum Screens{
         SPLASH_SCREEN,
         LOGIN_SCREEN,
         REGISTER_SCREEN,
@@ -72,9 +84,9 @@ public abstract class ScreenController implements ActionListener{
      * Creates a new {@link ScreenController} depending on the Screen that we want to go to, and calls the method
      * {@link ScreenController#start(boolean)} on that controller (which creates the Screen and puts it into the frame)
      *
-     * @param screen {@link Screen} which we want to go to
+     * @param screen {@link Screens} which we want to go to
      */
-    public void goToScreen(Screen screen){
+    public void goToScreen(Screens screen){
         //Now that we know that we need to change screen, let's check whether that
         //new screen should start with the settingsPanel or not
 
@@ -92,10 +104,10 @@ public abstract class ScreenController implements ActionListener{
      * Creates a new {@link ScreenController} depending on the Screen that we want to go to, and calls the method
      * {@link ScreenController#start(boolean)} on that controller (which creates the Screen and puts it into the frame)
      *
-     * @param screen {@link Screen} which we want to go to
+     * @param screen {@link Screens} which we want to go to
      * @param startWithSettingsPanelEnabled Whether the next screen should start with the settingsPanel enabled or not
      */
-    public void goToScreen(Screen screen, boolean startWithSettingsPanelEnabled){
+    public void goToScreen(Screens screen, boolean startWithSettingsPanelEnabled){
         switch(screen){
             case LOGIN_SCREEN -> new LoginScreenController(royaleFrame, gameModel).start(startWithSettingsPanelEnabled);
             case REGISTER_SCREEN -> new RegisterScreenController(royaleFrame, gameModel).start(startWithSettingsPanelEnabled);
@@ -175,5 +187,28 @@ public abstract class ScreenController implements ActionListener{
     public GameModel getGameModel(){
         return gameModel;
     }
+
+
+    @Override
+    public void actionPerformed(ActionEvent e) {}
+
+
+    /**
+     * Invoked when a mouse has been pressed on a component that this controller is listening to.
+     * <p>When overridden from a sub-class, <b>always call super.mousePressed(e)</b>
+     * @param e The event that occurred
+     */
+    @Override
+    public void mousePressed(MouseEvent e){
+
+    }
+    @Override
+    public void mouseClicked(MouseEvent e) {}
+    @Override
+    public void mouseReleased(MouseEvent e) {}
+    @Override
+    public void mouseEntered(MouseEvent e) {}
+    @Override
+    public void mouseExited(MouseEvent e) {}
 
 }

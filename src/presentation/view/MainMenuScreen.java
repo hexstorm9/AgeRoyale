@@ -11,6 +11,11 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 
+
+/**
+ *
+ *
+ */
 public class MainMenuScreen extends Screen {
 
     //JPanels that will be put on the CENTER of this MainMenuScreen (the main one is the battleMenuPanel)
@@ -45,12 +50,21 @@ public class MainMenuScreen extends Screen {
     public static final String UNLOCK_CHEST4_COMMAND = "unlock_chest4";
     public static final String UNLOCK_CHEST5_COMMAND = "unlock_chest5";
 
-    private final int SCREEN_HEIGHT;
 
-
+    /**
+     * Default MainMenuScreen Constructor.
+     * @param username
+     * @param crowns
+     * @param battleWins
+     * @param battlePlays
+     * @param arena
+     * @param screenWidth
+     * @param screenHeight
+     */
     public MainMenuScreen(String username, int crowns, int battleWins, int battlePlays, int arena, int screenWidth, int screenHeight){
+        super(screenHeight);
+
         setLayout(new BorderLayout());
-        SCREEN_HEIGHT = screenHeight;
 
         JPanel northPanel = new JPanel(){
             @Override
@@ -68,23 +82,23 @@ public class MainMenuScreen extends Screen {
         JPanel usernamePanel = new JPanel();
         usernamePanel.setLayout(new BoxLayout(usernamePanel, BoxLayout.X_AXIS));
         usernamePanel.setOpaque(false);
-        usernameLogo = new RoyaleLabel(new ImageIcon(MenuGraphics.scaleImage(MenuGraphics.getUsernameLogo(), (int) (screenHeight*0.05))));
+        usernameLogo = new RoyaleLabel(new ImageIcon(MenuGraphics.scaleImage(MenuGraphics.getUsernameLogo(), (int) (SCREEN_HEIGHT*0.05))));
         usernameLabel = new RoyaleLabel(username, RoyaleLabel.LabelType.PARAGRAPH);
         usernamePanel.add(usernameLogo);
-        usernamePanel.add(Box.createRigidArea(new Dimension(10,(int)(screenHeight*0.03))));
+        usernamePanel.add(Box.createRigidArea(new Dimension(10,(int)(SCREEN_HEIGHT*0.03))));
         usernamePanel.add(usernameLabel);
 
         JPanel crownsPanel = new JPanel();
         crownsPanel.setLayout(new BoxLayout(crownsPanel, BoxLayout.X_AXIS));
         crownsPanel.setOpaque(false);
-        crownImage = new RoyaleLabel(new ImageIcon(MenuGraphics.scaleImage(MenuGraphics.getCrown(), (int) (screenHeight*0.05))));
+        crownImage = new RoyaleLabel(new ImageIcon(MenuGraphics.scaleImage(MenuGraphics.getCrown(), (int) (SCREEN_HEIGHT*0.05))));
         crownsLabel = new RoyaleLabel(String.valueOf(crowns), RoyaleLabel.LabelType.PARAGRAPH);
         crownsPanel.add(crownImage);
-        crownsPanel.add(Box.createRigidArea(new Dimension(10,(int)(screenHeight*0.03))));
+        crownsPanel.add(Box.createRigidArea(new Dimension(10,(int)(SCREEN_HEIGHT*0.03))));
         crownsPanel.add(crownsLabel);
 
         northPanel.add(usernamePanel);
-        northPanel.add(Box.createRigidArea(new Dimension(50,(int)(screenHeight*0.03))));
+        northPanel.add(Box.createRigidArea(new Dimension(50,(int)(SCREEN_HEIGHT*0.03))));
         northPanel.add(crownsPanel);
 
 

@@ -14,7 +14,19 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 
-public class PasswordForgottenScreen extends JPanel {
+
+/**
+ * {@code PasswordForgottenScreen} is a {@link Screen} providing a visual way to recover the password to a user that has
+ * forgotten it.
+ * <p>The user will introduce its email, then it will be asked to introduce the code sent to this email and finally
+ * will be able to write a new password.
+ *
+ * <p>It has to be created and listened from a {@link presentation.controller.PasswordForgottenScreenController} object.
+ *
+ * @version 1.0
+ * @see presentation.controller.PasswordForgottenScreenController
+ */
+public class PasswordForgottenScreen extends Screen {
 
     private JPanel sendEmailAndCheckCodePanel;
     private JPanel newPasswordsPanel;
@@ -34,7 +46,12 @@ public class PasswordForgottenScreen extends JPanel {
     public static final String CHANGE_PASSWORD_BUTTON_ACTION_COMMAND = "change_password_button";
 
 
+    /**
+     * Default PasswordForgottenScreen constructor.
+     * @param screenHeight The Height of the Screen
+     */
     public PasswordForgottenScreen(int screenHeight){
+        super(screenHeight);
 
         setLayout(new GridBagLayout());
         centerPane = new JPanel();
@@ -159,6 +176,10 @@ public class PasswordForgottenScreen extends JPanel {
 
 
 
+    /**
+     * To be called whenever the {@code Screen} is created, so as to add a listener to its buttons
+     * @param al The listener of the Buttons
+     */
     public void addButtonListener(ActionListener al){
         sendEmailButton.addActionListener(al);
         sendEmailButton.setActionCommand(SEND_EMAIL_ACTION_COMMAND);
@@ -171,6 +192,10 @@ public class PasswordForgottenScreen extends JPanel {
     }
 
 
+    /**
+     * To be called whenever the {@code Screen} is created, so as to add a listener to its clickable labels
+     * @param ml The listener of the clickable labels
+     */
     public void addLabelsListener(MouseListener ml){
         returnToLoginLabel.addMouseListener(ml);
         returnToLoginLabel.setActionCommand(RETURN_LOGIN_LABEL_ACTION_COMMAND);
@@ -233,41 +258,78 @@ public class PasswordForgottenScreen extends JPanel {
     }
 
 
-
+    /**
+     * Returns the text inside the Email TextField
+     * @return The text inside the Email TextField
+     */
     public String getTextEmailTextField(){
         return emailTextField.getText();
     }
 
+    /**
+     * Returns the text inside the Verification Code TextField
+     * @return The text inside the Verification Code TextField
+     */
     public String getTextVerificationCodeTextField(){
         return verificationCodeTextField.getText();
     }
 
+    /**
+     * Returns the char[] inside the Password TextField
+     * @return char[] inside the Password TextField
+     */
     public char[] getTextPasswordTextField(){
         return newPasswordTextField.getPassword();
     }
 
+    /**
+     * Returns the char[] inside the Confirm Password TextField
+     * @return char[] inside the Confirm Password TextField
+     */
     public char[] getTextConfirmPasswordTextField(){
         return confirmNewPasswordTextField.getPassword();
     }
 
 
+    /**
+     * Sets an error message below the email TextField
+     * @param errorMessage The error message to show
+     */
     public void setEmailErrorMessage(String errorMessage){
         errorMailLabel.setText(errorMessage);
     }
+
+    /**
+     * Clears the Email Error Message
+     */
     public void emptyEmailErrorMessage(){
         errorMailLabel.setText("   ");
     }
 
+    /**
+     * Sets an error message below the verification code TextField
+     * @param errorMessage The error message to show
+     */
     public void setVerificationCodeErrorMessage(String errorMessage){
         errorCodeLabel.setText(errorMessage);
     }
+    /**
+     * Clears the Verification Code Error Message
+     */
     public void emptyVerificationCodeErrorMessage(){
         errorCodeLabel.setText("   ");
     }
 
+    /**
+     * Sets an error message below the passwords TextFields
+     * @param errorMessage The error message to show
+     */
     public void setPasswordsErrorMessage(String errorMessage){
         errorPasswordsLabel.setText(errorMessage);
     }
+    /**
+     * Clears the Passwords Error Message
+     */
     public void emptyPasswordsErrorMessage(){
         errorPasswordsLabel.setText("   ");
     }

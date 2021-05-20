@@ -133,9 +133,9 @@ public class SecurityUtility {
 
     /**
      * Returns a six digit random verification code and saves it into a class attribute so as to be retrieved
-     * later on by {@link SecurityUtility#latestVerificationCodeGenerated)
+     * later on by {@link SecurityUtility#latestVerificationCodeGenerated).
      *
-     * @return  A randomly generated six digit random verification code
+     * @return A randomly generated six digit random verification code
      */
     public static String getSixDigitRandomVerificationCode(){
         Random r = new Random();

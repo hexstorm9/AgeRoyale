@@ -12,14 +12,12 @@ import presentation.view.customcomponents.RoyaleLabel;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.sql.SQLException;
 import java.util.Arrays;
 
 
-public class RegisterScreenController extends ScreenController implements ActionListener, MouseListener {
+public class RegisterScreenController extends ScreenController {
 
     private RegisterScreen registerScreen;
 
@@ -59,28 +57,19 @@ public class RegisterScreenController extends ScreenController implements Action
 
     @Override
     public void mousePressed(MouseEvent e) {
+        super.mousePressed(e);
+
         if(e.getSource() instanceof RoyaleLabel){
             RoyaleLabel labelClicked = (RoyaleLabel) e.getSource();
 
             if(labelClicked.getActionCommand().equals(RegisterScreen.LOGIN_LABEL_ACTION_COMMAND)){
                 registerScreen.pauseAllComponents();
-                goToScreen(Screen.LOGIN_SCREEN);
+                goToScreen(Screens.LOGIN_SCREEN);
             }
         }
     }
 
 
-    @Override
-    public void mouseClicked(MouseEvent e) {}
-
-    @Override
-    public void mouseReleased(MouseEvent e) {}
-
-    @Override
-    public void mouseEntered(MouseEvent e) {}
-
-    @Override
-    public void mouseExited(MouseEvent e) {}
 
     private class RegisterUserInBackground extends SwingWorker<String, Void> {
 
@@ -130,7 +119,7 @@ public class RegisterScreenController extends ScreenController implements Action
                 registerScreen.setErrorMessage(errorMessage);
                 registerScreen.enableAllComponents();
             }
-            else goToScreen(Screen.MAIN_MENU); //If there is no error, let's go to the main menu
+            else goToScreen(Screens.MAIN_MENU); //If there is no error, let's go to the main menu
         }
     }
 }

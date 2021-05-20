@@ -58,7 +58,7 @@ public class MainMenuController extends ScreenController implements ActionListen
      */
     public void logOut(){
         gameModel.forgetPlayer();
-        goToScreen(Screen.LOGIN_SCREEN, false);
+        goToScreen(Screens.LOGIN_SCREEN, false);
     }
 
 
@@ -76,7 +76,7 @@ public class MainMenuController extends ScreenController implements ActionListen
                 break;
             case MainMenuScreen.PLAY_BUTTON_COMMAND:
                 mainMenuScreen.pauseAllComponents();
-                goToScreen(Screen.LOADING_BATTLE_SCREEN);
+                goToScreen(Screens.LOADING_BATTLE_SCREEN);
         }
     }
 
