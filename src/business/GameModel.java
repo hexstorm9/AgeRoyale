@@ -7,6 +7,7 @@ import persistence.UserDAO;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Date;
 
 /**
  * Main {@code Model} class of the application.
@@ -20,9 +21,15 @@ public class GameModel {
     private Player player;
     private UserDAO userDAO;
 
+    private OldBattlesUtility oldBattlesUtility;
 
+
+    /**
+     * Default GameModel Constructor
+     */
     public GameModel() {
         userDAO = new UserDAO();
+        oldBattlesUtility = new OldBattlesUtility();
     }
 
 
@@ -195,8 +202,27 @@ public class GameModel {
      * @see SecurityUtility#checkIfUsernameIsCorrect(String)
      */
     public boolean checkIfBattleNameIsValid(String battleName){
-        if(battleName.length() == 0) return true; //The battleName can be empty
+        if(battleName == null) return true; //The battleName can be null
         return SecurityUtility.checkIfUsernameIsCorrect(battleName);
+    }
+
+
+
+    /**
+     * Provided an array of {@link Movement}, the name of the battle and whether the battle was won or not,
+     * saves that Battle information remotely.
+     * <p>Call this method from a thread that can be blocked, as the method can take some time
+     *
+     * @param movements The movements that occurred during the Battle
+     * @param name The name of the battle. Can be {@code null}
+     * @param won Whether the battle was won or not
+     */
+    public void saveBattle(Movement[] movements, String name, boolean won){
+        try{
+            oldBattlesUtility.saveBattle(movements, name, player.getName(), won);
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
     }
 
 

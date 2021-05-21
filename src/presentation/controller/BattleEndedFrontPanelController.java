@@ -28,6 +28,8 @@ public class BattleEndedFrontPanelController extends FrontPanelController{
      */
     private BattleController battleController;
 
+    private boolean won;
+
 
     /**
      * Default BattleEndedFrontPanelController constructor.
@@ -35,10 +37,13 @@ public class BattleEndedFrontPanelController extends FrontPanelController{
      * @param battleController The battleController to redirect actions to.
      * @param frontPanel The BattleEndedFrontPanel it will control.
      * @param royaleFrame The royaleFrame that the frontPanel will be put in.
+     * @param won Whether the game was won or not
      */
-    public BattleEndedFrontPanelController(BattleController battleController, BattleEndedFrontPanel frontPanel, RoyaleFrame royaleFrame) {
+    public BattleEndedFrontPanelController(BattleController battleController, BattleEndedFrontPanel frontPanel,
+                                           RoyaleFrame royaleFrame, boolean won) {
         super(frontPanel, royaleFrame);
         this.battleController = battleController;
+        this.won = won;
     }
 
 
@@ -46,13 +51,14 @@ public class BattleEndedFrontPanelController extends FrontPanelController{
     public void actionPerformed(ActionEvent e) {
         if(e.getActionCommand().equals(BattleEndedFrontPanel.OK_BUTTON_ACTION_COMMAND)){
             BattleEndedFrontPanel battleEndedFrontPanel = (BattleEndedFrontPanel) frontPanel;
-            final String battleName = battleEndedFrontPanel.getBattleNameTextField();
+            String battleName = battleEndedFrontPanel.getBattleNameTextField();
+            if(battleName.equals("")) battleName = null;
 
             battleEndedFrontPanel.emptyBattleNameError();
 
             //If the battleName is valid, call return to the MainMenu passing the name of the battle
             if(battleController.getGameModel().checkIfBattleNameIsValid(battleName))
-                battleController.returnToMainMenu(battleName);
+                battleController.returnToMainMenu(battleName, won);
             else
                 battleEndedFrontPanel.showBattleNameError(LanguageManager.getSentence(Sentences.NAME_NOT_WELL_FORMATTED));
         }

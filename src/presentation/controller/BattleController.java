@@ -238,7 +238,7 @@ public class BattleController extends ScreenController implements Runnable{
                 BattleEndedFrontPanel frontPanel = new BattleEndedFrontPanel(royaleFrame.getWidth(), royaleFrame.getHeight(),
                         currentPlayerCrowns, playerCrowns, currentWinRate);
 
-                BattleEndedFrontPanelController battleEndedFrontPanelController = new BattleEndedFrontPanelController(this, frontPanel, royaleFrame);
+                BattleEndedFrontPanelController battleEndedFrontPanelController = new BattleEndedFrontPanelController(this, frontPanel, royaleFrame, playerCrowns > 0);
                 battleEndedFrontPanelController.setIfCanBeHidden(false); //We don't want to allow the user to be able to hide this panel
 
                 showFrontPanel(frontPanel, battleEndedFrontPanelController);
@@ -252,14 +252,14 @@ public class BattleController extends ScreenController implements Runnable{
      *
      * <p>Given a Battle Name, returns to the MainMenu (the Battle has finished and the Player information has been updated)
      * and asks the model to save the current Battle to the Database.
-     * <p>If the battle Name provided is null, the Name of the Battle will be its ID
+     * <p>The battleName can be {@code null} (no name)
      *
      * @param battleName The name of the Battle that just ended
+     * @param won Whether the game was won or not
      */
-    public void returnToMainMenu(String battleName) {
-        //TODO: Save the battle
+    public void returnToMainMenu(String battleName, boolean won) {
         Thread saveBattleInBackground = new Thread(() -> {
-
+            gameModel.saveBattle(null, battleName, won);
         });
         saveBattleInBackground.start();
 

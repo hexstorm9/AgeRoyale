@@ -1,7 +1,10 @@
 package business;
 
 import business.entities.BattleInfo;
+import persistence.BattleHistoryDAO;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.sql.SQLException;
 
 /**
@@ -16,11 +19,13 @@ import java.sql.SQLException;
  */
 public class OldBattlesUtility {
 
+    private BattleHistoryDAO battleHistoryDAO;
 
     /**
      * Default OldBattlesUtility constructor
      */
     public OldBattlesUtility() {
+        this.battleHistoryDAO = new BattleHistoryDAO();
     }
 
 
@@ -60,6 +65,7 @@ public class OldBattlesUtility {
     /**
      * Provided an array of {@link Movement}, the name of the battle, the name of the player and whether the battle was won or not,
      * saves that Battle information remotely.
+     * <p>Call this method from a thread that can be blocked, as the method can take some time
      *
      * @param movements The movements that occurred during the Battle
      * @param name The name of the battle. Can be {@code null}
@@ -68,9 +74,9 @@ public class OldBattlesUtility {
      * @throws SQLException If a connection to the database can't be established or queries are wrong
      */
     public void saveBattle(Movement[] movements, String name, String playerName, boolean won) throws SQLException {
-
+        String movementsSerialized = serializeMovements(movements);
+        battleHistoryDAO.saveBattle(movementsSerialized, name, playerName, won, new Date());
     }
-
 
 
     /**

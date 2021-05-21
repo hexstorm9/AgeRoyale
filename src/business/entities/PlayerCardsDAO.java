@@ -46,7 +46,6 @@ public class PlayerCardsDAO {
 
         final String updateCardLevelQuery = "UPDATE user_cards SET " + cardName + " = " + newCardLevel + " WHERE name = '" + player + "';";
         JDBCConnector.getInstance().updateDatabase(updateCardLevelQuery);
-
     }
 
 

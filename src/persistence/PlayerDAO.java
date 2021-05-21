@@ -102,7 +102,7 @@ public class PlayerDAO {
                     objectsToBeReturned.get(i + 2), objectsToBeReturned.get(i + 3));
         }
 
-        return playersToBeReturned;
+        return playersToBeReturned.length == 0? null: playersToBeReturned;
     }
 
     /**
@@ -128,7 +128,7 @@ public class PlayerDAO {
                     objectsToBeReturned.get(i + 2), objectsToBeReturned.get(i + 3));
         }
 
-        return playersToBeReturned;
+        return playersToBeReturned.length == 0? null: playersToBeReturned;
     }
 
 
