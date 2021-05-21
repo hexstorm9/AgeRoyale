@@ -89,7 +89,7 @@ public class BattleEndedFrontPanel extends FrontPanel{
         currentWinRatePanel.setOpaque(false);
         currentWinRatePanel.setLayout(new BoxLayout(currentWinRatePanel, BoxLayout.X_AXIS));
         RoyaleLabel percentageWinRateLabel = new RoyaleLabel(winRate + "%", RoyaleLabel.LabelType.PARAGRAPH);
-        percentageWinRateLabel.setForeground(playerCrownsInBattle > 0? Color.GREEN: MenuGraphics.RED);
+        percentageWinRateLabel.setForeground(winRate >= 50? Color.GREEN: MenuGraphics.RED);
         currentWinRatePanel.add(new RoyaleLabel("WinRate: ", RoyaleLabel.LabelType.PARAGRAPH));
         currentWinRatePanel.add(percentageWinRateLabel);
 

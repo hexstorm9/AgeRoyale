@@ -6,7 +6,6 @@ import presentation.controller.BattleController;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Random;
 
 
@@ -42,8 +41,8 @@ public class BattleModel {
         this.player = player;
 
         map = new Map(battlePanelDimension);
-        enemyCards = (ArrayList<Card>) Collections.synchronizedList(new ArrayList<Card>()); //ArrayList thread-safe
-        playerCards = (ArrayList<Card>) Collections.synchronizedList(new ArrayList<Card>()); //ArrayList thread-safe
+        enemyCards = new ArrayList<>();
+        playerCards = new ArrayList<>();
 
         physicsSystem = new PhysicsSystem(this, map);
 
@@ -238,10 +237,8 @@ public class BattleModel {
      * @return Whether there is some player on the enemy Map or not.
      */
     public boolean isPlayerOnEnemyMap() {
-        //The BattleBot thread will iterate over the ArrayList, but no problem as the
-        //array list is a synchronized list
         for(Card c: playerCards)
-            if(map.isPositionOnTheLeftMap(c.position)) return true;
+            if(map.isPositionOnTheRightMap(c.position)) return true;
 
         return false;
     }

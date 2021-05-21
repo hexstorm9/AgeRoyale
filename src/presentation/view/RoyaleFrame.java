@@ -45,7 +45,7 @@ public class RoyaleFrame extends JFrame {
 
         //TODO: Delete before production. Opens the game in the second monitor if the user has one.
         try{
-            gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[1];
+            gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[0];
         }catch(ArrayIndexOutOfBoundsException e){
             gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
         }
