@@ -6,6 +6,7 @@ import presentation.controller.BattleController;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 
@@ -30,6 +31,10 @@ public class BattleModel {
     private double enemyGold; //From 0 to 100
     private final double amountOfGoldEveryUpdate; //Tells the amount of gold that will be increased in every update
     private final double amountOfGoldEveryEnemyKilled; //Tells the amount of gold that will be increased in every enemy killed
+    private static final int GOLD_ON_START = 50; //The amount of gold both player and enemy will have on start
+
+
+    private ArrayList<Movement> battleMovements;
 
 
     public BattleModel(BattleController battleController, Player player, Dimension battlePanelDimension){
@@ -37,8 +42,8 @@ public class BattleModel {
         this.player = player;
 
         map = new Map(battlePanelDimension);
-        enemyCards = new ArrayList<>();
-        playerCards = new ArrayList<>();
+        enemyCards = (ArrayList<Card>) Collections.synchronizedList(new ArrayList<Card>()); //ArrayList thread-safe
+        playerCards = (ArrayList<Card>) Collections.synchronizedList(new ArrayList<Card>()); //ArrayList thread-safe
 
         physicsSystem = new PhysicsSystem(this, map);
 
@@ -55,8 +60,8 @@ public class BattleModel {
         battleController.gameStatsChanged(playerCards.size(), enemyCards.size());
 
         //Define Gold
-        playerGold = 0;
-        enemyGold = 0;
+        playerGold = GOLD_ON_START;
+        enemyGold = GOLD_ON_START;
         amountOfGoldEveryUpdate = 0.08;
         amountOfGoldEveryEnemyKilled = 5;
     }
@@ -82,7 +87,7 @@ public class BattleModel {
             if(!enemyCards.get(i).isTotallyDead()) enemyCards.get(i).update();
             else{
                 //If that enemy card that just died is the tower, let's end the game (the player won)
-                if(playerCards.get(i).getCardType().isTower()){
+                if(enemyCards.get(i).getCardType().isTower()){
                     endGame(Card.Status.PLAYER);
                     return;
                 }
@@ -128,14 +133,15 @@ public class BattleModel {
      */
     private void endGame(Card.Status winner){
         Random r = new Random();
-        final int crownsOfTheBattle = 20 + r.nextInt(15); //The crowns a player looses/wins can be ranged from 20 to 35
-
-        //Create a new thread to update the Player information (so as not to block this thread)
-        Thread updatePlayerThread = new Thread(() ->
-                player.updateAfterBattlePlayed(winner == Card.Status.PLAYER ? crownsOfTheBattle : -crownsOfTheBattle, winner == Card.Status.PLAYER));
-        updatePlayerThread.start();
+        //The crowns a player looses/wins can be ranged from 20 to 35. If it has lost, multiply it for -1
+        final int crownsOfTheBattle = (20 + r.nextInt(15)) * (winner == Card.Status.PLAYER? 1: -1);
 
         battleController.endGame(crownsOfTheBattle);
+
+        //Create a new thread to update the Player information (so as not to block this gameLoop thread)
+        Thread updatePlayerThread = new Thread(() ->
+                player.updateAfterBattlePlayed(crownsOfTheBattle, winner == Card.Status.PLAYER));
+        updatePlayerThread.start();
     }
 
 
@@ -226,5 +232,18 @@ public class BattleModel {
     public ArrayList<Card> getPlayerCards(){ return playerCards;}
     public ArrayList<Card> getEnemyCards(){ return enemyCards;}
 
+
+    /**
+     * Returns whether there is some player on the Enemy Map or not.
+     * @return Whether there is some player on the enemy Map or not.
+     */
+    public boolean isPlayerOnEnemyMap() {
+        //The BattleBot thread will iterate over the ArrayList, but no problem as the
+        //array list is a synchronized list
+        for(Card c: playerCards)
+            if(map.isPositionOnTheLeftMap(c.position)) return true;
+
+        return false;
+    }
 
 }

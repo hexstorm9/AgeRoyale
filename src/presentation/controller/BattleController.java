@@ -162,12 +162,12 @@ public class BattleController extends ScreenController implements Runnable{
         else if(e.getSource() instanceof BattleScreen.BattlePanel){
             Cards cardToThrow = battleScreen.getCardSelected();
             if(cardToThrow == null){ //If no card has been selected
-                SoundPlayer.getInstance().play(Sounds.BUTTON);
+                SoundPlayer.getInstance().play(Sounds.ERROR);
                 return;
             }
 
             boolean cardThrown = battleModel.throwCard(cardToThrow, Card.Status.PLAYER, e.getX(), e.getY());
-            if(!cardThrown) SoundPlayer.getInstance().play(Sounds.BUTTON);
+            if(!cardThrown) SoundPlayer.getInstance().play(Sounds.ERROR);
             else battleScreen.updateCardsToShow(); //Once a card is thrown, let's update cards
         }
     }
@@ -213,7 +213,8 @@ public class BattleController extends ScreenController implements Runnable{
 
     /**
      * To be called from the Model whenever the battle has ended.
-     * <p>It stops the GameLoop and everything related to the battle.
+     * <p>It stops the GameLoop and everything related to the battle. Also, starts displaying an instance of
+     * {@link BattleEndedFrontPanel} with the information of the battle.
      *
      * @param playerCrowns The crowns that the user has won/lost
      */
@@ -223,14 +224,47 @@ public class BattleController extends ScreenController implements Runnable{
         gameRunning = false;
         battleBot.stopBot();
 
-        //As this method will be called from the gameLoopThread, let's use the EDT to modify the View
-        SwingUtilities.invokeLater(() -> {
-            BattleEndedFrontPanel frontPanel = new BattleEndedFrontPanel(royaleFrame.getWidth(), royaleFrame.getHeight(), playerCrowns);
+        MusicPlayer.getInstance().stop();
+        SoundPlayer.getInstance().play(playerCrowns > 0? Sounds.WON: Sounds.LOST);
 
-            BattleEndedFrontPanelController battleEndedFrontPanelController = new BattleEndedFrontPanelController(frontPanel, royaleFrame);
-            battleEndedFrontPanelController.setFrontPanelVisibility(true);
-            battleEndedFrontPanelController.canBeHidden(false);
-        });
+        //Let's save a reference to the currentPlayerCrowns and winRate before the model updates it
+        final int currentPlayerCrowns = gameModel.getPlayer().getCrowns();
+        final int currentWinRate = (int)(((gameModel.getPlayer().getBattleWins() + (playerCrowns > 0? 1: 0))
+                /((double)(gameModel.getPlayer().getBattlePlays() + 1))) * 100);
+
+        try{
+            //As this method will be called from the gameLoopThread, let's use the EDT to modify the View
+            SwingUtilities.invokeLater(() -> {
+                BattleEndedFrontPanel frontPanel = new BattleEndedFrontPanel(royaleFrame.getWidth(), royaleFrame.getHeight(),
+                        currentPlayerCrowns, playerCrowns, currentWinRate);
+
+                BattleEndedFrontPanelController battleEndedFrontPanelController = new BattleEndedFrontPanelController(this, frontPanel, royaleFrame);
+                battleEndedFrontPanelController.setIfCanBeHidden(false); //We don't want to allow the user to be able to hide this panel
+
+                showFrontPanel(frontPanel, battleEndedFrontPanelController);
+            });
+        }catch(Exception e){ e.printStackTrace();}
     }
+
+
+    /**
+     * To be called whenever the Battle has finished, from the {@link BattleEndedFrontPanelController}
+     *
+     * <p>Given a Battle Name, returns to the MainMenu (the Battle has finished and the Player information has been updated)
+     * and asks the model to save the current Battle to the Database.
+     * <p>If the battle Name provided is null, the Name of the Battle will be its ID
+     *
+     * @param battleName The name of the Battle that just ended
+     */
+    public void returnToMainMenu(String battleName) {
+        //TODO: Save the battle
+        Thread saveBattleInBackground = new Thread(() -> {
+
+        });
+        saveBattleInBackground.start();
+
+        goToScreen(Screens.MAIN_MENU);
+    }
+
 
 }

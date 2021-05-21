@@ -135,7 +135,6 @@ public class SettingsPanelController extends FrontPanelController implements Cha
                     settingsPanel.getDeleteAccountConfirmPasswordFieldText()) == false)
                 return LanguageManager.getSentence(Sentences.PASSWORDS_DONT_MATCH);
 
-
             try{
                 boolean accountDeleted = screenController.getGameModel().deleteUser(settingsPanel.getDeleteAccountPasswordFieldText());
                 if(accountDeleted == false) return LanguageManager.getSentence(Sentences.INCORRECT_PASSWORD);

@@ -24,6 +24,7 @@ public class RoyaleLabel extends JLabel implements MouseListener{
     private boolean clickable; //Can the Label be clicked?
     private MouseListener[] mouseListenerBuffer; //Needed so as to disable clicks temporarily
 
+    private Color foregroundColor;
 
     public RoyaleLabel(ImageIcon imageIcon) {
         super(imageIcon);
@@ -62,6 +63,8 @@ public class RoyaleLabel extends JLabel implements MouseListener{
             default:
                 setFont(getFont().deriveFont(16f));
         }
+
+        foregroundColor = getForeground();
     }
 
 
@@ -112,12 +115,13 @@ public class RoyaleLabel extends JLabel implements MouseListener{
 
     @Override
     public void mouseEntered(MouseEvent e) {
+        foregroundColor = getForeground(); //Let's get the current color before changing it
         setForeground(MenuGraphics.YELLOW);
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        setForeground(Color.WHITE);
+        setForeground(foregroundColor);
     }
 
 

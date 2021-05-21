@@ -8,7 +8,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 /**
- * FrontPanelController will control a {@link FrontPanel}.
+ * The FrontPanelController will control a single {@link FrontPanel}.
  *
  * @see FrontPanel
  * @version 1.0
@@ -33,7 +33,7 @@ public abstract class FrontPanelController implements ActionListener, MouseListe
         this.frontPanel = frontPanel;
         this.royaleFrame = royaleFrame;
         frontPanel.addButtonsListener(this);
-        frontPanel.addMouseListener(this);
+        frontPanel.addLabelsListener(this);
 
         isFrontPanelVisible = false;
         canHideFrontPanel = true;
@@ -43,7 +43,8 @@ public abstract class FrontPanelController implements ActionListener, MouseListe
     /**
      * Set whether this frontPanel should be visible on the current {@link RoyaleFrame}
      * or not.
- * @param visible Whether the {@code FrontPanel} that this controller controls is visible or not
+     * <p><b>Do not call directly. Use the {@link ScreenController#showFrontPanel(FrontPanel, FrontPanelController)} method.</b>
+     * @param visible Whether the {@code FrontPanel} that this controller controls is visible or not
      */
     public void setFrontPanelVisibility(boolean visible){
         if(visible) royaleFrame.setFrontPanel(frontPanel);
@@ -90,8 +91,16 @@ public abstract class FrontPanelController implements ActionListener, MouseListe
      * <p>By default, a FrontPanel can be hidden
      * @param canBeHidden Whether the FrontPanel can be hidden or not.
      */
-    public void canBeHidden(boolean canBeHidden){
+    public void setIfCanBeHidden(boolean canBeHidden){
         canHideFrontPanel = canBeHidden;
+    }
+
+    /**
+     * Returns whether this frontPanel can be hidden or not
+     * @return Whether this frontPanel can be hidden or not
+     */
+    public boolean canBeHidden(){
+        return canHideFrontPanel;
     }
 
 }

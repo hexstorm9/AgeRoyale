@@ -66,6 +66,7 @@ public enum Cards {
     public int getMaxHealth(int level){ return level >= maxHealth.length ? maxHealth[maxHealth.length-1]: maxHealth[level]; }
     public int getDamage(int level){ return level >= damage.length ? damage[damage.length-1]: damage[level]; }
     public boolean isTower(){ return isTower;}
+    public boolean isDefensive(){ return movingVelocity == 0;}
 
     /**
      * Returns the String representing that Cards (its name, but in lowercase)

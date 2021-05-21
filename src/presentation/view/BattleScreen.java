@@ -26,8 +26,6 @@ public class BattleScreen extends Screen {
     private SouthPanel southPanel;
 
 
-
-
     /**
      * Default BattleScreen Constructor.
      * <p>In order to paint itself, a reference to the {@link BattleController} that controls the {@code Screen} is needed.

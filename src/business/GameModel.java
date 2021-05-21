@@ -186,4 +186,18 @@ public class GameModel {
     }
 
 
+    /**
+     * Returns whether the BattleName provided is valid or not.
+     * <p>The criteria for the battle name follows the same criteria as the name of the player when it registers.
+     *
+     * @param battleName The battle name to check
+     * @return Whether the battleName provided is valid or not
+     * @see SecurityUtility#checkIfUsernameIsCorrect(String)
+     */
+    public boolean checkIfBattleNameIsValid(String battleName){
+        if(battleName.length() == 0) return true; //The battleName can be empty
+        return SecurityUtility.checkIfUsernameIsCorrect(battleName);
+    }
+
+
 }

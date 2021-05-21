@@ -17,6 +17,9 @@ import java.util.Locale;
  */
 public class Card {
 
+    /**
+     * Tells the state of the card
+     */
     public enum State{
         /**
          * The {@code Card} won't move, but it will be constantly checking for enemies in range (to start attacking them)
@@ -80,6 +83,10 @@ public class Card {
     private int updatesAttacking; //Counter for attacking updates
 
 
+    /**
+     * Tells a Card orientation. Whether it's looking to the {@code right} or
+     * to the {@code left}
+     */
     public enum Orientation{
         RIGHT,
         LEFT
@@ -87,6 +94,9 @@ public class Card {
     private Orientation currentOrientation;
 
 
+    /**
+     * Tells whether the Card is a Player or an Enemy
+     */
     public enum Status{
         PLAYER,
         ENEMY

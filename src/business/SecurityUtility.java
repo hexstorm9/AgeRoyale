@@ -76,7 +76,9 @@ public class SecurityUtility {
      * @return Whether the password provided is secure or not
      */
     public static boolean checkIfPasswordIsSecure(char[] password){
-        if(password.length < 8) return false;
+        //We won't be using regex
+
+        if(password.length < 8 || password.length > 15) return false;
         boolean hasUppercaseLetter, hasLowercaseLetter, hasSymbol, hasNumber;
         hasUppercaseLetter = false;
         hasLowercaseLetter = false;
@@ -102,7 +104,10 @@ public class SecurityUtility {
      * @return Whether the email is well-formatted or not.
      */
     public static boolean checkIfEmailIsCorrect(String email){
-        Pattern pattern = Pattern.compile("[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}");
+        //Regex that every email has to match
+        final String emailRegex = "[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}";
+
+        Pattern pattern = Pattern.compile(emailRegex);
         Matcher matcher = pattern.matcher(email);
 
         //If the email matches the pattern is valid. If not, it's not valid.
@@ -114,26 +119,28 @@ public class SecurityUtility {
      * Checks whether the username is correct or not.
      * <p>For it to be correct, it must follow:
      * <ul>
-     *     <li>No special symbols</li>
+     *     <li>No special symbols (spaces neither)</li>
      *     <li>At least 4 characters</li>
      * </ul>
      * @param username The username to check
      * @return Whether the username is valid (correct) or not
      */
     public static boolean checkIfUsernameIsCorrect(String username) {
-        if(username.length() < 4) return false;
+        if(username.length() < 4 ||username.length() > 20) return false;
 
-        Pattern pattern = Pattern.compile("[^a-zA-Z0-9]");
+        final String hasSomethingThatIsNotNumberOrCharacterRegex = "[^a-zA-Z0-9]";
+        Pattern pattern = Pattern.compile(hasSomethingThatIsNotNumberOrCharacterRegex);
         Matcher matcher = pattern.matcher(username);
 
-        //If the username matches the pattern it means it has special symbols, so it's not valid. Else, it's valid.
-        return matcher.matches() ? false: true;
+        //If the username finds the pattern (something that is neither a number nor a character)
+        //it means it has special symbols, so it's not valid.
+        return matcher.find() ? false: true;
     }
 
 
     /**
      * Returns a six digit random verification code and saves it into a class attribute so as to be retrieved
-     * later on by {@link SecurityUtility#latestVerificationCodeGenerated).
+     * later on by {@link SecurityUtility#getLatestVerificationCodeGenerated()} ).
      *
      * @return A randomly generated six digit random verification code
      */

@@ -179,7 +179,8 @@ public abstract class ScreenController implements ActionListener, MouseListener{
      * <p>It will show the {@link ScreenController#settingsPanel} of this {@link ScreenController}
      */
     protected void escKeyPressed(){
-        if(currentFrontPanelController != null && currentFrontPanelController.isFrontPanelVisible()) currentFrontPanelController.setFrontPanelVisibility(false);
+        if(currentFrontPanelController != null && currentFrontPanelController.isFrontPanelVisible()
+                && currentFrontPanelController.canBeHidden()) currentFrontPanelController.setFrontPanelVisibility(false);
         else showFrontPanel(settingsPanel, settingsPanelController);
     }
 
