@@ -259,7 +259,7 @@ public class BattleController extends ScreenController implements Runnable{
      */
     public void returnToMainMenu(String battleName, boolean won) {
         Thread saveBattleInBackground = new Thread(() -> {
-            gameModel.saveBattle(null, battleName, won);
+            gameModel.saveBattle(battleModel.getBattleMovements(), battleName, won);
         });
         saveBattleInBackground.start();
 

@@ -32,10 +32,25 @@ public class BattleModel {
     private final double amountOfGoldEveryEnemyKilled; //Tells the amount of gold that will be increased in every enemy killed
     private static final int GOLD_ON_START = 50; //The amount of gold both player and enemy will have on start
 
+    /**
+     * It will save how many updates have already happened (an updates counter)
+     */
+    private int updatesCounter;
 
+
+    /**
+     * In a normal battle, {@code battleMovements} will be used as an array to save all the movements done.
+     * When reproducing a battle, {@code battleMovements} will be used as the array to read all the movements from the old battle
+     */
     private ArrayList<Movement> battleMovements;
 
 
+    /**
+     * Default BattleModel Constructor.
+     * @param battleController
+     * @param player
+     * @param battlePanelDimension
+     */
     public BattleModel(BattleController battleController, Player player, Dimension battlePanelDimension){
         this.battleController = battleController;
         this.player = player;
@@ -45,9 +60,12 @@ public class BattleModel {
         playerCards = new ArrayList<>();
 
         physicsSystem = new PhysicsSystem(this, map);
+        updatesCounter = 0;
+        battleMovements = new ArrayList<>(); //Create the BattleMovements arraylist so as to add them when they happen
 
         playerCurrentCardsToThrow = new ArrayList<>();
         for(int i = 0; i < PLAYER_CURRENT_CARDS; i++) generateNewCardToThrow();
+
 
         //Let's create both towers
         playerCards.add(new Card(Cards.TOWER, 1, Card.Status.PLAYER, map.getTowerPosition(Card.Status.PLAYER),
@@ -55,8 +73,10 @@ public class BattleModel {
         enemyCards.add(new Card(Cards.TOWER, 1, Card.Status.ENEMY, map.getTowerPosition(Card.Status.ENEMY),
                 map.getTowerHeight(), physicsSystem));
 
+
         //Update Game Stats
         battleController.gameStatsChanged(playerCards.size(), enemyCards.size());
+
 
         //Define Gold
         playerGold = GOLD_ON_START;
@@ -68,7 +88,9 @@ public class BattleModel {
 
 
     public void update(){
-        //Update all Cards
+        updatesCounter++;
+
+        //Update all Cards and check whether some card is totally dead or not.
         for(int i = 0; i < playerCards.size(); i++){
             if(!playerCards.get(i).isTotallyDead()) playerCards.get(i).update();
             else{
@@ -183,6 +205,10 @@ public class BattleModel {
             enemyGold -= c.getGoldCost();
         }
 
+        //Let's create a new Movement and save it to the array of movements
+        Movement cardThrownMovement = new Movement(c, cardStatus, cardPosition, updatesCounter);
+        battleMovements.add(cardThrownMovement);
+
         battleController.gameStatsChanged(playerCards.size(), enemyCards.size());
         return true;
     }
@@ -241,6 +267,19 @@ public class BattleModel {
             if(map.isPositionOnTheRightMap(c.position)) return true;
 
         return false;
+    }
+
+
+    /**
+     * Returns the array of {@link Movement} representing what happened during the battle.
+     * <p>To be called only when the battle has ended
+     * @return The array of {@link Movement} representing what happened during this battle.
+     */
+    public Movement[] getBattleMovements(){
+        Movement[] movements = new Movement[battleMovements.size()];
+        movements = battleMovements.toArray(movements);
+
+        return movements;
     }
 
 }

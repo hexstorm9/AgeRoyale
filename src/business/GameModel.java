@@ -1,5 +1,6 @@
 package business;
 
+import business.entities.BattleInfo;
 import business.entities.Player;
 import persistence.JDBCConnector;
 import persistence.PlayerDAO;
@@ -7,12 +8,13 @@ import persistence.UserDAO;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Date;
+
 
 /**
  * Main {@code Model} class of the application.
  *
  * <p>Lets you perform actions such as login in or registering a new user, and holds all the information of the current player.
+ * <p>There should only be a {@link GameModel} for each Game
  *
  * @version 1.0
  */
@@ -214,16 +216,61 @@ public class GameModel {
      * <p>Call this method from a thread that can be blocked, as the method can take some time
      *
      * @param movements The movements that occurred during the Battle
-     * @param name The name of the battle. Can be {@code null}
+     * @param battleName The name of the battle. Can be {@code null}
      * @param won Whether the battle was won or not
      */
-    public void saveBattle(Movement[] movements, String name, boolean won){
+    public void saveBattle(Movement[] movements, String battleName, boolean won){
         try{
-            oldBattlesUtility.saveBattle(movements, name, player.getName(), won);
+            oldBattlesUtility.saveBattle(movements, battleName, player.getName(), won);
         }catch(SQLException e){
             e.printStackTrace();
         }
     }
 
 
+    /**
+     * Returns an array of simple {@link BattleInfo} representing the Battles that a user played.
+     * @param user The user to check its battles
+     * @return Array of simple {@link BattleInfo} representing the Battles that the user played ({@code null} if none)
+     */
+    public BattleInfo[] getBattlesByUser(String user){
+        try{
+            return oldBattlesUtility.getBattlesByUser(user);
+        }catch(SQLException e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+    /**
+     * Returns an array of simple {@link BattleInfo} representing the latest battles that were played
+     * @param howMany How many battles want to be returned
+     * @return Array of simple {@link BattleInfo} representing the latest Battles played ({@code null} if none)
+     */
+    public BattleInfo[] getLatestBattles(int howMany) {
+        try{
+            return oldBattlesUtility.getLatestBattles(howMany);
+        }catch(SQLException e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+    /**
+     * Returns a complete {@link BattleInfo} representing the Battle with the ID specified, and containing
+     * the array of {@link Movement} inside it.
+     * @param id The ID of the battle that wants to be returned
+     * @return A complete {@link BattleInfo} representing the Battle with the ID specified or {@code null} if
+     * no battle exists with that ID.
+     */
+    public BattleInfo getCompleteBattleById(int id) throws SQLException {
+        try{
+            return oldBattlesUtility.getCompleteBattleById(id);
+        }catch(SQLException e){
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

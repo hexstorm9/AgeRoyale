@@ -34,7 +34,7 @@ public class BattleHistoryDAO {
      * @throws SQLException If a connection to the database can't be established or queries are wrong
      */
     public BattleInfo[] getBattlesByUser(String user) throws SQLException{
-        final String getBattlesByUserQuery = "SELECT (id, name, player_name, won, battle_date) FROM battle_history " +
+        final String getBattlesByUserQuery = "SELECT id, name, player_name, won, battle_date FROM battle_history " +
                 "WHERE player_name='" + user + "' ORDER by battle_date desc";
 
         ArrayList<Object> resultsList;
@@ -71,7 +71,7 @@ public class BattleHistoryDAO {
      * @throws SQLException If a connection to the database can't be established or queries are wrong
      */
     public BattleInfo[] getLatestBattles(int howMany) throws SQLException {
-        final String getLatestBattlesQuery = "SELECT (id, name, player_name, won, battle_date) FROM battle_history " +
+        final String getLatestBattlesQuery = "SELECT id, name, player_name, won, battle_date FROM battle_history " +
                 "ORDER by battle_date desc LIMIT " + howMany + ";";
 
         ArrayList<Object> resultsList;
@@ -103,14 +103,14 @@ public class BattleHistoryDAO {
 
     /**
      * Returns a complete {@link BattleInfo} representing the Battle with the ID specified.
-     * <p>Note that the {@link BattleInfo} returned has only the serialized Battles. A deserialization is needed.
+     * <p>Note that the {@link BattleInfo} returned has only the serialized Battles. <b>A deserialization is needed.</b>
      *
      * @param desiredBattleId The ID of the battle that wants to be returned
-     * @return A complete {@link BattleInfo} representing the Battle with the ID specified
+     * @return A complete {@link BattleInfo} representing the Battle with the ID specified. A deserialization is needed.
      * @throws SQLException If a connection to the database can't be established or queries are wrong
      */
     public BattleInfo getCompleteBattleById(int desiredBattleId) throws SQLException {
-        final String getCompleteBattleById = "SELECT (id, name, player_name, won, battle_date, movements) FROM battle_history " +
+        final String getCompleteBattleById = "SELECT id, name, player_name, won, battle_date, movements FROM battle_history " +
                 "WHERE id = " + desiredBattleId + ";";
 
         ArrayList<Object> resultsList;

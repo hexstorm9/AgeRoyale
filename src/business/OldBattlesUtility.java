@@ -1,11 +1,12 @@
 package business;
 
 import business.entities.BattleInfo;
+import business.entities.Cards;
 import persistence.BattleHistoryDAO;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.sql.SQLException;
+
 
 /**
  * OldBattlesUtility provides a way to save and retrieve old battles.
@@ -36,7 +37,8 @@ public class OldBattlesUtility {
      * @throws SQLException If a connection to the database can't be established or queries are wrong
      */
     public BattleInfo[] getBattlesByUser(String user) throws SQLException {
-        return null;
+        BattleInfo[] battlesByUser = battleHistoryDAO.getBattlesByUser(user);
+        return battlesByUser;
     }
 
 
@@ -47,7 +49,8 @@ public class OldBattlesUtility {
      * @throws SQLException If a connection to the database can't be established or queries are wrong
      */
     public BattleInfo[] getLatestBattles(int howMany) throws SQLException {
-        return null;
+        BattleInfo[] latestBattles = battleHistoryDAO.getLatestBattles(howMany);
+        return latestBattles;
     }
 
 
@@ -58,7 +61,11 @@ public class OldBattlesUtility {
      * @throws SQLException If a connection to the database can't be established or queries are wrong
      */
     public BattleInfo getCompleteBattleById(int id) throws SQLException {
-        return null;
+        BattleInfo completeBattleById = battleHistoryDAO.getCompleteBattleById(id);
+
+        //Let's deserialize its movements and return it
+        completeBattleById.setMovements(deserializeMovements(completeBattleById.getSerializedMovements()));
+        return completeBattleById;
     }
 
 
@@ -85,7 +92,39 @@ public class OldBattlesUtility {
      * @return The movements serialized as a {@code String}
      */
     private String serializeMovements(Movement[] movements){
-        return null;
+        /*SerializedMovements will follow the format:
+        *  - A '/' will separate each movement
+        *  - A '-' will separate each field of that movement
+        *    and the positions fields are ordered will follow:
+        *       1.PlayerOrEnemy (1 if it's player, 0 if it's enemy)
+        *       2.cardPosition X
+        *       3.cardPosition Y
+        *       4.cardThrown (using Cards.toString())
+        *       5.updateThrown
+        */
+
+        StringBuilder movementsSerialized = new StringBuilder(); //Create a StringBuilder for the movementsSerialized and set the string to null
+        StringBuilder movement = new StringBuilder();
+
+        for(int i = 0; i < movements.length; i++){
+            movement.setLength(0); //Clear the StringBuilder so as to start adding new things
+            movement.append(movements[i].getPlayerOrEnemy() == Card.Status.PLAYER ? 1: 0);
+            movement.append("-"); //Next Field
+            movement.append((int)movements[i].getCardPosition().x);
+            movement.append("-"); //Next Field
+            movement.append((int)movements[i].getCardPosition().y);
+            movement.append("-"); //Next Field
+            movement.append(movements[i].getCardThrown().toString());
+            movement.append("-"); //Next Field
+            movement.append(movements[i].getUpdateThrown());
+            movement.append("/"); //Movement ended
+
+            movementsSerialized.append(movement); //Add the serialized movement to the movementsSerialized String
+        }
+
+
+        //Return null if movementsSerialized is empty
+        return movementsSerialized.toString().equals("")? null: movementsSerialized.toString();
     }
 
 
@@ -95,7 +134,32 @@ public class OldBattlesUtility {
      * @return An array of {@link Movement} representing the serialized Movements provided
      */
     private Movement[] deserializeMovements(String movements){
-        return null;
+        /*SerializedMovements will follow the format:
+         *  - A '/' will separate each movement
+         *  - A '-' will separate each field of that movement
+         *    and the positions fields are ordered will follow:
+         *       1.PlayerOrEnemy (1 if it's player, 0 if it's enemy)
+         *       2.cardPosition X
+         *       3.cardPosition Y
+         *       4.cardThrown (using Cards.toString())
+         *       5.updateThrown
+         */
+
+        String[] eachMovement = movements.split("/"); //Will give us each movement serialized
+        Movement[] movementsDeserialized = new Movement[eachMovement.length];
+
+        for(int i = 0; i < eachMovement.length; i++){
+            String[] eachField = eachMovement[i].split("-");
+            Card.Status playerOrEnemy = Integer.valueOf(eachField[0]) == 1? Card.Status.PLAYER: Card.Status.ENEMY;
+            Vector2 cardPosition = new Vector2(Integer.valueOf(eachField[1]), Integer.valueOf(eachField[2]));
+            Cards cardThrown = Cards.fromString(eachField[3]);
+            int updateThrown = Integer.valueOf(eachField[4]);
+
+            Movement currentMovement = new Movement(cardThrown, playerOrEnemy, cardPosition, updateThrown);
+            movementsDeserialized[i] = currentMovement;
+        }
+
+        return movementsDeserialized.length == 0? null: movementsDeserialized;
     }
 
 }

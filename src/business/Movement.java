@@ -80,4 +80,5 @@ public class Movement implements Comparable{
         else if(movementProvided.getUpdateThrown() < updateThrown) return 1;
         else return 0;
     }
+
 }

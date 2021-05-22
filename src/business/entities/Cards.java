@@ -74,6 +74,20 @@ public enum Cards {
      */
     @Override
     public String toString() {
-        return this.name().toLowerCase(Locale.ROOT);
+        return this.name().toLowerCase();
+    }
+
+    /**
+     * Provided a name of the {@link Cards}, returns its value or {@code null} if the card does not exist.
+     * @param card The name of the {@link Cards} that wants to be returned
+     * @return The {@link Cards} that the provided {@code String} represents or {@code null} if the card does not exist.
+     */
+    public static Cards fromString(String cardName){
+
+        cardName = cardName.toLowerCase();
+        for(Cards c: Cards.values())
+            if(c.toString().equals(cardName)) return c;
+
+        return null;
     }
 }
