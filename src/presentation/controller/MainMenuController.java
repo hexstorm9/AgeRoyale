@@ -10,6 +10,7 @@ import presentation.view.RoyaleFrame;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 
@@ -26,6 +27,8 @@ public class MainMenuController extends ScreenController{
     private MainMenuScreen mainMenuScreen;
     private Thread updateRankingsThread;
 
+    private CustomMouseAdapter mouseAdapter;
+
 
     /**
      * Default MainMenuController constructor.
@@ -41,7 +44,9 @@ public class MainMenuController extends ScreenController{
      * {@inheritDoc}
      */
     public void start(boolean showSettingsPanelOnStart){
-        mainMenuScreen = new MainMenuScreen(gameModel.getPlayer(), royaleFrame.getWidth(), royaleFrame.getHeight());
+        mouseAdapter = new CustomMouseAdapter();
+
+        mainMenuScreen = new MainMenuScreen(gameModel.getPlayer(), mouseAdapter, royaleFrame.getWidth(), royaleFrame.getHeight());
         mainMenuScreen.addButtonsListener(this);
         mainMenuScreen.addPanelsListener(this);
         mainMenuScreen.addLabelsListener(this);
@@ -178,4 +183,35 @@ public class MainMenuController extends ScreenController{
 
     @Override
     public void mouseExited(MouseEvent e) {}
+
+
+    class CustomMouseAdapter extends MouseAdapter{
+        @Override
+        public void mousePressed(MouseEvent e) {
+            super.mousePressed(e);
+
+            if (e.getSource() instanceof JTable) {
+                JTable currentTable = mainMenuScreen.getCurrentTable();
+                if(currentTable == null) return;
+
+                int row = currentTable.rowAtPoint(e.getPoint());
+
+                String secondColumn = (String) currentTable.getValueAt(row, 1);
+                try {
+                    //If the second column is an integer, a player has been clicked
+                    Integer.parseInt(secondColumn);
+
+                    //A player has been clicked, so let's show its battles ->
+                    //TODO: Show player battles
+
+                } catch (NumberFormatException ex) {
+                    //If it is not an integer, a battle has been clicked
+                    final int battleId = Integer.parseInt((String)currentTable.getValueAt(row, 4));
+                    goToScreen(Screens.LOADING_BATTLE_SCREEN, battleId);
+                }
+
+            }
+        }
+    }
+
 }

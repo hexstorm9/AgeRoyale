@@ -1,7 +1,7 @@
 package presentation.view;
 
-import business.Card;
 import business.entities.*;
+import presentation.controller.MainMenuController;
 import presentation.graphics.MenuGraphics;
 import presentation.view.customcomponents.RoyaleButton;
 import presentation.view.customcomponents.RoyaleLabel;
@@ -9,10 +9,9 @@ import presentation.view.customcomponents.RoyaleLabel;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -45,6 +44,7 @@ public class MainMenuScreen extends Screen {
     private RoyaleLabel usernameLogo, usernameLabel, crownImage, crownsLabel;
 
     private Player currentPlayer;
+    private MouseAdapter mouseAdapter;
 
     private final int SCREEN_WIDTH;
 
@@ -79,13 +79,16 @@ public class MainMenuScreen extends Screen {
      * Default MainMenuScreen Constructor.
      *
      * @param currentPlayer The current player that is playing (so as to get its information)
+     * @param mouseAdapter The mouseAdapter that will listen to the Rankings JTables
      * @param screenWidth The desired width of the screen
      * @param screenHeight The desired height of the screen
      */
-    public MainMenuScreen(Player currentPlayer, int screenWidth, int screenHeight){
+    public MainMenuScreen(Player currentPlayer, MouseAdapter mouseAdapter, int screenWidth, int screenHeight){
         super(screenHeight);
         this.currentPlayer = currentPlayer;
+        this.mouseAdapter = mouseAdapter;
         SCREEN_WIDTH = screenWidth;
+
 
         setLayout(new BorderLayout());
 
@@ -280,6 +283,14 @@ public class MainMenuScreen extends Screen {
      */
     public void pauseAllComponents(){
         battleMenuPanel.pauseAllComponents();
+    }
+
+    /**
+     * Returns the current jTable showing
+     * @return The current jTable showing
+     */
+    public JTable getCurrentTable(){
+        return rankingMenuPanel.currentTableShowing;
     }
 
 
@@ -574,14 +585,12 @@ public class MainMenuScreen extends Screen {
         private Player[] playersByWinRatio;
         private BattleInfo[] latestBattles;
 
-        private int rankingShowing; //Informs about the ranking that is showing right now (0 playersByCrown, 1 playersByWinRatio, 2 latestBattles)
+        private JTable currentTableShowing;
 
 
         private RankingsMenuPanel(){
             setOpaque(false);
             setLayout(new GridBagLayout());
-
-            rankingShowing = 0;
 
 
             centerPanel = new JPanel();
@@ -664,6 +673,7 @@ public class MainMenuScreen extends Screen {
 
             JTable rankingByCrownsTable = returnNewFormattedTable(data, columnNames);
             rankingsScrollPanel.setViewportView(rankingByCrownsTable);
+            currentTableShowing = rankingByCrownsTable;
         }
 
         private void showRankingByWinRate(){
@@ -678,11 +688,12 @@ public class MainMenuScreen extends Screen {
 
             JTable rankingByWinRate = returnNewFormattedTable(data, columnNames);
             rankingsScrollPanel.setViewportView(rankingByWinRate);
+            currentTableShowing = rankingByWinRate;
         }
 
         private void showLatestBattles(){
             String[] columnNames = {"Player", "Name", "Result", "Date", "ID"};
-            String[][] data = new String[latestBattles.length][5];
+            Object[][] data = new String[latestBattles.length][5];
 
             for(int i = 0; i < data.length; i++){
                 data[i][0] = latestBattles[i].getPlayerName();
@@ -694,10 +705,11 @@ public class MainMenuScreen extends Screen {
 
             JTable latestBattles = returnNewFormattedTable(data, columnNames);
             rankingsScrollPanel.setViewportView(latestBattles);
+            currentTableShowing = latestBattles;
         }
 
 
-        private JTable returnNewFormattedTable(String[][] data, String[] columnNames){
+        private JTable returnNewFormattedTable(Object[][] data, String[] columnNames){
             JTable newTable = new JTable(data, columnNames);
             newTable.setFillsViewportHeight(true);
             newTable.setShowGrid(false);
@@ -716,7 +728,7 @@ public class MainMenuScreen extends Screen {
                                                              @Override
                                                              public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
                                                                  RoyaleLabel t = new RoyaleLabel(value.toString(), RoyaleLabel.LabelType.PARAGRAPH);
-                                                                 t.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
+                                                                 t.setBorder(BorderFactory.createEmptyBorder(30, 0, 20, 0));
                                                                  t.setHorizontalAlignment(LEFT);
                                                                  t.setForeground(MenuGraphics.YELLOW);
                                                                  t.setOpaque(false);
@@ -728,6 +740,7 @@ public class MainMenuScreen extends Screen {
             newTable.setForeground(Color.WHITE);
             newTable.setFont(MenuGraphics.getMainFont());
             newTable.setRowHeight((int)(newTable.getRowHeight() * 2.5));
+            newTable.addMouseListener(mouseAdapter);
 
             return newTable;
         }
