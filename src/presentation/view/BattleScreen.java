@@ -165,7 +165,7 @@ public class BattleScreen extends Screen {
             setPreferredSize(new Dimension(getPreferredSize().width, SCREEN_HEIGHT * 20/100));
             setLayout(new GridBagLayout());
             setOpaque(false);
-            woodTile = BattleGraphics.getWoodTile();
+            woodTile = MenuGraphics.getWoodTile();
 
             centerPanel = new JPanel();
             centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
@@ -331,7 +331,7 @@ public class BattleScreen extends Screen {
                 setLayout(new BorderLayout());
                 setOpaque(false);
 
-                cardImage = MenuGraphics.scaleImage(BattleGraphics.getCardSprite(c), cardHeight);
+                cardImage = MenuGraphics.scaleImage(MenuGraphics.getCardSprite(c), cardHeight);
                 add(new RoyaleLabel(new ImageIcon(cardImage)), BorderLayout.CENTER);
             }
 
@@ -339,8 +339,8 @@ public class BattleScreen extends Screen {
             private void setSelected(boolean selected){
                 this.selected = selected;
 
-                if(selected) cardImage = MenuGraphics.scaleImage(BattleGraphics.getCardSprite(cardHolding), CARD_HEIGHT_SELECTED);
-                else cardImage = MenuGraphics.scaleImage(BattleGraphics.getCardSprite(cardHolding), CARD_HEIGHT);
+                if(selected) cardImage = MenuGraphics.scaleImage(MenuGraphics.getCardSprite(cardHolding), CARD_HEIGHT_SELECTED);
+                else cardImage = MenuGraphics.scaleImage(MenuGraphics.getCardSprite(cardHolding), CARD_HEIGHT);
 
                 removeAll();
                 add(new RoyaleLabel(new ImageIcon(cardImage)), BorderLayout.CENTER);

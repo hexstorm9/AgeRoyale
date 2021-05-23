@@ -16,10 +16,10 @@ public class PlayerDAO {
      * Given a Player name, this method will return all of its attributes. If the Player name provided doesn't exist, the method will
      * return null. If it does, the array of Objects returned will be formatted:
      * <ul>
-     *     <li>Position 0 -> The name of that Player (String)</ul>
-     *     <li>Position 1 -> The Crowns (int)</ul>
-     *     <li>Position 2 -> The Battle Wins (int)</ul>
-     *     <li>Position 3 -> The Battle Plays (int)</ul>
+     *     <li>Position 0 -> The name of that Player (String)</li>
+     *     <li>Position 1 -> The Crowns (int)</li>
+     *     <li>Position 2 -> The Battle Wins (int)</li>
+     *     <li>Position 3 -> The Battle Plays (int)</li>
      * </ul>
      * <p>The {@code Object[]} returned must be casted to the correct types.
      *

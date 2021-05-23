@@ -5,15 +5,42 @@ package business.entities;
  * The Cards {@code enum} will contain all the Cards information of the game
  */
 public enum Cards {
+    /**
+     * Defines the Adams Card
+     */
     ADAMS(3, new int[]{250, 280, 320}, new int[]{20, 25, 30}, 4, 10, 0),
+    /**
+     * Defines the Trump Card
+     */
     TRUMP(3, new int[]{250, 280, 320}, new int[]{30, 40, 50}, 2, 6, 10),
+    /**
+     * Defines the David Card
+     */
     DAVID(5, new int[]{250, 280, 320}, new int[]{60, 90, 120}, 1, 7, 4),
+    /**
+     * Defines the Rafa Card
+     */
     RAFA(4, new int[]{250, 280, 320}, new int[]{20, 30, 40}, 3, 8, 7),
+    /**
+     * Defines the Saula Card
+     */
     SAULA(4, new int[]{250, 280, 320}, new int[]{20, 25, 30}, 6, 10, 0),
+    /**
+     * Defines the Cano Card
+     */
     CANO(2, new int[]{250, 280, 320}, new int[]{20, 30, 40}, 4, 8, 8),
+    /**
+     * Defines the Malé Card
+     */
     MALÉ(2, new int[]{250, 280, 320}, new int[]{25, 35, 45}, 3, 15, 12),
+    /**
+     * Defines the Carpi Card
+     */
     CARPI(6, new int[]{250, 280, 320}, new int[]{50, 60, 70}, 4, 10, 4),
 
+    /**
+     * Defines the Tower Card
+     */
     TOWER(true, 1000, new int[]{800, 1000, 1200}, new int[]{10, 15, 20}, 4, 10, 0);
 
 
@@ -58,14 +85,56 @@ public enum Cards {
         this(false, goldCost, maxHealth, damage, range, attackingVelocity, movingVelocity);
     }
 
+
+    /**
+     * Returns the Gold cost of a Card
+     * @return The Gold cost of a Card
+     */
     public int getGoldCost(){ return goldCost;}
+
+    /**
+     * Returns the Range of a Card
+     * @return The Range of a Card
+     */
     public int getRange(){ return range;}
+
+    /**
+     * Returns the Attacking Velocity of a Card
+     * @return The Attacking Velocity of a Card
+     */
     public int getAttackingVelocity(){ return attackingVelocity;}
+
+    /**
+     * Returns the Moving Velocity of a Card
+     * @return The Moving Velocity of a Card
+     */
     public int getMovingVelocity(){return movingVelocity;}
+
+    /**
+     * Returns the Max Health of a Card
+     * @return The Max Health of a Card
+     */
     public int getMaxHealth(int level){ return level >= maxHealth.length ? maxHealth[maxHealth.length-1]: maxHealth[level]; }
+
+    /**
+     * Returns the Damage of a Card
+     * @return The Damage of a Card
+     */
     public int getDamage(int level){ return level >= damage.length ? damage[damage.length-1]: damage[level]; }
+
+    /**
+     * Returns whether a Card is a tower or not
+     * @return Whether a Card is a tower or not
+     */
     public boolean isTower(){ return isTower;}
+
+    /**
+     * Returns whether a Card is defensive or not
+     * @return Whether a Card is defensive or not
+     */
     public boolean isDefensive(){ return movingVelocity == 0;}
+
+
 
     /**
      * Returns the String representing that Cards (its name, but in lowercase)

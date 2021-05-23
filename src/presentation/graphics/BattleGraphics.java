@@ -43,11 +43,6 @@ public class BattleGraphics {
     private static Image tree1, tree2, tree3, tree4;
 
     private static HashMap<Cards, HashMap<Card.State, ArrayList<Image>>> cardSprites;
-
-    private static HashMap<Cards, Image> cardsImage;
-
-
-    private static Image woodTile;
     //-------------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------------
 
@@ -69,8 +64,6 @@ public class BattleGraphics {
         //Reading Images -----------------------------------------------------------------------------------
         //-------------------------------------------------------------------------------------------------------
         try{
-            woodTile = readImage("./resources/sprites/woodTile.png");
-
             tile1a = readImage("./resources/sprites/mapTiles/1a.png");
             tile1b = readImage("./resources/sprites/mapTiles/1b.png");
             tile2 = readImage("./resources/sprites/mapTiles/2.png");
@@ -133,18 +126,9 @@ public class BattleGraphics {
                             break;
                         }
                     }
-
                     currentCardSprites.put(state, currentStateImages);
                 }
-
                 cardSprites.put(c, currentCardSprites);
-            }
-
-
-            cardsImage = new HashMap<>();
-            for(Cards c: Cards.values()){
-                if(c.isTower()) continue; //If the card is a tower, don't read its card image
-                cardsImage.put(c, readImage("./resources/sprites/cardImages/" + c.toString() + ".png"));
             }
 
         }catch(IOException e){
@@ -162,15 +146,6 @@ public class BattleGraphics {
     //Getters to all Images loaded -->
     //-------------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------------
-
-    /**
-     * Returns a Wood Tile
-     * @return Wood Tile
-     */
-    public static Image getWoodTile(){
-        return woodTile;
-    }
-
 
     /**
      * Returns a tile image specified by the {@code char} introduced
@@ -358,15 +333,5 @@ public class BattleGraphics {
         g.dispose();
 
         return flippedImage;
-    }
-
-
-    /**
-     * Returns the desired Card Sprite (depending on the {@code Cards} provided)
-     * @param c The card that indicates the sprite to return
-     * @return The desired Card Sprite
-     */
-    public static Image getCardSprite(Cards c) {
-        return cardsImage.get(c);
     }
 }

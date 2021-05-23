@@ -4,9 +4,19 @@ package business.entities;
  * The {@code Songs enum} declares all the Songs that can be played on the game
  */
 public enum Songs {
+    /**
+     * Defines the Song of the Menu
+     */
     MENU("menu.mp3"),
+    /**
+     * Defines the Song of the MainMenu
+     */
     MAIN_MENU("mainMenu.mp3"),
+    /**
+     * Defines the Song of the Battle
+     */
     BATTLE("battle.mp3");
+
 
     private final String path;
 

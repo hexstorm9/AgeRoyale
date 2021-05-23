@@ -6,7 +6,13 @@ package business;
  * @version 1.0
  */
 public class Vector2 {
+    /**
+     * The X position of the Vector2
+     */
     public double x;
+    /**
+     * The Y position of the Vector2
+     */
     public double y;
 
     /**

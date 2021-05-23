@@ -13,8 +13,8 @@ import java.util.HashMap;
  * to the {@code database}.
  *
  * <p>Each game needs to have a Player, but this class can also be used as a container to store information
- * about other players.
- * <p><b>Never update a Player that is not the Player of the Game</b>
+ * about other players (there are two constructors).
+ * <p><b>Never use the Default Constructor if it's not for the Player of the game</b>
  *
  * @version 1.0
  */
@@ -36,6 +36,8 @@ public class Player {
     /**
      * Default Player Constructor.
      * <p>Loads all its attributes from the DB.
+     *
+     * @param name The name of the player that wants to be loaded
      */
     public Player(String name) throws SQLException{
         this.name = name;
@@ -50,6 +52,11 @@ public class Player {
      * Player Constructor when we know the player attributes already.
      * <p>This kind of Player won't be able to interact with the DB (the method {@link #updateAttributesFromDB()}
      * won't do anything) and its playerCard {@code HashMap} will be empty.
+     *
+     * @param name The name of the player
+     * @param crowns The crowns that the player has
+     * @param battleWins The battleWins that the player has
+     * @param battlePlays The battlePlays that the player has
      */
     public Player(String name, int crowns, int battleWins, int battlePlays){
         this.name = name;

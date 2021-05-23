@@ -4,7 +4,18 @@ package business.entities;
  * The {@code Language enum} will contain the information about all the available languages in the game.
  */
 public enum Language {
-    ENGLISH("en", 0), SPANISH("es", 1), CATALAN("ca", 2);
+    /**
+     * Defines the English Language
+     */
+    ENGLISH("en", 0),
+    /**
+     * Defines the Spanish Language
+     */
+    SPANISH("es", 1),
+    /**
+     * Defines the Catalan Language
+     */
+    CATALAN("ca", 2);
 
 
     private String stringValue;

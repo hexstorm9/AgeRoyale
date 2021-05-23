@@ -1,5 +1,7 @@
 package presentation.view;
 
+import business.Card;
+import business.entities.Cards;
 import business.entities.Player;
 import presentation.graphics.MenuGraphics;
 import business.entities.LanguageManager;
@@ -11,6 +13,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 
 
 /**
@@ -39,7 +42,7 @@ public class MainMenuScreen extends Screen {
     private RoyaleButton playButton;
     private RoyaleLabel usernameLogo, usernameLabel, crownImage, crownsLabel;
 
-
+    private Player currentPlayer;
 
     public static final String CARDS_MENU_BUTTON_ACTION_COMMAND = "cards_menu";
     public static final String BATTLE_MENU_BUTTON_ACTION_COMMAND = "battle_menu";
@@ -72,6 +75,7 @@ public class MainMenuScreen extends Screen {
      */
     public MainMenuScreen(Player currentPlayer, int screenWidth, int screenHeight){
         super(screenHeight);
+        this.currentPlayer = currentPlayer;
 
         setLayout(new BorderLayout());
 
@@ -94,21 +98,31 @@ public class MainMenuScreen extends Screen {
         usernameLogo = new RoyaleLabel(new ImageIcon(MenuGraphics.scaleImage(MenuGraphics.getUsernameLogo(), (int) (SCREEN_HEIGHT*0.05))));
         usernameLabel = new RoyaleLabel(currentPlayer.getName(), RoyaleLabel.LabelType.PARAGRAPH);
         usernamePanel.add(usernameLogo);
-        usernamePanel.add(Box.createRigidArea(new Dimension(10,(int)(SCREEN_HEIGHT*0.03))));
+        usernamePanel.add(Box.createRigidArea(new Dimension(10, 10)));
         usernamePanel.add(usernameLabel);
 
         JPanel crownsPanel = new JPanel();
         crownsPanel.setLayout(new BoxLayout(crownsPanel, BoxLayout.X_AXIS));
         crownsPanel.setOpaque(false);
-        crownImage = new RoyaleLabel(new ImageIcon(MenuGraphics.scaleImage(MenuGraphics.getCrown(), (int) (SCREEN_HEIGHT*0.05))));
-        crownsLabel = new RoyaleLabel(String.valueOf(currentPlayer.getCrowns()), RoyaleLabel.LabelType.PARAGRAPH);
-        crownsPanel.add(crownImage);
-        crownsPanel.add(Box.createRigidArea(new Dimension(10,(int)(SCREEN_HEIGHT*0.03))));
+        crownsLabel = new RoyaleLabel(currentPlayer.getCrowns() + " ", RoyaleLabel.LabelType.PARAGRAPH);
+        crownImage = new RoyaleLabel(new ImageIcon(MenuGraphics.scaleImage(MenuGraphics.getCrown(), crownsLabel.getFontMetrics(crownsLabel.getFont()).getHeight())));
         crownsPanel.add(crownsLabel);
+        crownsPanel.add(crownImage);
+
+        JPanel winRatePanel = new JPanel();
+        winRatePanel.setOpaque(false);
+        winRatePanel.setLayout(new BoxLayout(winRatePanel, BoxLayout.X_AXIS));
+        final int winRate = (int)((currentPlayer.getBattleWins()/(double)currentPlayer.getBattlePlays()) * 100);
+        RoyaleLabel percentageWinRateLabel = new RoyaleLabel(winRate + "%", RoyaleLabel.LabelType.PARAGRAPH);
+        percentageWinRateLabel.setForeground(winRate >= 50? Color.GREEN: MenuGraphics.RED);
+        winRatePanel.add(new RoyaleLabel("Win Rate: ", RoyaleLabel.LabelType.PARAGRAPH));
+        winRatePanel.add(percentageWinRateLabel);
 
         northPanel.add(usernamePanel);
         northPanel.add(Box.createRigidArea(new Dimension(50,(int)(SCREEN_HEIGHT*0.03))));
         northPanel.add(crownsPanel);
+        northPanel.add(Box.createRigidArea(new Dimension(50,(int)(SCREEN_HEIGHT*0.03))));
+        northPanel.add(winRatePanel);
 
 
         JPanel southPanel = new JPanel();
@@ -240,15 +254,20 @@ public class MainMenuScreen extends Screen {
             cardsGridPanel.setAlignmentX(CENTER_ALIGNMENT);
             cardsGridPanel.setLayout(new GridLayout(2, 4));
 
+            ArrayList<CardPanel> everyUserCard = new ArrayList<>();
+            for(Cards c: Cards.values()){
+                if(c.isTower()) continue;
+                String cardName = c.toString().substring(0, 1).toUpperCase() + c.toString().substring(1);
+                int cardLevel = currentPlayer.getPlayerCards().get(c);
+                int userCards = 1;
+                int cardsToNextLevel = 10;
 
-            cardsGridPanel.add(new CardPanel("Miner", 1, 6, 10, CARD_PANEL_1_ACTION_COMMAND));
-            cardsGridPanel.add(new CardPanel("Giant", 1, 6, 10, CARD_PANEL_2_ACTION_COMMAND));
-            cardsGridPanel.add(new CardPanel("Dragon", 1, 2, 10, CARD_PANEL_3_ACTION_COMMAND));
-            cardsGridPanel.add(new CardPanel("Giant", 2, 1, 15, CARD_PANEL_4_ACTION_COMMAND));
-            cardsGridPanel.add(new CardPanel("Minions", 1, 6, 10, CARD_PANEL_5_ACTION_COMMAND));
-            cardsGridPanel.add(new CardPanel("Miner", 1, 6, 10, CARD_PANEL_6_ACTION_COMMAND));
-            cardsGridPanel.add(new CardPanel("Infernal", 2, 7, 15, CARD_PANEL_7_ACTION_COMMAND));
-            cardsGridPanel.add(new CardPanel("Giant", 1, 2, 10, CARD_PANEL_8_ACTION_COMMAND));
+                everyUserCard.add(new CardPanel(cardName, cardLevel, userCards, cardsToNextLevel, CARD_PANEL_1_ACTION_COMMAND));
+            }
+
+            for(int i = 0; i < 8; i++)
+                cardsGridPanel.add(everyUserCard.get(i));
+
 
             RoyaleLabel deckLabel = new RoyaleLabel("Deck", RoyaleLabel.LabelType.TITLE);
             deckLabel.setAlignmentX(CENTER_ALIGNMENT);
@@ -323,15 +342,13 @@ public class MainMenuScreen extends Screen {
                 numberCardsLabel.setAlignmentX(CENTER_ALIGNMENT);
 
 
-                Image cardTestScaled = MenuGraphics.scaleImage(MenuGraphics.getCardTest() , (SCREEN_HEIGHT * 25/100) * 50/100);
+                Image cardTestScaled = MenuGraphics.scaleImage(MenuGraphics.getCardSprite(Cards.fromString(cardName)) , (SCREEN_HEIGHT * 25/100) * 60/100);
                 RoyaleLabel cardTestImage = new RoyaleLabel(new ImageIcon(cardTestScaled));
                 cardTestImage.setAlignmentX(CENTER_ALIGNMENT);
 
 
                 add(cardNameLabel);
-                add(Box.createRigidArea(new Dimension(10, 10)));
                 add(cardTestImage);
-                add(Box.createRigidArea(new Dimension(10, 10)));
                 add(levelLabel);
                 add(Box.createRigidArea(new Dimension(10, 10)));
                 add(numberCardsLabel);

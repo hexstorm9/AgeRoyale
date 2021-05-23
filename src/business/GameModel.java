@@ -118,6 +118,14 @@ public class GameModel {
     }
 
 
+    /**
+     * Provided the email and the new password, changes that user's password.
+     * <p>If either the email is wrong or the password is not secure enough, it will throw a {@link RegistrationException}
+     * @param email The email of the user that wants to change its password
+     * @param password The new password for that user
+     * @throws RegistrationException Whenever the email provided doesn't exist or the password is not secure enough
+     * @throws SQLException If a connection to the database can't be established or queries are wrong
+     */
     public void changeUserPassword(String email, char[] password) throws RegistrationException, SQLException{
         if(SecurityUtility.checkIfEmailIsCorrect(email) == false) throw new RegistrationException(RegistrationException.RegistrationExceptionCause.EMAIL_NOT_VALID);
         if(SecurityUtility.checkIfPasswordIsSecure(password) == false) throw new RegistrationException(RegistrationException.RegistrationExceptionCause.PASSWORD_NOT_SECURE);
@@ -135,7 +143,7 @@ public class GameModel {
      * @param password The password of the current user that wants its account to be deleted
      *
      * @return Boolean telling whether the user has been deleted or not. If it has not been deleted, the cause will always
-     * be that the password introduced is not correct
+     *         be that the password introduced is not correct
      * @throws SQLException If a connection to the database can't be established or queries are wrong
      */
     public boolean deleteUser(char[] password) throws SQLException{
@@ -151,9 +159,9 @@ public class GameModel {
 
 
     /**
-     * Returns the player that the {@code GameModel} holds
-     * @return
-     */
+    * Returns the player that the {@code GameModel} holds
+    * @return The player that the {@code GameModel} holds
+    */
    public Player getPlayer(){
         return player;
    }
@@ -173,6 +181,7 @@ public class GameModel {
      * by Win Rate.
      * <p>They'll hold information about themselves.
      *
+     * @param numberOfPlayersToBeReturned The number of players to be returned (maximum). It can be less than the number provided.
      * @return An array of {@link Player} ordered by Win Rate
      * @throws SQLException If a connection to the database can't be established or queries are wrong
      */
@@ -186,6 +195,8 @@ public class GameModel {
      * by Crowns.
      * <p>They'll hold information about themselves.
      *
+     * @param numberOfPlayersToBeReturned The maximum number of players to be returned (can be less than the number provided, if there
+     *                                    aren't enough entries)
      * @return An array of {@link Player} ordered by Crowns
      * @throws SQLException If a connection to the database can't be established or queries are wrong
      */
@@ -264,8 +275,9 @@ public class GameModel {
      * @param id The ID of the battle that wants to be returned
      * @return A complete {@link BattleInfo} representing the Battle with the ID specified or {@code null} if
      * no battle exists with that ID.
+     * @throws SQLException whenever the server is down or the query is not well formatted
      */
-    public BattleInfo getCompleteBattleById(int id) throws SQLException {
+    public BattleInfo getCompleteBattleById(int id) throws SQLException{
         try{
             return oldBattlesUtility.getCompleteBattleById(id);
         }catch(SQLException e){

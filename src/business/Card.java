@@ -88,7 +88,13 @@ public class Card {
      * to the {@code left}
      */
     public enum Orientation{
+        /**
+         * Right Orientation
+         */
         RIGHT,
+        /**
+         * Left Orientation
+         */
         LEFT
     }
     private Orientation currentOrientation;
@@ -98,7 +104,13 @@ public class Card {
      * Tells whether the Card is a Player or an Enemy
      */
     public enum Status{
+        /**
+         * The card has been thrown by a player
+         */
         PLAYER,
+        /**
+         * The card has been thrown by an enemy
+         */
         ENEMY
     }
     private Status cardStatus;
@@ -106,7 +118,6 @@ public class Card {
 
     protected final int CARD_HEIGHT;
 
-    protected int goldCost;
     protected Vector2 position; //The position of a Card will be its bottom-left point's position (not its upper-left).
     protected int health;
     protected int damage;
@@ -281,8 +292,6 @@ public class Card {
      * In the case of objects, a {@link NullPointerException} will be thrown when accessing them.
      */
     private void initializeAttributes(Cards cardType, int level){
-        goldCost = cardType.getGoldCost();
-
         health = cardType.getMaxHealth(level);
         damage = cardType.getDamage(level);
         range = cardType.getRange();
@@ -335,7 +344,6 @@ public class Card {
     }
 
 
-    public int getGoldCost(){ return goldCost; }
 
     /**
      * Returns whether the card is totally alive or not
@@ -372,7 +380,7 @@ public class Card {
 
     /**
      * Returns whether the card is totally dead or not.
-     * <p>Once a card is dead (life < 0), it changes its state to DYING. When this state ends,
+     * <p>Once a card is dead (life {@literal <} 0), it changes its state to DYING. When this state ends,
      * totallyDead will become true.
      *
      * @return Whether the card is totally dead or not

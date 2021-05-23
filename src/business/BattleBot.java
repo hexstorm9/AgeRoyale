@@ -34,6 +34,9 @@ public class BattleBot implements Runnable{
     /**
      * Default BattleBot constructor.
      * <p>Creates a new BattleBot but it doesn't start it. In order to do so, call {@link #startBot()}
+     *
+     * @param battleModel A reference to the BattleModel, so as to be able to throw cards
+     * @param battlePanelSize The size of the BattlePanel, so as to select a correct position to throw the card into
      */
     public BattleBot(BattleModel battleModel, Dimension battlePanelSize){
         botThread = new Thread(this);

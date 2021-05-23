@@ -7,7 +7,13 @@ package business;
  */
 public class Tuple<T, R> {
 
+    /**
+     * The first object that the Tuple holds
+     */
     public final T firstField;
+    /**
+     * The second object that the Tuple holds
+     */
     public final R secondField;
 
     /**

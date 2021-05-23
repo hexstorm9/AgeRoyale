@@ -26,19 +26,26 @@ public class RoyaleLabel extends JLabel implements MouseListener{
 
     private Color foregroundColor;
 
-    public RoyaleLabel(ImageIcon imageIcon) {
-        super(imageIcon);
-    }
-
-
     /**
      * There are different types of {@link RoyaleLabel} you can construct.
      * <p>Use this enum to provide a type on the constructor
      */
     public enum LabelType{
+        /**
+         * Defines a title Label
+         */
         TITLE,
+        /**
+         * Defines a paragraph Label
+         */
         PARAGRAPH,
+        /**
+         * Defines a lin Label
+         */
         LINK,
+        /**
+         * Defines an error Label
+         */
         ERROR
     }
 
@@ -76,6 +83,19 @@ public class RoyaleLabel extends JLabel implements MouseListener{
         }
 
         foregroundColor = getForeground();
+    }
+
+
+
+    /**
+     * RoyaleLabel constructor for Images.
+     * <p>Instantiates a new RoyaleLabel with an image
+     * @param imageIcon The image that the RoyaleLabel will hold
+     *
+     * @see ImageIcon
+     */
+    public RoyaleLabel(ImageIcon imageIcon) {
+        super(imageIcon);
     }
 
 

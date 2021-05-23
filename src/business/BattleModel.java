@@ -197,10 +197,14 @@ public class BattleModel {
     }
 
 
+    /**
+     * Given a {@link Graphics} object, draws the whole Battle into it
+     * @param g The {@link Graphics} object to draw the battle into
+     */
     public void draw(Graphics g){
-        map.draw(g);
-        for(Card c: playerCards) c.draw(g);
-        for(Card c: enemyCards) c.draw(g);
+        map.draw(g); //Draw the map
+        for(Card c: playerCards) c.draw(g); //Draw the playerCards
+        for(Card c: enemyCards) c.draw(g); //Draw the enemyCards
     }
 
 

@@ -61,7 +61,8 @@ public class Map {
     /**
      * Default Map Constructor.
      * <p>Constructs a new map given the dimension of the panel it will be painted to
-     * @param battlePanelDimension
+     * @param battlePanelDimension The Dimension of the BattlePanel (place where the Map will be drawn into) so as to
+     *                             correctly construct the map (its construction will depend on the size provided)
      */
     public Map(Dimension battlePanelDimension){
         this.battlePanelDimension = battlePanelDimension;

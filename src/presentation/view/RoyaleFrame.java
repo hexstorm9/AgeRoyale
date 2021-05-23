@@ -91,6 +91,7 @@ public class RoyaleFrame extends JFrame {
     /**
      * Sets the panel that will be on top of everything else. If you want it to be shown, {@link RoyaleFrame#setFrontPanelVisible(boolean)} has to be called.
      * <p>Caution! There can only be one single panel at a time on top of everything else
+     * @param newFrontPanel The new frontPanel to be shown
      */
     public void setFrontPanel(FrontPanel newFrontPanel){
         newFrontPanel.setVisible(false);

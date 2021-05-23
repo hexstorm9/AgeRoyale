@@ -1,10 +1,13 @@
 package presentation.graphics;
 
+import business.entities.Cards;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 
 /**
  * MenuGraphics is a {@code static} class that will have all the graphics (images, fonts, colors, etc.) loaded
@@ -47,6 +50,10 @@ public class MenuGraphics {
 
     private static BufferedImage mainCursorImage, clickableCursorImage, writingCursorImage;
     private static Cursor mainCursor, clickableCursor, writingCursor;
+
+    private static HashMap<Cards, Image> cardsImage;
+    private static Image woodTile; //WoodTile of the battle south panel
+
     //-------------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------------
 
@@ -119,6 +126,15 @@ public class MenuGraphics {
         pause = ImageIO.read(new File(PAUSE_PATH));
         forward = ImageIO.read(new File(FORWARD_PATH));
         backwards = ImageIO.read(new File(BACKWARDS_PATH));
+
+        woodTile = ImageIO.read(new File("./resources/sprites/woodTile.png"));
+
+        cardsImage = new HashMap<>();
+        for(Cards c: Cards.values()){
+            if(c.isTower()) continue; //If the card is a tower, don't read its card image (it doesn't have card image)
+            cardsImage.put(c, ImageIO.read(new File("./resources/sprites/cardImages/" + c.toString() + ".png")));
+        }
+
         //-------------------------------------------------------------------------------------------------------
         //-------------------------------------------------------------------------------------------------------
 
@@ -346,4 +362,24 @@ public class MenuGraphics {
     public static BufferedImage getBackwardsButton() {
         return backwards;
     }
+
+
+    /**
+     * Returns the desired Card Sprite (depending on the {@code Cards} provided)
+     * @param c The card that indicates the sprite to return
+     * @return The desired Card Sprite
+     */
+    public static Image getCardSprite(Cards c) {
+        return cardsImage.get(c);
+    }
+
+    /**
+     * Returns a Wood Tile
+     * @return Wood Tile
+     */
+    public static Image getWoodTile(){
+        return woodTile;
+    }
+
+
 }

@@ -25,7 +25,13 @@ public class RoyaleButton extends JButton implements MouseListener{
      * The type of button that the button will be.
      */
     public enum ButtonType{
+        /**
+         * Defines a normal button
+         */
         NORMAL,
+        /**
+         * Defines a big button
+         */
         BIG
     }
 

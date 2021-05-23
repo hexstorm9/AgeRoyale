@@ -163,7 +163,11 @@ public class BattleController extends ScreenController implements Runnable{
    }
 
 
-
+    /**
+     * Called from the {@link BattleScreen} with the desired {@link Graphics}, asks the {@link BattleModel} of the
+     * game to draw the whole battle in this {@link Graphics} object
+     * @param g The {@link Graphics} object to draw the battle into.
+     */
    public void paintBattle(Graphics g){
         battleModel.draw(g);
    }

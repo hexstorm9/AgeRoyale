@@ -91,7 +91,7 @@ public class MainMenuController extends ScreenController{
                 break;
             case MainMenuScreen.PLAY_BUTTON_COMMAND:
                 mainMenuScreen.pauseAllComponents();
-                goToScreen(Screens.LOADING_BATTLE_SCREEN, 5);
+                goToScreen(Screens.LOADING_BATTLE_SCREEN);
         }
     }
 

@@ -34,13 +34,34 @@ public abstract class ScreenController implements ActionListener, MouseListener{
      * Defines all the Screens of the Game
      */
     public enum Screens{
+        /**
+         * Defines the SplashScreen
+         */
         SPLASH_SCREEN,
+        /**
+         * Defines the LoginScreen
+         */
         LOGIN_SCREEN,
+        /**
+         * Defines the RegisterScreen
+         */
         REGISTER_SCREEN,
+        /**
+         * Defines the PasswordForgottenScreen
+         */
         PASSWORD_FORGOTTEN_SCREEN,
+        /**
+         * Defines the MainMenuScreen
+         */
         MAIN_MENU,
-        BATTLE,
-        LOADING_BATTLE_SCREEN;
+        /**
+         * Defines the LoadingBattleScreen
+         */
+        LOADING_BATTLE_SCREEN,
+        /**
+         * Defines the BattleScreen
+         */
+        BATTLE
     }
 
 
@@ -150,6 +171,9 @@ public abstract class ScreenController implements ActionListener, MouseListener{
     /**
      * Puts a {@link JPanel} on top of everything else, and shows it.
      * <p>In order to hide it, call {@link ScreenController#hideFrontPanel()}
+     *
+     * @param panelToPutOnTopOfEverythingElse The frontPanel to be shown
+     * @param frontPanelController The frontPanelController of the frontPanel that wants to be shown
      */
     public void showFrontPanel(FrontPanel panelToPutOnTopOfEverythingElse, FrontPanelController frontPanelController){
         currentFrontPanelController = frontPanelController;

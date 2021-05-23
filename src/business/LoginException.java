@@ -16,8 +16,17 @@ public class LoginException extends Exception{
      * Defines the possible causes of a LoginException
      */
     public enum LoginExceptionCause{
+        /**
+         * The cause of the LoginException is that the name does not exist in the database
+         */
         NAME_DOES_NOT_EXIST,
+        /**
+         * The cause of the LoginException is that the email doesn't exist in the databse
+         */
         EMAIL_DOES_NOT_EXIST,
+        /**
+         * The cause of the LoginException is that the password provided is not correct
+         */
         INCORRECT_PASSWORD
     }
     private LoginExceptionCause exceptionCause;
