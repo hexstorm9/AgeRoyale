@@ -103,7 +103,7 @@ public class OldBattlesUtility {
         *       5.updateThrown
         */
 
-        StringBuilder movementsSerialized = new StringBuilder(); //Create a StringBuilder for the movementsSerialized and set the string to null
+        StringBuilder movementsSerialized = new StringBuilder(""); //Create a StringBuilder for the movementsSerialized and set the string to empty
         StringBuilder movement = new StringBuilder();
 
         for(int i = 0; i < movements.length; i++){

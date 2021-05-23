@@ -37,7 +37,7 @@ public class SettingsPanelController extends FrontPanelController implements Cha
     public void actionPerformed(ActionEvent e) {
         switch(e.getActionCommand()){
             case SettingsPanel.EXIT_BUTTON_ACTION_COMMAND:
-                if(screenController instanceof BattleController)
+                if(((SettingsPanel)frontPanel).isConfirmationBeforeExitingEnabled())
                     ((SettingsPanel)frontPanel).showConfirmationBeforeExitingGame(true);
                 else
                     System.exit(0);
@@ -51,10 +51,10 @@ public class SettingsPanelController extends FrontPanelController implements Cha
             case SettingsPanel.LOG_OUT_BUTTON_ACTION_COMMAND:
                 //It can only be called from the MainMenuController or the BattleController
                 //Else, do nothing
-                if(screenController instanceof MainMenuController)
-                    ((MainMenuController)screenController).logOut();
-                else if(screenController instanceof BattleController)
+                if(((SettingsPanel)frontPanel).isConfirmationBeforeExitingEnabled())
                     ((SettingsPanel)frontPanel).showConfirmationBeforeExitingGame(false);
+                else if(screenController instanceof MainMenuController || screenController instanceof BattleController)
+                    ((MainMenuController)screenController).logOut();
                 break;
             case SettingsPanel.DELETE_ACCOUNT_BUTTON_ACTION_COMMAND:
                 ((SettingsPanel)frontPanel).showDeleteAccountPanel();

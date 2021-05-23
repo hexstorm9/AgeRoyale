@@ -16,10 +16,10 @@ import java.awt.event.MouseListener;
 
 /**
  * The LoginScreen will be a JPanel put directly into the {@link RoyaleFrame} by means
- * of its method {@link RoyaleFrame#changeScreen(JPanel, RoyaleFrame.BackgroundStyle)}
+ * of its method {@link RoyaleFrame#changeScreen(JPanel)}
  *
  * <p>A {@link presentation.controller.LoginScreenController} needs to create this class and
- * call the latter mentioned method {@link RoyaleFrame#changeScreen(JPanel, RoyaleFrame.BackgroundStyle)}.
+ * call the latter mentioned method {@link RoyaleFrame#changeScreen(JPanel)}.
  * After that, the controller should call the register listener methods in this class.
  *
  * @see presentation.controller.LoginScreenController

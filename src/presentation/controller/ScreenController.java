@@ -50,8 +50,9 @@ public abstract class ScreenController implements ActionListener, MouseListener{
      *
      * @param rf The RoyaleFrame that will control this controller
      * @param gm The GameModel that this class will interact with
+     * @param extraInfo Some screens may need extra information so as to be constructed. If not, it'll be {@code null}
      */
-    public ScreenController(RoyaleFrame rf, GameModel gm){
+    public ScreenController(RoyaleFrame rf, GameModel gm, Object extraInfo){
         royaleFrame = rf;
         gameModel = gm;
         rf.setFrontPanelVisible(false); //Clear frontPanel from the royaleFrame when starting a new Screen
@@ -69,7 +70,7 @@ public abstract class ScreenController implements ActionListener, MouseListener{
 
     /**
      * This method has to be called whenever a new {@link ScreenController} is created. It will create the view
-     * for that controller and assign it to the {@link RoyaleFrame} by using {@link RoyaleFrame#changeScreen(JPanel, RoyaleFrame.BackgroundStyle)}
+     * for that controller and assign it to the {@link RoyaleFrame} by using {@link RoyaleFrame#changeScreen(JPanel)}
      *
      * <p>Furthermore, as all ScreenControllers control a Screen which has a SettingsPanel, you can either start displaying
      * the new Screen or display the new Screen + the SettingsPanel on top of that new Screen
@@ -87,6 +88,18 @@ public abstract class ScreenController implements ActionListener, MouseListener{
      * @param screen {@link Screens} which we want to go to
      */
     public void goToScreen(Screens screen){
+        goToScreen(screen, null);
+    }
+
+
+    /**
+     * Creates a new {@link ScreenController} depending on the Screen that we want to go to, and calls the method
+     * {@link ScreenController#start(boolean)} on that controller (which creates the Screen and puts it into the frame)
+     *
+     * @param screen {@link Screens} which we want to go to
+     * @param extraInfo Some screens may need extra information so as to be constructed. If not, set to {@code null}
+     */
+    public void goToScreen(Screens screen, Object extraInfo){
         //Now that we know that we need to change screen, let's check whether that
         //new screen should start with the settingsPanel or not
 
@@ -96,7 +109,7 @@ public abstract class ScreenController implements ActionListener, MouseListener{
                 && currentFrontPanelController == settingsPanelController)
             settingsPanelIsBeingShown = true;
 
-        goToScreen(screen, settingsPanelIsBeingShown);
+        goToScreen(screen, settingsPanelIsBeingShown, extraInfo);
     }
 
 
@@ -106,15 +119,16 @@ public abstract class ScreenController implements ActionListener, MouseListener{
      *
      * @param screen {@link Screens} which we want to go to
      * @param startWithSettingsPanelEnabled Whether the next screen should start with the settingsPanel enabled or not
+     * @param extraInfo Some screens may need extra information so as to be constructed. If not, set to {@code null}
      */
-    public void goToScreen(Screens screen, boolean startWithSettingsPanelEnabled){
+    public void goToScreen(Screens screen, boolean startWithSettingsPanelEnabled, Object extraInfo){
         switch(screen){
             case LOGIN_SCREEN -> new LoginScreenController(royaleFrame, gameModel).start(startWithSettingsPanelEnabled);
             case REGISTER_SCREEN -> new RegisterScreenController(royaleFrame, gameModel).start(startWithSettingsPanelEnabled);
             case PASSWORD_FORGOTTEN_SCREEN -> new PasswordForgottenScreenController(royaleFrame, gameModel).start(startWithSettingsPanelEnabled);
             case MAIN_MENU -> new MainMenuController(royaleFrame, gameModel).start(startWithSettingsPanelEnabled);
-            case BATTLE -> new BattleController(royaleFrame, gameModel).start(startWithSettingsPanelEnabled);
-            case LOADING_BATTLE_SCREEN -> new LoadingBattleScreenController(royaleFrame, gameModel).start(startWithSettingsPanelEnabled);
+            case LOADING_BATTLE_SCREEN -> new LoadingBattleScreenController(royaleFrame, gameModel, extraInfo).start(startWithSettingsPanelEnabled);
+            case BATTLE -> new BattleController(royaleFrame, gameModel, extraInfo).start(startWithSettingsPanelEnabled);
             default -> new SplashScreenController(royaleFrame, gameModel).start(false); //Never start the splashScreen with a settingsPanel being shown
         }
     }

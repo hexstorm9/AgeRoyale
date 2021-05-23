@@ -3,8 +3,9 @@ package persistence;
 import business.entities.BattleInfo;
 
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -48,15 +49,9 @@ public class BattleHistoryDAO {
             String name = (String)resultsList.get(i+1);
             String playerName = (String)resultsList.get(i+2);
             boolean won = (boolean)resultsList.get(i+3);
-            Date thisBattleDatePlayed;
-            try{
-                thisBattleDatePlayed = datetimeDatabaseDateFormat.parse((String)resultsList.get(i+4));
-            }catch(ParseException e){
-                thisBattleDatePlayed = new Date();
-                e.printStackTrace();
-            }
+            Date battleDatePlayed = Date.from(((LocalDateTime)resultsList.get(i+4)).atZone(ZoneId.systemDefault()).toInstant());
 
-            BattleInfo thisBattle = new BattleInfo(id, name, playerName, won, thisBattleDatePlayed);
+            BattleInfo thisBattle = new BattleInfo(id, name, playerName, won, battleDatePlayed);
             userBattles[k] = thisBattle;
         }
 
@@ -85,15 +80,9 @@ public class BattleHistoryDAO {
             String name = (String)resultsList.get(i+1);
             String playerName = (String)resultsList.get(i+2);
             boolean won = (boolean)resultsList.get(i+3);
-            Date thisBattleDatePlayed;
-            try{
-                thisBattleDatePlayed = datetimeDatabaseDateFormat.parse((String)resultsList.get(i+4));
-            }catch(ParseException e){
-                thisBattleDatePlayed = new Date();
-                e.printStackTrace();
-            }
+            Date battleDatePlayed = Date.from(((LocalDateTime)resultsList.get(i+4)).atZone(ZoneId.systemDefault()).toInstant());
 
-            BattleInfo thisBattle = new BattleInfo(id, name, playerName, won, thisBattleDatePlayed);
+            BattleInfo thisBattle = new BattleInfo(id, name, playerName, won, battleDatePlayed);
             latestBattles[k] = thisBattle;
         }
 
@@ -120,13 +109,7 @@ public class BattleHistoryDAO {
         String name = (String)resultsList.get(1);
         String playerName = (String)resultsList.get(2);
         boolean won = (boolean)resultsList.get(3);
-        Date battleDatePlayed;
-        try{
-            battleDatePlayed = datetimeDatabaseDateFormat.parse((String)resultsList.get(4));
-        }catch(ParseException e){
-            battleDatePlayed = new Date();
-            e.printStackTrace();
-        }
+        Date battleDatePlayed = Date.from(((LocalDateTime)resultsList.get(4)).atZone(ZoneId.systemDefault()).toInstant());
         String movements = (String)resultsList.get(5);
 
         return new BattleInfo(id, name, playerName, won, battleDatePlayed, movements);

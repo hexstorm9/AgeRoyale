@@ -27,7 +27,7 @@ public class PasswordForgottenScreenController extends ScreenController{
 
 
     public PasswordForgottenScreenController(RoyaleFrame royaleFrame, GameModel gameModel){
-        super(royaleFrame, gameModel);
+        super(royaleFrame, gameModel, null);
     }
 
     public void start(boolean showSettingsPanelOnStart){
@@ -36,7 +36,7 @@ public class PasswordForgottenScreenController extends ScreenController{
         passwordForgottenScreen.addLabelsListener(this);
         setPanelToListenForESCKey(passwordForgottenScreen);
 
-        royaleFrame.changeScreen(passwordForgottenScreen, RoyaleFrame.BackgroundStyle.MENU);
+        royaleFrame.changeScreen(passwordForgottenScreen);
 
         if(showSettingsPanelOnStart)
             showFrontPanel(settingsPanel, settingsPanelController);

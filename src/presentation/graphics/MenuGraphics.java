@@ -24,6 +24,7 @@ import java.io.IOException;
 public class MenuGraphics {
 
 
+
     //Colors ------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------------
     public static final Color RED = new Color(200, 30, 30);
@@ -41,6 +42,7 @@ public class MenuGraphics {
     private static BufferedImage englishFlag, catalanFlag, spanishFlag;
     private static BufferedImage cardTest;
     private static BufferedImage usernameLogo, crown, arenaGif, chest;
+    private static BufferedImage play, pause, forward, backwards;
     private static Font mainFont;
 
     private static BufferedImage mainCursorImage, clickableCursorImage, writingCursorImage;
@@ -74,6 +76,11 @@ public class MenuGraphics {
 
     private static final String ARENA_GIF_PATH = "./resources/sprites/arena.png";
     private static final String CHEST_PATH = "./resources/sprites/chest.png";
+
+    private static final String PLAY_PATH = "./resources/sprites/buttons/play.png";
+    private static final String PAUSE_PATH = "./resources/sprites/buttons/pause.png";
+    private static final String FORWARD_PATH = "./resources/sprites/buttons/forward.png";
+    private static final String BACKWARDS_PATH = "./resources/sprites/buttons/backwards.png";
     //-------------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------------
 
@@ -107,6 +114,11 @@ public class MenuGraphics {
 
         arenaGif = ImageIO.read(new File(ARENA_GIF_PATH));
         chest = ImageIO.read(new File(CHEST_PATH));
+
+        play = ImageIO.read(new File(PLAY_PATH));
+        pause = ImageIO.read(new File(PAUSE_PATH));
+        forward = ImageIO.read(new File(FORWARD_PATH));
+        backwards = ImageIO.read(new File(BACKWARDS_PATH));
         //-------------------------------------------------------------------------------------------------------
         //-------------------------------------------------------------------------------------------------------
 
@@ -299,5 +311,39 @@ public class MenuGraphics {
      */
     public static BufferedImage getChest() {
         return chest;
+    }
+
+    /**
+     * Returns the Play Button Image
+     * @return Play Button Image
+     */
+    public static BufferedImage getPlayButton() {
+        return play;
+    }
+
+    /**
+     * Returns the Pause Button Image
+     * @return Pause Button Image
+     */
+    public static BufferedImage getPauseButton() {
+        return pause;
+    }
+
+
+    /**
+     * Returns the Forward Button Image
+     * @return Forward Button Image
+     */
+    public static BufferedImage getForwardButton() {
+        return forward;
+    }
+
+
+    /**
+     * Returns the Backwards Button Image
+     * @return Backwards Button Image
+     */
+    public static BufferedImage getBackwardsButton() {
+        return backwards;
     }
 }

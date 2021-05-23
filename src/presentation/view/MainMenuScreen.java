@@ -1,5 +1,6 @@
 package presentation.view;
 
+import business.entities.Player;
 import presentation.graphics.MenuGraphics;
 import business.entities.LanguageManager;
 import business.entities.Sentences;
@@ -13,8 +14,19 @@ import java.awt.event.MouseListener;
 
 
 /**
+ * The MainMenuScreen will be a {@link Screen} providing the user with the ability to see rankings, play battles, see
+ * the cards they own...
+ * <p>It has three tabs:
+ * <ul>
+ *     <li>1. Battle Tab: Where you can see your Chests, Arena and play new battles</li>
+ *     <li>2. Rankings Tab: Where you can see the rankings of the Game and the latest battles played</li>
+ *     <li>3. Cards Tab: Where you can see the cards you own, the level they have and your deck</li>
+ * </ul>
  *
+ * <p>A {@code MainMenuScreen} has to be created an controlled by a {@link presentation.controller.MainMenuController}
  *
+ * @see presentation.controller.MainMenuController
+ * @version 1.0
  */
 public class MainMenuScreen extends Screen {
 
@@ -53,15 +65,12 @@ public class MainMenuScreen extends Screen {
 
     /**
      * Default MainMenuScreen Constructor.
-     * @param username
-     * @param crowns
-     * @param battleWins
-     * @param battlePlays
-     * @param arena
-     * @param screenWidth
-     * @param screenHeight
+     *
+     * @param currentPlayer The current player that is playing (so as to get its information)
+     * @param screenWidth The desired width of the screen
+     * @param screenHeight The desired height of the screen
      */
-    public MainMenuScreen(String username, int crowns, int battleWins, int battlePlays, int arena, int screenWidth, int screenHeight){
+    public MainMenuScreen(Player currentPlayer, int screenWidth, int screenHeight){
         super(screenHeight);
 
         setLayout(new BorderLayout());
@@ -83,7 +92,7 @@ public class MainMenuScreen extends Screen {
         usernamePanel.setLayout(new BoxLayout(usernamePanel, BoxLayout.X_AXIS));
         usernamePanel.setOpaque(false);
         usernameLogo = new RoyaleLabel(new ImageIcon(MenuGraphics.scaleImage(MenuGraphics.getUsernameLogo(), (int) (SCREEN_HEIGHT*0.05))));
-        usernameLabel = new RoyaleLabel(username, RoyaleLabel.LabelType.PARAGRAPH);
+        usernameLabel = new RoyaleLabel(currentPlayer.getName(), RoyaleLabel.LabelType.PARAGRAPH);
         usernamePanel.add(usernameLogo);
         usernamePanel.add(Box.createRigidArea(new Dimension(10,(int)(SCREEN_HEIGHT*0.03))));
         usernamePanel.add(usernameLabel);
@@ -92,7 +101,7 @@ public class MainMenuScreen extends Screen {
         crownsPanel.setLayout(new BoxLayout(crownsPanel, BoxLayout.X_AXIS));
         crownsPanel.setOpaque(false);
         crownImage = new RoyaleLabel(new ImageIcon(MenuGraphics.scaleImage(MenuGraphics.getCrown(), (int) (SCREEN_HEIGHT*0.05))));
-        crownsLabel = new RoyaleLabel(String.valueOf(crowns), RoyaleLabel.LabelType.PARAGRAPH);
+        crownsLabel = new RoyaleLabel(String.valueOf(currentPlayer.getCrowns()), RoyaleLabel.LabelType.PARAGRAPH);
         crownsPanel.add(crownImage);
         crownsPanel.add(Box.createRigidArea(new Dimension(10,(int)(SCREEN_HEIGHT*0.03))));
         crownsPanel.add(crownsLabel);
@@ -114,7 +123,7 @@ public class MainMenuScreen extends Screen {
         southPanel.add(battleMenuButton);
         southPanel.add(rankingMenuButton);
 
-        battleMenuPanel = new BattleMenuPanel(arena);
+        battleMenuPanel = new BattleMenuPanel(currentPlayer.getArena());
         cardsMenuPanel = new CardsMenuPanel();
         rankingMenuPanel = new RankingsMenuPanel();
 
@@ -125,6 +134,10 @@ public class MainMenuScreen extends Screen {
     }
 
 
+    /**
+     * To be called whenever the {@code Screen} is created, so as to add a listener to its buttons
+     * @param al The listener of the Buttons
+     */
     public void addButtonsListener(ActionListener al){
         cardsMenuButton.addActionListener(al);
         battleMenuButton.addActionListener(al);
@@ -134,14 +147,27 @@ public class MainMenuScreen extends Screen {
         rankingMenuPanel.addButtonsListener(al);
     }
 
+
+    /**
+     * To be called whenever the {@code Screen} is created, so as to add a listener to its labels
+     * @param ml The listener of the labels
+     */
     public void addLabelsListener(MouseListener ml){
         battleMenuPanel.addLabelsListener(ml);
     }
+
+    /**
+     * To be called whenever the {@code Screen} is created, so as to add a listener to its panels
+     * @param ml The listener of the Panels
+     */
     public void addPanelsListener(MouseListener ml){
         cardsMenuPanel.addPanelsListener(ml);
     }
 
 
+    /**
+     * Shows the Cards Tab, hiding the other two tabs
+     */
     public void putCardsMenuPanelToCenter(){
         //If what's inside the CENTER is the CardsMenu, return
         if(((BorderLayout)getLayout()).getLayoutComponent(BorderLayout.CENTER) == cardsMenuPanel) return;
@@ -153,6 +179,9 @@ public class MainMenuScreen extends Screen {
         revalidate();
     }
 
+    /**
+     * Shows the Battle Tab, hiding the other two tabs
+     */
     public void putBattleMenuPanelToCenter(){
         //If what's inside the CENTER is the BattleMenu, return
         if(((BorderLayout)getLayout()).getLayoutComponent(BorderLayout.CENTER) == battleMenuPanel) return;
@@ -164,6 +193,9 @@ public class MainMenuScreen extends Screen {
         revalidate();
     }
 
+    /**
+     * Shows the Rankings tab, hiding the other two tabs
+     */
     public void putRankingsMenuPanelToCenter(){
         //If what's inside the CENTER is the rankingsMenu, return
         if(((BorderLayout)getLayout()).getLayoutComponent(BorderLayout.CENTER) == rankingMenuPanel) return;
@@ -176,14 +208,18 @@ public class MainMenuScreen extends Screen {
     }
 
 
-
+    /**
+     * Pauses all components so as the user is not able to click anything or carry out any action
+     */
     public void pauseAllComponents(){
         battleMenuPanel.pauseAllComponents();
     }
 
 
-
-
+    /**
+     * CardsMenuPanel is a class that will be put in a tab of the {@link MainMenuScreen}, providing a visual way for the
+     * user to see its Cards status
+     */
     public class CardsMenuPanel extends JPanel{
 
         private JPanel centerPanel;
@@ -191,7 +227,7 @@ public class MainMenuScreen extends Screen {
         private Image woodTable;
         private int woodTableXCoord, woodTableYCoord;
 
-        public CardsMenuPanel(){
+        private CardsMenuPanel(){
             setOpaque(false);
             setLayout(new GridBagLayout()); //To make everything centered
 
@@ -229,7 +265,7 @@ public class MainMenuScreen extends Screen {
         }
 
 
-        public void addPanelsListener(MouseListener ml){
+        private void addPanelsListener(MouseListener ml){
             Component[] cardPanels =  cardsGridPanel.getComponents();
             if(cardPanels == null) return;
 
@@ -237,7 +273,7 @@ public class MainMenuScreen extends Screen {
         }
 
         @Override
-        public void paintComponent(Graphics g) {
+        protected void paintComponent(Graphics g) {
             //If woodTableXCoord is 0 (meaning it hasn't been initialized yet) let's calculate woodTableXCoord and woodTableYCoord
             if(woodTableXCoord == 0){
                 JFrame parentJFrame = (JFrame) SwingUtilities.getWindowAncestor(cardsGridPanel); //Obtain a reference to the current JFrame
@@ -258,6 +294,10 @@ public class MainMenuScreen extends Screen {
         }
 
 
+        /**
+         * CardPanel will be a class representing the information for a single {@code Card} of the user.
+         * <p>It will be put inside a {@link CardsMenuPanel}
+         */
         public class CardPanel extends JPanel{
             private String actionCommand;
 
@@ -297,6 +337,10 @@ public class MainMenuScreen extends Screen {
                 add(numberCardsLabel);
             }
 
+            /**
+             * Returns the ActionCommand that this card has
+             * @return The ActionCommand of this card
+             */
             public String getActionCommand(){
                 return actionCommand;
             }
@@ -312,7 +356,7 @@ public class MainMenuScreen extends Screen {
         private int currentArena;
         private RoyaleLabel arenaImage, chestImage, chestLabel1, chestLabel2, chestLabel3, chestLabel4, chestLabel5;
 
-        public BattleMenuPanel(int currentArena){
+        private BattleMenuPanel(int currentArena){
             this.currentArena = currentArena; //We need to know the current arena in order to load the gif of the arena
             setOpaque(false);
 
@@ -405,12 +449,12 @@ public class MainMenuScreen extends Screen {
             add(center, new GridBagConstraints());
         }
 
-        public void addButtonsListener(ActionListener al){
+        private void addButtonsListener(ActionListener al){
             playButton.addActionListener(al);
             playButton.setActionCommand(PLAY_BUTTON_COMMAND);
         }
 
-        public void addLabelsListener(MouseListener ml){
+        private void addLabelsListener(MouseListener ml){
             chestLabel1.addMouseListener(ml);
             chestLabel1.setActionCommand(UNLOCK_CHEST1_COMMAND);
             chestLabel1.setClickable(true);
@@ -432,7 +476,7 @@ public class MainMenuScreen extends Screen {
             chestLabel5.setClickable(true);
         }
 
-        public void pauseAllComponents(){
+        private void pauseAllComponents(){
             chestLabel1.setClickable(false);
             chestLabel2.setClickable(false);
             chestLabel3.setClickable(false);
@@ -446,7 +490,7 @@ public class MainMenuScreen extends Screen {
 
     private class RankingsMenuPanel extends JPanel{
 
-        public RankingsMenuPanel(){
+        private RankingsMenuPanel(){
             setOpaque(false);
             setLayout(new GridBagLayout());
 
@@ -478,7 +522,7 @@ public class MainMenuScreen extends Screen {
             add(centerPanel, new GridBagConstraints());
         }
 
-        public void addButtonsListener(ActionListener al){
+        private void addButtonsListener(ActionListener al){
 
         }
 

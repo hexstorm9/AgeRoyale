@@ -134,7 +134,7 @@ public class SecurityUtility {
 
         //If the username finds the pattern (something that is neither a number nor a character)
         //it means it has special symbols, so it's not valid.
-        return matcher.find() ? false: true;
+        return matcher.find()? false: true;
     }
 
 

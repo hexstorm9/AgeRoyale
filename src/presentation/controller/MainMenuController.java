@@ -13,26 +13,27 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
 
 
+/**
+ *
+ */
 public class MainMenuController extends ScreenController implements ActionListener, MouseListener{
 
     private MainMenuScreen mainMenuScreen;
 
 
     public MainMenuController(RoyaleFrame royaleFrame, GameModel gameModel){
-        super(royaleFrame, gameModel);
+        super(royaleFrame, gameModel, null);
     }
 
 
     public void start(boolean showSettingsPanelOnStart){
-        mainMenuScreen = new MainMenuScreen(gameModel.getPlayer().getName(), gameModel.getPlayer().getCrowns(),
-                gameModel.getPlayer().getBattleWins(), gameModel.getPlayer().getBattlePlays(),
-                gameModel.getPlayer().getArena(), royaleFrame.getWidth(), royaleFrame.getHeight());
+        mainMenuScreen = new MainMenuScreen(gameModel.getPlayer(), royaleFrame.getWidth(), royaleFrame.getHeight());
         mainMenuScreen.addButtonsListener(this);
         mainMenuScreen.addPanelsListener(this);
         mainMenuScreen.addLabelsListener(this);
         setPanelToListenForESCKey(mainMenuScreen);
 
-        royaleFrame.changeScreen(mainMenuScreen, RoyaleFrame.BackgroundStyle.MENU);
+        royaleFrame.changeScreen(mainMenuScreen);
 
         if(showSettingsPanelOnStart)
             showFrontPanel(settingsPanel, settingsPanelController);
@@ -58,7 +59,7 @@ public class MainMenuController extends ScreenController implements ActionListen
      */
     public void logOut(){
         gameModel.forgetPlayer();
-        goToScreen(Screens.LOGIN_SCREEN, false);
+        goToScreen(Screens.LOGIN_SCREEN);
     }
 
 
@@ -76,7 +77,7 @@ public class MainMenuController extends ScreenController implements ActionListen
                 break;
             case MainMenuScreen.PLAY_BUTTON_COMMAND:
                 mainMenuScreen.pauseAllComponents();
-                goToScreen(Screens.LOADING_BATTLE_SCREEN);
+                goToScreen(Screens.LOADING_BATTLE_SCREEN, 5);
         }
     }
 

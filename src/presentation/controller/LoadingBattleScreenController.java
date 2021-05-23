@@ -1,37 +1,68 @@
 package presentation.controller;
 
 import business.GameModel;
+import business.Movement;
 import presentation.graphics.BattleGraphics;
 import presentation.sound.MusicPlayer;
-import presentation.sound.SoundPlayer;
 import presentation.view.LoadingBattleScreen;
 import presentation.view.RoyaleFrame;
 
 import javax.swing.*;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Random;
 
 
 public class LoadingBattleScreenController extends ScreenController{
 
+
     private LoadingBattleScreen loadingBattleScreen;
 
-    public LoadingBattleScreenController(RoyaleFrame royaleFrame, GameModel gameModel){
-        super(royaleFrame, gameModel);
+    /**
+     * Id of the battle to reproduce. {@code null} if there is no battle to reproduce and we want to
+     * load a normal battle instead.
+     */
+    private Object battleToReproduceId;
+    private Movement[] movementsOfTheBattleToReproduce;
+
+
+    /**
+     * Default LoginBattleScreenController constructor.
+     *
+     * @param royaleFrame The RoyaleFrame this controller will control
+     * @param gameModel The GameModel this controller will control
+     * @param battleToReproduceId The ID of the battle that needs to be loaded and reproduced. If {@code null},
+     * it means that no battle needs to be reproduced, and we're only loading a normal battle
+     */
+    public LoadingBattleScreenController(RoyaleFrame royaleFrame, GameModel gameModel, Object battleToReproduceId){
+        super(royaleFrame, gameModel, battleToReproduceId);
+        this.battleToReproduceId = battleToReproduceId;
     }
 
+
+    /**
+     * Called when the LoadingBattleScreenController is created.
+     * <p>Creates the view for this LoadingBattleScreenController ({@link LoadingBattleScreen}) and puts it onto the {@link RoyaleFrame}
+     * this controller controls.
+     *
+     * @param showSettingsPanelOnStart Whether you want to show the settings panel on start or not
+     */
     @Override
     public void start(boolean showSettingsPanelOnStart) {
         loadingBattleScreen = new LoadingBattleScreen(royaleFrame.getHeight());
         setPanelToListenForESCKey(loadingBattleScreen);
 
-        royaleFrame.changeScreen(loadingBattleScreen, RoyaleFrame.BackgroundStyle.MENU);
+        royaleFrame.changeScreen(loadingBattleScreen);
 
         MusicPlayer.getInstance().stop();
         new LoadBattleResourcesInBackground().execute(); //Start the LoadBattleResourcesInBackground thread
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void buildSettingsPanel() {
         settingsPanel.addLanguagesButton();
@@ -39,6 +70,10 @@ public class LoadingBattleScreenController extends ScreenController{
     }
 
 
+    /**
+     * Method provided to update the progress bar on the view this controller controls.
+     * @param progress The new progress of the progressbar
+     */
     public void updateProgressBar(int progress){
         loadingBattleScreen.setProgressBarValue(progress);
     }
@@ -52,12 +87,12 @@ public class LoadingBattleScreenController extends ScreenController{
         protected String doInBackground(){
             try{
                 try {
-                    //TODO: Load Battle Sounds correctly (implement them to the SoundPlayer)
-                    SoundPlayer.getInstance().load(); //Load Battle Sounds
+                    if(battleToReproduceId != null)
+                        movementsOfTheBattleToReproduce = gameModel.getCompleteBattleById((int)battleToReproduceId).getMovements();
                     moveProgress(0, 40, 600);
-                }catch(IOException e){
+                }catch(SQLException e){
                     e.printStackTrace();
-                    return "Error Loading Battle Sounds";
+                    return "Error loading the Battle to Reproduce";
                 }
                 try {
                     BattleGraphics.load();
@@ -109,7 +144,12 @@ public class LoadingBattleScreenController extends ScreenController{
                 e.printStackTrace();
             }
 
-            if (errorMessage == null) goToScreen(Screens.BATTLE); //If everything has been loaded correctly, let's go to the BATTLE Screen
+
+            //If everything has been loaded correctly, let's go to the BATTLE Screen
+            if(errorMessage == null){
+                if(battleToReproduceId == null) goToScreen(Screens.BATTLE);
+                else goToScreen(Screens.BATTLE, movementsOfTheBattleToReproduce);
+            }
             else royaleFrame.showCriticalErrorAndExitApplication(errorMessage);
         }
     }

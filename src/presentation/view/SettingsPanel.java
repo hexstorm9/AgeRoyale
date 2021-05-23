@@ -188,6 +188,7 @@ public class SettingsPanel extends FrontPanel {
 
 
 
+
     //-------------------------------------------------------------------------------------
     //add() methods -----------------------------------------------------------------------
 
@@ -206,14 +207,20 @@ public class SettingsPanel extends FrontPanel {
         RoyaleLabel playerName = new RoyaleLabel(name, RoyaleLabel.LabelType.PARAGRAPH);
         playerName.setForeground(MenuGraphics.BLUE);
         playerName.setAlignmentX(CENTER_ALIGNMENT);
-        RoyaleLabel playerLevel = new RoyaleLabel(Integer.toString(arena), RoyaleLabel.LabelType.PARAGRAPH);
+        RoyaleLabel playerLevel = new RoyaleLabel("Arena " + arena, RoyaleLabel.LabelType.PARAGRAPH);
         playerLevel.setAlignmentX(CENTER_ALIGNMENT);
-        RoyaleLabel playerTrophies = new RoyaleLabel(Integer.toString(crowns), RoyaleLabel.LabelType.PARAGRAPH);
-        playerTrophies.setAlignmentX(CENTER_ALIGNMENT);
+
+        JPanel playerCrownsPanel = new JPanel();
+        playerCrownsPanel.setAlignmentX(CENTER_ALIGNMENT);
+        playerCrownsPanel.setOpaque(false);
+        RoyaleLabel playerCrowns = new RoyaleLabel(Integer.toString(crowns), RoyaleLabel.LabelType.PARAGRAPH);
+        playerCrownsPanel.add(playerCrowns);
+        ImageIcon crownsImage = new ImageIcon(MenuGraphics.scaleImage(MenuGraphics.getCrown(), playerCrowns.getFontMetrics(playerCrowns.getFont()).getHeight()));
+        playerCrownsPanel.add(new RoyaleLabel(crownsImage));
 
         playerInformationPanel.add(playerName);
         playerInformationPanel.add(playerLevel);
-        playerInformationPanel.add(playerTrophies);
+        playerInformationPanel.add(playerCrownsPanel);
 
         mainPanel.add(Box.createRigidArea(new Dimension(30, 30)), 0);
         mainPanel.add(playerInformationPanel, 1);
@@ -247,6 +254,9 @@ public class SettingsPanel extends FrontPanel {
     }
 
 
+    /**
+     * Adds the Change Languages button so as to be able to enter the change language menu
+     */
     public void addLanguagesButton(){
         RoyaleButton changeLanguageButton = new RoyaleButton("Change Language");
         changeLanguageButton.setActionCommand(CHANGE_LANGUAGE_BUTTON_ACTION_COMMAND);
@@ -258,6 +268,9 @@ public class SettingsPanel extends FrontPanel {
     }
 
 
+    /**
+     * Adds the Delete Account button so as to be able to enter the delete account menu
+     */
     public void addDeleteAccountButton(){
         RoyaleButton deleteAccountButton = new RoyaleButton("Delete Account");
         deleteAccountButton.setActionCommand(DELETE_ACCOUNT_BUTTON_ACTION_COMMAND);
@@ -279,6 +292,14 @@ public class SettingsPanel extends FrontPanel {
         confirmationBeforeExitingPanel = new ConfirmationBeforeExitingPanel();
     }
 
+
+    /**
+     * Undo the previous call to {@link #addConfirmationBeforeExiting()}
+     */
+    public void removeConfirmationBeforeExiting(){
+        confirmationBeforeExitingPanel = null;
+
+    }
 
 
     /**
@@ -359,8 +380,13 @@ public class SettingsPanel extends FrontPanel {
         deleteAccountPanel.returnToSettingsLabel.setClickable(true);
     }
 
-
-
+    /**
+     * Returns whether the confirmation before exiting is enabled or not
+     * @return Whether the confirmation before exiting is enabled or not
+     */
+    public boolean isConfirmationBeforeExitingEnabled() {
+        return confirmationBeforeExitingPanel != null;
+    }
 
 
     private class MainPanel extends JPanel{
@@ -444,15 +470,16 @@ public class SettingsPanel extends FrontPanel {
         }
 
         /**
-         * Add to the MainPanel CENTER JPanel
-         * @param comp
-         * @return
+         * {@inheritDoc}
          */
         @Override
         public Component add(Component comp) {
             return panelOnTheCenterTwo.add(comp);
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public Component add(Component comp, int index) {
             return panelOnTheCenterTwo.add(comp, index);

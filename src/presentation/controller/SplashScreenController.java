@@ -22,7 +22,7 @@ public class SplashScreenController extends ScreenController{
 
 
     public SplashScreenController(RoyaleFrame royaleFrame, GameModel gameModel){
-        super(royaleFrame, gameModel);
+        super(royaleFrame, gameModel, null);
     }
 
 
@@ -30,7 +30,7 @@ public class SplashScreenController extends ScreenController{
         splashScreen = new SplashScreen(royaleFrame.getHeight());
         setPanelToListenForESCKey(splashScreen);
 
-        royaleFrame.changeScreen(splashScreen, RoyaleFrame.BackgroundStyle.MENU);
+        royaleFrame.changeScreen(splashScreen);
 
         new LoadGameInBackground().execute(); //Start Loading the Game in a Background thread
     }

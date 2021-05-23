@@ -9,6 +9,7 @@ import java.awt.event.MouseListener;
 
 /**
  * The FrontPanelController will control a single {@link FrontPanel}.
+ * <p>It will put that {@link FrontPanel} in the game's {@link RoyaleFrame} {@code GlassPane} (on top of everything else)
  *
  * @see FrontPanel
  * @version 1.0

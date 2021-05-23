@@ -5,10 +5,19 @@ import business.entities.Player;
 import presentation.controller.BattleController;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Random;
+import java.util.*;
 
 
+/**
+ * BattleModel is the {@code model} of a Battle.
+ * <p>It controls everything from the map, to the physics system to the gold and cards that are being thrown.
+ * <p>In order to create a {@code BattleModel}, a {@link BattleController} that controls the View and this Model must exist.
+ *
+ * <p>Depending on whether you want a "new" battle or reproduce an old one, you'll use one constructor or another.
+ *
+ * @version 1.0
+ * @see BattleController
+ */
 public class BattleModel {
 
     private BattleController battleController; //The battleController that controls this battleModel
@@ -43,15 +52,19 @@ public class BattleModel {
      * When reproducing a battle, {@code battleMovements} will be used as the array to read all the movements from the old battle
      */
     private ArrayList<Movement> battleMovements;
+    private final boolean isReproducingOldBattle;
 
 
     /**
-     * Default BattleModel Constructor.
-     * @param battleController
-     * @param player
-     * @param battlePanelDimension
+     * Reproduce old battle BattleModel Constructor.
+     * <p>Creates and reproduces an old battle with the {@link Movement} array provided.
+     *
+     * @param movements Array of {@link Movement} that the Battle will follow
+     * @param battleController The controller that controls this battleModel
+     * @param player An instance of the Player that is playing
+     * @param battlePanelDimension The dimension of the BattlePanel
      */
-    public BattleModel(BattleController battleController, Player player, Dimension battlePanelDimension){
+    public BattleModel(Movement[] movements, BattleController battleController, Player player, Dimension battlePanelDimension){
         this.battleController = battleController;
         this.player = player;
 
@@ -61,7 +74,6 @@ public class BattleModel {
 
         physicsSystem = new PhysicsSystem(this, map);
         updatesCounter = 0;
-        battleMovements = new ArrayList<>(); //Create the BattleMovements arraylist so as to add them when they happen
 
         playerCurrentCardsToThrow = new ArrayList<>();
         for(int i = 0; i < PLAYER_CURRENT_CARDS; i++) generateNewCardToThrow();
@@ -83,12 +95,56 @@ public class BattleModel {
         enemyGold = GOLD_ON_START;
         amountOfGoldEveryUpdate = 0.08;
         amountOfGoldEveryEnemyKilled = 5;
+
+
+        //Depending on whether the movements are null or not, reproduce an old battle or carry out a normal one
+        if(movements == null){
+            battleMovements = new ArrayList<>(); //Create the BattleMovements arraylist so as to add them when they happen
+            isReproducingOldBattle = false;
+        }
+        else{
+            battleMovements = new ArrayList<>(Arrays.asList(movements));
+            Collections.sort(battleMovements); //Sort the battleMovements by updates (the sooner the card was thrown, the sooner it will appear in the array)
+            isReproducingOldBattle = true;
+            //So as to avoid errors, let's set the player and enemy gold to unlimited
+            playerGold = 100000;
+            enemyGold = 100000;
+        }
+
     }
 
 
+    /**
+     * Default BattleModel Constructor.
+     * <p>Creates and manages a normal battle.
+     *
+     * @param battleController The controller that controls this battleModel
+     * @param player An instance of the Player that is playing
+     * @param battlePanelDimension The dimension of the BattlePanel
+     */
+    public BattleModel(BattleController battleController, Player player, Dimension battlePanelDimension){
+        this(null, battleController, player, battlePanelDimension);
+    }
 
+
+    /**
+     * {@code Update()} updates the Physics and Logic of all the elements in the Battle
+     * (by calling its respective update() methods too).
+     * <p>It also updates the gold of both player and enemy, and checks for dead cards or dead tower (end of game).
+     */
     public void update(){
         updatesCounter++;
+
+        //If we're reproducing an old battle and the next movement (they're ordered by updates from lower to bigger) occurred in
+        //  this update, let's launch the card and pop that movement from the array
+        if(isReproducingOldBattle && battleMovements.get(0).getUpdateThrown() == updatesCounter){
+            Cards cardThrown = battleMovements.get(0).getCardThrown();
+            Vector2 positionThrown = battleMovements.get(0).getCardPosition();
+            Card.Status cardStatus = battleMovements.get(0).getPlayerOrEnemy();
+            throwCard(cardThrown, cardStatus, (int)positionThrown.x, (int)positionThrown.y);
+            //Now that we reproduced that movement, remove it from the array
+            battleMovements.remove(0);
+        }
 
         //Update all Cards and check whether some card is totally dead or not.
         for(int i = 0; i < playerCards.size(); i++){
@@ -130,6 +186,8 @@ public class BattleModel {
      * @param amount The amount of gold to increase
      */
     public void addGold(Card.Status status, double amount){
+        if(isReproducingOldBattle) return; //Do not add gold if we're reproducing an old battle
+
         if(status == Card.Status.PLAYER){
             playerGold = playerGold + amount > 100? 100: playerGold + amount;
         }
@@ -153,6 +211,12 @@ public class BattleModel {
      * @param winner The winner of the game (either the Player or the Enemy)
      */
     private void endGame(Card.Status winner){
+        //If the battle is an old one, return (we don't want to do anything else)
+        if(isReproducingOldBattle){
+            battleController.endGame(0);
+            return;
+        }
+
         Random r = new Random();
         //The crowns a player looses/wins can be ranged from 20 to 35. If it has lost, multiply it for -1
         final int crownsOfTheBattle = (20 + r.nextInt(15)) * (winner == Card.Status.PLAYER? 1: -1);
@@ -221,7 +285,7 @@ public class BattleModel {
      * @return {@code Double} from 0 to 100 indicating the current Gold that the Player Has
      */
     public double getPlayerCurrentGold(){
-        return playerGold;
+        return playerGold > 100? 100: playerGold;
     }
 
 
@@ -230,10 +294,14 @@ public class BattleModel {
      * @return {@code Double} from 0 to 100 indicating the current Gold that the enemy has
      */
     public double getEnemyCurrentGold() {
-        return enemyGold;
+        return enemyGold > 100? 100: enemyGold;
     }
 
 
+    /**
+     * Returns the Current {@link Cards} that the Player can throw
+     * @return The Current {@link Cards} that the Player can throw
+     */
     public ArrayList<Cards> getPlayerCurrentCardsToThrow(){
         return playerCurrentCardsToThrow;
     }
@@ -254,7 +322,16 @@ public class BattleModel {
     }
 
 
+    /**
+     * Returns an {@link ArrayList} of {@link Card} with the player cards
+     * @return An {@link ArrayList} of {@link Card} with the player cards
+     */
     public ArrayList<Card> getPlayerCards(){ return playerCards;}
+
+    /**
+     * Returns an {@link ArrayList} of {@link Card} with the enemy cards
+     * @return An {@link ArrayList} of {@link Card} with the enemy cards
+     */
     public ArrayList<Card> getEnemyCards(){ return enemyCards;}
 
 

@@ -22,7 +22,7 @@ public class RegisterScreenController extends ScreenController {
     private RegisterScreen registerScreen;
 
     public RegisterScreenController(RoyaleFrame royaleFrame, GameModel gameModel){
-        super(royaleFrame, gameModel);
+        super(royaleFrame, gameModel, null);
     }
 
     public void start(boolean showSettingsPanelOnStart){
@@ -31,7 +31,7 @@ public class RegisterScreenController extends ScreenController {
         registerScreen.addButtonListener(this);
         setPanelToListenForESCKey(registerScreen);
 
-        royaleFrame.changeScreen(registerScreen, RoyaleFrame.BackgroundStyle.MENU);
+        royaleFrame.changeScreen(registerScreen);
 
         if(showSettingsPanelOnStart)
             showFrontPanel(settingsPanel, settingsPanelController);

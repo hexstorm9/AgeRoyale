@@ -1,9 +1,6 @@
 package presentation.controller;
 
-import business.BattleBot;
-import business.BattleModel;
-import business.Card;
-import business.GameModel;
+import business.*;
 import business.entities.Cards;
 import business.entities.Songs;
 import business.entities.Sounds;
@@ -12,16 +9,22 @@ import presentation.sound.SoundPlayer;
 import presentation.view.BattleEndedFrontPanel;
 import presentation.view.BattleScreen;
 import presentation.view.RoyaleFrame;
+import presentation.view.customcomponents.RoyaleLabel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
 /**
  * BattleController is the Controller class for the {@link BattleScreen}.
  * <p>It will be linking both the {@link BattleScreen} and {@link BattleModel}.
+ *
+ * <p>Depending on what's passed in the Constructor, it will create
+ * a normal Battle or reproduce an existing old battle.
  *
  * @see BattleScreen
  * @see BattleModel
@@ -34,16 +37,40 @@ public class BattleController extends ScreenController implements Runnable{
 
     private boolean gameRunning = true;
 
+    private boolean isReproducingOldBattle; //False if the constructor param movementsArray is null
+    private Movement[] oldBattleMovements;
+
     private BattleBot battleBot;
+
+
+    private final int MAX_FRAMES_PER_SECOND = 60;
+    private final int INITIAL_UPDATES_PER_SECOND = 60;
+    private int CURRENT_UPDATES_PER_SECOND = INITIAL_UPDATES_PER_SECOND;
+
+    private final double fOPTIMAL_TIME = 1000000000 / MAX_FRAMES_PER_SECOND;
+    private double uOPTIMAL_TIME = 1000000000 / CURRENT_UPDATES_PER_SECOND;
 
 
     /**
      * Default BattleController Constructor.
+     *
      * @param royaleFrame The RoyaleFrame this controller will control
      * @param gameModel The GameModel this controller will control
+     * @param movementsArray Array of {@link business.Movement} that will include all the movements that need to
+     * occur during the Battle. If {@code null}, it means it's a normal battle (not a reproduced one)
      */
-    public BattleController(RoyaleFrame royaleFrame, GameModel gameModel){
-        super(royaleFrame, gameModel);
+    public BattleController(RoyaleFrame royaleFrame, GameModel gameModel, Object movementsArray){
+        super(royaleFrame, gameModel, movementsArray);
+
+        //If the movementsArray is not null, it means we have to reproduce an old battle with the movements provided
+        if(movementsArray != null){
+            isReproducingOldBattle = true;
+            oldBattleMovements = Arrays.copyOf((Object[])movementsArray, ((Object[])movementsArray).length, Movement[].class);
+            settingsPanel.removeConfirmationBeforeExiting(); //We don't want confirmation before exiting if we're not playing
+        }
+        else{
+            isReproducingOldBattle = false;
+        }
     }
 
 
@@ -55,22 +82,30 @@ public class BattleController extends ScreenController implements Runnable{
      * @param showSettingsPanelOnStart Whether you want to show the settings panel on start or not
      */
     public void start(boolean showSettingsPanelOnStart){
-        battleScreen = new BattleScreen(this, royaleFrame.getHeight());
+        battleScreen = new BattleScreen(this, royaleFrame.getHeight(), isReproducingOldBattle);
         setPanelToListenForESCKey(battleScreen);
 
-        royaleFrame.changeScreen(battleScreen, RoyaleFrame.BackgroundStyle.MENU);
+        royaleFrame.changeScreen(battleScreen);
 
         if(showSettingsPanelOnStart)
             showFrontPanel(settingsPanel, settingsPanelController);
 
         MusicPlayer.getInstance().playInLoop(Songs.BATTLE);
 
-        battleModel = new BattleModel(this, gameModel.getPlayer(), battleScreen.getBattlePanelSize());
-        battleScreen.updateCardsToShow();
 
-        battleBot = new BattleBot(battleModel, battleScreen.getBattlePanelSize());
-        battleBot.startBot();
+        //If it's not reproducing an old battle, create a normal BattleModel and start the Bot
+        if(!isReproducingOldBattle){
+            battleModel = new BattleModel(this, gameModel.getPlayer(), battleScreen.getBattlePanelSize());
+            battleScreen.updateCardsToShow();
+            battleBot = new BattleBot(battleModel, battleScreen.getBattlePanelSize());
+            battleBot.startBot();
+        }
+        else{ //If it's reproducing an old battle, cast the array of movements and pass it when creating the BattleModel
+            battleModel = new BattleModel(oldBattleMovements, this, gameModel.getPlayer(), battleScreen.getBattlePanelSize());
+        }
 
+
+        //Start the gameLoop
         Thread gameLoop = new Thread(this);
         gameLoop.start();
     }
@@ -84,7 +119,6 @@ public class BattleController extends ScreenController implements Runnable{
         settingsPanel.addTroopsStats();
         settingsPanel.addLogOutButton();
         settingsPanel.addCreditsButton();
-
         settingsPanel.addConfirmationBeforeExiting();
     }
 
@@ -95,12 +129,6 @@ public class BattleController extends ScreenController implements Runnable{
      */
     @Override
     public void run(){
-        final int MAX_FRAMES_PER_SECOND = 60;
-        final int MAX_UPDATES_PER_SECOND = 60;
-
-        final double uOPTIMAL_TIME = 1000000000 / MAX_UPDATES_PER_SECOND;
-        final double fOPTIMAL_TIME = 1000000000 / MAX_FRAMES_PER_SECOND;
-
         double uDeltaTime = 0, fDeltaTime = 0;
         int frames = 0, updates = 0;
         long startTime = System.nanoTime();
@@ -108,7 +136,7 @@ public class BattleController extends ScreenController implements Runnable{
 
         while(gameRunning){
             long currentTime = System.nanoTime();
-            uDeltaTime += (currentTime - startTime);
+            if(uOPTIMAL_TIME != Double.MAX_VALUE) uDeltaTime += (currentTime - startTime);
             fDeltaTime += (currentTime - startTime);
             startTime = currentTime;
 
@@ -151,15 +179,22 @@ public class BattleController extends ScreenController implements Runnable{
 
 
     @Override
+    public void actionPerformed(ActionEvent e) {
+        super.actionPerformed(e);
+        if(e.getActionCommand() == BattleScreen.EXIT_BUTTON_ACTION_COMMAND && isReproducingOldBattle)
+            goToScreen(Screens.MAIN_MENU);
+    }
+
+    @Override
     public void mousePressed(MouseEvent e) {
         super.mousePressed(e);
 
-        if(e.getSource() instanceof BattleScreen.SouthPanel.CardPanel){
+        if(e.getSource() instanceof BattleScreen.SouthPanel.CardPanel && !isReproducingOldBattle){
             BattleScreen.SouthPanel.CardPanel cardClicked = (BattleScreen.SouthPanel.CardPanel) e.getSource();
             battleScreen.setCardSelected(cardClicked.getCardHolding());
             SoundPlayer.getInstance().play(Sounds.BUTTON);
         }
-        else if(e.getSource() instanceof BattleScreen.BattlePanel){
+        else if(e.getSource() instanceof BattleScreen.BattlePanel && !isReproducingOldBattle){
             Cards cardToThrow = battleScreen.getCardSelected();
             if(cardToThrow == null){ //If no card has been selected
                 SoundPlayer.getInstance().play(Sounds.ERROR);
@@ -169,6 +204,24 @@ public class BattleController extends ScreenController implements Runnable{
             boolean cardThrown = battleModel.throwCard(cardToThrow, Card.Status.PLAYER, e.getX(), e.getY());
             if(!cardThrown) SoundPlayer.getInstance().play(Sounds.ERROR);
             else battleScreen.updateCardsToShow(); //Once a card is thrown, let's update cards
+        }
+        else if(e.getSource() instanceof RoyaleLabel){
+            RoyaleLabel labelClicked = (RoyaleLabel) e.getSource();
+
+            if(labelClicked.getActionCommand().equals(BattleScreen.PLAY_BUTTON_ACTION_COMMAND)){
+                modifyUpdatesPerSecond(-1);
+                battleScreen.setPauseButtonVisible();
+            }
+            else if(labelClicked.getActionCommand().equals(BattleScreen.PAUSE_BUTTON_ACTION_COMMAND)) {
+                modifyUpdatesPerSecond(0);
+                battleScreen.setPlayButtonVisible();
+            }
+            else if(labelClicked.getActionCommand().equals(BattleScreen.FORWARD_BUTTON_ACTION_COMMAND)) {
+                updatesPerSecondForward();
+            }
+            else if(labelClicked.getActionCommand().equals(BattleScreen.BACKWARDS_BUTTON_ACTION_COMMAND)) {
+                updatesPerSecondBackwards();
+            }
         }
     }
 
@@ -222,10 +275,15 @@ public class BattleController extends ScreenController implements Runnable{
         //This method will be called from the gameLoop Thread, and we want to stop that thread.
         //That's why we'll do it from the EDT
         gameRunning = false;
-        battleBot.stopBot();
 
         MusicPlayer.getInstance().stop();
+
+        //If we're reproducing an old battle, do not continue
+        if(isReproducingOldBattle) return;
+
+
         SoundPlayer.getInstance().play(playerCrowns > 0? Sounds.WON: Sounds.LOST);
+        battleBot.stopBot();
 
         //Let's save a reference to the currentPlayerCrowns and winRate before the model updates it
         final int currentPlayerCrowns = gameModel.getPlayer().getCrowns();
@@ -267,4 +325,28 @@ public class BattleController extends ScreenController implements Runnable{
     }
 
 
+    /**
+     * Modifies the UPS to make the game run faster/slower
+     * @param multiplicity Can be 0.25, 0.5, 0, 2 or 4
+     */
+    private void modifyUpdatesPerSecond(double multiplicity){
+        if(multiplicity == -1) CURRENT_UPDATES_PER_SECOND = INITIAL_UPDATES_PER_SECOND;
+
+        else CURRENT_UPDATES_PER_SECOND *= multiplicity;
+        uOPTIMAL_TIME = multiplicity == 0? Double.MAX_VALUE: 1000000000 / CURRENT_UPDATES_PER_SECOND;
+    }
+
+    private void updatesPerSecondForward(){
+        double currentMultiplicity = CURRENT_UPDATES_PER_SECOND/(double)INITIAL_UPDATES_PER_SECOND;
+
+        if(currentMultiplicity == 4) return;
+        modifyUpdatesPerSecond(2); //Multiply the current UPS by 2
+    }
+
+    private void updatesPerSecondBackwards(){
+        double currentMultiplicity = CURRENT_UPDATES_PER_SECOND/(double)INITIAL_UPDATES_PER_SECOND;
+
+        if(currentMultiplicity == 0.25) return;
+        modifyUpdatesPerSecond(0.5); //Multiply the current UPS by 0.5
+    }
 }

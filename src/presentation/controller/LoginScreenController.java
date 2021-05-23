@@ -22,8 +22,9 @@ public class LoginScreenController extends ScreenController {
 
 
     public LoginScreenController(RoyaleFrame royaleFrame, GameModel gameModel){
-        super(royaleFrame, gameModel);
+        super(royaleFrame, gameModel, null);
     }
+
 
     public void start(boolean settingsPanelIsBeingShown){
         loginScreen = new LoginScreen(royaleFrame.getHeight());
@@ -31,7 +32,7 @@ public class LoginScreenController extends ScreenController {
         loginScreen.addLabelsListener(this);
         setPanelToListenForESCKey(loginScreen);
 
-        royaleFrame.changeScreen(loginScreen, RoyaleFrame.BackgroundStyle.MENU);
+        royaleFrame.changeScreen(loginScreen);
 
         if(settingsPanelIsBeingShown)
             showFrontPanel(settingsPanel, settingsPanelController);

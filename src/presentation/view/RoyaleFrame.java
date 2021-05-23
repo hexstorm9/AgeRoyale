@@ -9,7 +9,7 @@ import java.awt.event.KeyListener;
 /**
  * Main View Class of the project.
  * RoyaleFrame will be the JFrame of the game.
- * <p>Whenever a screen change wants to take place, the RoyaleFrame will need to be called ({@link RoyaleFrame#changeScreen(JPanel, BackgroundStyle)} (JPanel)})
+ * <p>Whenever a screen change wants to take place, the RoyaleFrame will need to be called ({@link RoyaleFrame#changeScreen(JPanel)} (JPanel)})
  * <p>The frame will be displayed in full screen, using the Java FullScreenExclusiveMode API.
  *
  * @see <a href="https://docs.oracle.com/javase/tutorial/extra/fullscreen/index.html">FullScreenExclusiveMode API</a>
@@ -18,13 +18,7 @@ public class RoyaleFrame extends JFrame {
 
     private GraphicsDevice gd;
     private MenuBackgroundPanel menuBackgroundPanel;
-    private BattleBackgroundPanel battleBackgroundPanel;
 
-
-    public enum BackgroundStyle{
-        MENU,
-        BATTLE
-    }
 
 
     /**
@@ -72,34 +66,20 @@ public class RoyaleFrame extends JFrame {
 
     /**
      * Provided a JPanel, this method deletes the Main Panel in the Frame and paints the new one provided.
-     * The background style will also need to be provided so as to update it.
      *
      * @param newMainPanel The new main JPanel to put in the RoyaleFrame
-     * @param backgroundStyle The Background style desired for this main JPanel provided
-     *
-     * @see BackgroundStyle
      */
-    public void changeScreen(JPanel newMainPanel, BackgroundStyle backgroundStyle){
+    public void changeScreen(JPanel newMainPanel){
         if(newMainPanel == null) return;
         newMainPanel.setOpaque(false); //Force transparent JPanel
 
-        //If the current content pane is the menuBackgroundPanel (meaning we're in the menu) add the panel provided to the menuBackgroundPanel
-        //Else, add the panel provided to the battleBackgroundPanel (meaning we're in the battle)
-        if(backgroundStyle == BackgroundStyle.MENU){
-            if(getContentPane() != menuBackgroundPanel) setContentPane(menuBackgroundPanel);
-            menuBackgroundPanel.removeAll();
-            menuBackgroundPanel.add(newMainPanel);
-        }
-        else if(backgroundStyle == BackgroundStyle.BATTLE){
-            if(getContentPane() != battleBackgroundPanel) setContentPane(battleBackgroundPanel);
-            battleBackgroundPanel.removeAll();
-            battleBackgroundPanel.add(newMainPanel);
-        }
+        if(getContentPane() != menuBackgroundPanel) setContentPane(menuBackgroundPanel);
+        menuBackgroundPanel.removeAll();
+        menuBackgroundPanel.add(newMainPanel);
 
         if(getKeyListeners() != null){
-            for(KeyListener kl: getKeyListeners()){ //Delete other keyListeners that could exist. We only want one
+            for(KeyListener kl: getKeyListeners()) //Delete other keyListeners that could exist. We only want one
                 removeKeyListener(kl);
-            }
         }
 
         repaint(); //Repaint the frame as its contents have been updated

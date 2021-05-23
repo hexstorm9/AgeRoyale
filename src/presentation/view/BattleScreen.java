@@ -4,6 +4,7 @@ import business.entities.Cards;
 import presentation.controller.BattleController;
 import presentation.graphics.BattleGraphics;
 import presentation.graphics.MenuGraphics;
+import presentation.view.customcomponents.RoyaleButton;
 import presentation.view.customcomponents.RoyaleLabel;
 
 import javax.swing.*;
@@ -25,6 +26,13 @@ public class BattleScreen extends Screen {
     private BattlePanel battlePanel;
     private SouthPanel southPanel;
 
+    private boolean isReproducingOldBattle;
+
+    public static final String PLAY_BUTTON_ACTION_COMMAND = "play_button";
+    public static final String PAUSE_BUTTON_ACTION_COMMAND = "pause_button";
+    public static final String FORWARD_BUTTON_ACTION_COMMAND = "forward_button";
+    public static final String BACKWARDS_BUTTON_ACTION_COMMAND = "backwards_button";
+    public static final String EXIT_BUTTON_ACTION_COMMAND = "exit_button";
 
     /**
      * Default BattleScreen Constructor.
@@ -32,9 +40,12 @@ public class BattleScreen extends Screen {
      *
      * @param battleController The BattleController that controls this Screen
      * @param screenHeight The height that this Screen will have
+     * @param isReproducingOldBattle Whether an old battle is being reproduced or not (the whole SouthPanel will change
+     * depending on it)
      */
-    public BattleScreen(BattleController battleController, int screenHeight){
+    public BattleScreen(BattleController battleController, int screenHeight, boolean isReproducingOldBattle){
         super(screenHeight);
+        this.isReproducingOldBattle = isReproducingOldBattle;
 
         this.battleController = battleController;
 
@@ -58,7 +69,7 @@ public class BattleScreen extends Screen {
      */
     public void draw(){
         battlePanel.repaint();
-        southPanel.goldProgressBar.repaint();
+        if(!isReproducingOldBattle) southPanel.goldProgressBar.repaint();
     }
 
 
@@ -80,6 +91,21 @@ public class BattleScreen extends Screen {
      * @param c Card selected by the Player
      */
     public void setCardSelected(Cards c){ southPanel.setCardSelected(c); }
+
+
+    /**
+     * Sets the play button visible and hides the pause button
+     */
+    public void setPlayButtonVisible(){
+        southPanel.setPlayVisible();
+    }
+
+    /**
+     * Sets the pause button visible and hides the play button
+     */
+    public void setPauseButtonVisible(){
+        southPanel.setPauseVisible();
+    }
 
 
     /**
@@ -120,14 +146,19 @@ public class BattleScreen extends Screen {
      */
     public class SouthPanel extends JPanel{
 
-        private ArrayList<Cards> cardsToShow;
-
         private JPanel centerPanel;
+        private Image woodTile; //The background tile
+        private int verticalWoodTiles, horizontalWoodTiles;
+
+        //Attributes for when we're in a normal battle
+        private ArrayList<Cards> cardsToShow;
         private JPanel cardsPanel;
         private GoldProgressBar goldProgressBar;
 
-        private Image woodTile; //The background tile
-        private int verticalWoodTiles, horizontalWoodTiles;
+        //Attributes for when we're reproducing an old battle
+        private JPanel controlsPanel;
+        private RoyaleLabel playLabel, pauseLabel, forwardLabel, backwardsLabel;
+        private RoyaleButton exitButton;
 
 
         private SouthPanel(){
@@ -140,20 +171,83 @@ public class BattleScreen extends Screen {
             centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
             centerPanel.setOpaque(false);
 
-            cardsPanel = new JPanel();
-            cardsPanel.setLayout(new BoxLayout(cardsPanel, BoxLayout.X_AXIS));
-            cardsPanel.setOpaque(false);
+
+            //If we're not reproducing an old battle, let's add the CardsPanel and the goldProgressBar
+            if(!isReproducingOldBattle){
+                cardsPanel = new JPanel();
+                cardsPanel.setLayout(new BoxLayout(cardsPanel, BoxLayout.X_AXIS));
+                cardsPanel.setOpaque(false);
 
 
-            goldProgressBar = new GoldProgressBar(getPreferredSize().height * 20/100,500, getPreferredSize().height * 7/100);
+                goldProgressBar = new GoldProgressBar(getPreferredSize().height * 20/100,500, getPreferredSize().height * 7/100);
 
-            centerPanel.add(cardsPanel);
-            centerPanel.add(goldProgressBar);
+                centerPanel.add(cardsPanel);
+                centerPanel.add(goldProgressBar);
+            }
+            else{ //If we're reproducing an old battle, let's add the proper control buttons and exit button
+                controlsPanel = new JPanel();
+                controlsPanel.setLayout(new BoxLayout(controlsPanel, BoxLayout.X_AXIS));
+                controlsPanel.setOpaque(false);
+                controlsPanel.setAlignmentX(CENTER_ALIGNMENT);
+
+
+                final int buttonsHeight = getPreferredSize().height * 30/100;
+                backwardsLabel = new RoyaleLabel(new ImageIcon(MenuGraphics.scaleImage(MenuGraphics.getBackwardsButton(), buttonsHeight)));
+                backwardsLabel.addMouseListener(battleController);
+                backwardsLabel.setActionCommand(BACKWARDS_BUTTON_ACTION_COMMAND);
+
+                playLabel = new RoyaleLabel(new ImageIcon(MenuGraphics.scaleImage(MenuGraphics.getPlayButton(), buttonsHeight)));
+                playLabel.addMouseListener(battleController);
+                playLabel.setActionCommand(PLAY_BUTTON_ACTION_COMMAND);
+                playLabel.setVisible(false);
+
+                pauseLabel = new RoyaleLabel(new ImageIcon(MenuGraphics.scaleImage(MenuGraphics.getPauseButton(), buttonsHeight)));
+                pauseLabel.addMouseListener(battleController);
+                pauseLabel.setActionCommand(PAUSE_BUTTON_ACTION_COMMAND);
+
+                forwardLabel = new RoyaleLabel(new ImageIcon(MenuGraphics.scaleImage(MenuGraphics.getForwardButton(), buttonsHeight)));
+                forwardLabel.addMouseListener(battleController);
+                forwardLabel.setActionCommand(FORWARD_BUTTON_ACTION_COMMAND);
+
+                controlsPanel.add(backwardsLabel);
+                controlsPanel.add(Box.createRigidArea(new Dimension(20, 10)));
+                controlsPanel.add(playLabel);
+                controlsPanel.add(pauseLabel);
+                controlsPanel.add(Box.createRigidArea(new Dimension(20, 10)));
+                controlsPanel.add(forwardLabel);
+
+                exitButton = new RoyaleButton("Exit");
+                exitButton.setAlignmentX(CENTER_ALIGNMENT);
+                exitButton.addActionListener(battleController);
+                exitButton.setActionCommand(EXIT_BUTTON_ACTION_COMMAND);
+
+                centerPanel.add(controlsPanel);
+                centerPanel.add(Box.createRigidArea(new Dimension(20, 20)));
+                centerPanel.add(exitButton);
+            }
+
             add(centerPanel, new GridBagConstraints());
         }
 
 
+        private void setPlayVisible(){
+            playLabel.setVisible(true);
+            pauseLabel.setVisible(false);
+            repaint();
+            revalidate();
+        }
+
+        private void setPauseVisible(){
+            playLabel.setVisible(false);
+            pauseLabel.setVisible(true);
+            repaint();
+            revalidate();
+        }
+
+
         private void updateCardsToShow(){
+            if(isReproducingOldBattle) return;
+
             cardsPanel.removeAll();
             cardsPanel.setPreferredSize(new Dimension(cardsPanel.getPreferredSize().width, getPreferredSize().height * 75/100));
             cardsToShow = battleController.getCardsToShow();
@@ -169,8 +263,9 @@ public class BattleScreen extends Screen {
         }
 
 
-
         private void setCardSelected(Cards c){
+            if(isReproducingOldBattle) return;
+
             Component[] cardPanels = cardsPanel.getComponents();
             for(int i = 0; i < cardPanels.length; i++){
                 CardPanel cp = (CardPanel) cardPanels[i];
@@ -184,6 +279,8 @@ public class BattleScreen extends Screen {
         }
 
         private Cards getCardSelected(){
+            if(isReproducingOldBattle) return null;
+
             Component[] cardPanels = cardsPanel.getComponents();
             for(int i = 0; i < cardPanels.length; i++){
                 CardPanel cp = (CardPanel) cardPanels[i];
