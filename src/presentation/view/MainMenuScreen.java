@@ -1,18 +1,20 @@
 package presentation.view;
 
 import business.Card;
-import business.entities.Cards;
-import business.entities.Player;
+import business.entities.*;
 import presentation.graphics.MenuGraphics;
-import business.entities.LanguageManager;
-import business.entities.Sentences;
 import presentation.view.customcomponents.RoyaleButton;
 import presentation.view.customcomponents.RoyaleLabel;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 
@@ -44,6 +46,8 @@ public class MainMenuScreen extends Screen {
 
     private Player currentPlayer;
 
+    private final int SCREEN_WIDTH;
+
     public static final String CARDS_MENU_BUTTON_ACTION_COMMAND = "cards_menu";
     public static final String BATTLE_MENU_BUTTON_ACTION_COMMAND = "battle_menu";
     public static final String RANKINGS_MENU_BUTTON_ACTION_COMMAND = "ranking_menu";
@@ -65,6 +69,11 @@ public class MainMenuScreen extends Screen {
     public static final String UNLOCK_CHEST4_COMMAND = "unlock_chest4";
     public static final String UNLOCK_CHEST5_COMMAND = "unlock_chest5";
 
+    public static final String RANKING_BY_CROWNS_BUTTON_ACTION_COMMAND = "ranking_by_crowns";
+    public static final String RANKING_BY_WINRATE_BUTTON_ACTION_COMMAND = "ranking_by_winrate";
+    public static final String LATEST_BATTLES_BUTTON_ACTION_COMMAND = "latest_battles";
+
+
 
     /**
      * Default MainMenuScreen Constructor.
@@ -76,6 +85,7 @@ public class MainMenuScreen extends Screen {
     public MainMenuScreen(Player currentPlayer, int screenWidth, int screenHeight){
         super(screenHeight);
         this.currentPlayer = currentPlayer;
+        SCREEN_WIDTH = screenWidth;
 
         setLayout(new BorderLayout());
 
@@ -85,7 +95,7 @@ public class MainMenuScreen extends Screen {
                 Graphics2D g2d = (Graphics2D) g;
 
                 g2d.setColor(new Color(0, 0, 0, 120));
-                g2d.fillRoundRect(getLocation().x + 50, getLocation().y + 20, screenWidth - 100, getPreferredSize().height - 40, 50, 50);
+                g2d.fillRoundRect(getLocation().x + 50, getLocation().y + 20, SCREEN_WIDTH - 100, getPreferredSize().height - 40, 50, 50);
                 super.paintComponent(g);
             }
         };
@@ -209,6 +219,8 @@ public class MainMenuScreen extends Screen {
 
     /**
      * Shows the Rankings tab, hiding the other two tabs
+     * <p>Just after calling this method, call always {@link #updateRankingsMenuInformation(Player[], Player[], BattleInfo[])} if you want to
+     * display updated information.
      */
     public void putRankingsMenuPanelToCenter(){
         //If what's inside the CENTER is the rankingsMenu, return
@@ -221,6 +233,47 @@ public class MainMenuScreen extends Screen {
         revalidate();
     }
 
+
+    /**
+     * Updates the Rankings Menu with the information provided.
+     * <p><b>To be called always when created a new {@link MainMenuScreen} if you want to display rankings</b>
+     * @param playersByCrowns An array of simple {@link Player}s ordered by crowns (the player with more crowns, the position 0)
+     * @param playersByWinRatio An array of simple {@link Player}s ordered by win ratio (the player with more win ratio, the position 0)
+     * @param latestBattles An array of simple {@link BattleInfo}s ordered by date (the latest battle played, the position 0)
+     */
+    public void updateRankingsMenuInformation(Player[] playersByCrowns, Player[] playersByWinRatio, BattleInfo[] latestBattles){
+        rankingMenuPanel.updateInformation(playersByCrowns, playersByWinRatio, latestBattles);
+    }
+
+    /**
+     * When we're in the RankingsMenu Tab, call this method so as to show the Player Ranking by Crowns (it's the one by default)
+     */
+    public void showRankingPlayersByCrowns(){
+        //If what's inside the CENTER is not the rankingsMenu, return
+        if(((BorderLayout)getLayout()).getLayoutComponent(BorderLayout.CENTER) != rankingMenuPanel) return;
+
+        rankingMenuPanel.showRankingByCrowns();
+    }
+
+    /**
+     * When we're in the RankingsMenu Tab, call this method so as to show the Player Ranking by win rate
+     */
+    public void showRankingPlayersByWinRate(){
+        //If what's inside the CENTER is not the rankingsMenu, return
+        if(((BorderLayout)getLayout()).getLayoutComponent(BorderLayout.CENTER) != rankingMenuPanel) return;
+
+        rankingMenuPanel.showRankingByWinRate();
+    }
+
+    /**
+     * When we're in the RankingsMenu Tab, call this method so as to show the latest battles
+     */
+    public void showLatestBattles(){
+        //If what's inside the CENTER is not the rankingsMenu, return
+        if(((BorderLayout)getLayout()).getLayoutComponent(BorderLayout.CENTER) != rankingMenuPanel) return;
+
+        rankingMenuPanel.showLatestBattles();
+    }
 
     /**
      * Pauses all components so as the user is not able to click anything or carry out any action
@@ -507,50 +560,209 @@ public class MainMenuScreen extends Screen {
 
     private class RankingsMenuPanel extends JPanel{
 
+        private JPanel centerPanel;
+        private JScrollPane rankingsScrollPanel;
+        private Image woodTable;
+        private int woodTableXCoord, woodTableYCoord;
+
+
+        private RoyaleButton playersByCrownsButton;
+        private RoyaleButton playersByWinRatioButton;
+        private RoyaleButton latestBattlesButton;
+
+        private Player[] playersByCrowns;
+        private Player[] playersByWinRatio;
+        private BattleInfo[] latestBattles;
+
+        private int rankingShowing; //Informs about the ranking that is showing right now (0 playersByCrown, 1 playersByWinRatio, 2 latestBattles)
+
+
         private RankingsMenuPanel(){
             setOpaque(false);
             setLayout(new GridBagLayout());
 
-            JPanel centerPanel = new JPanel();
+            rankingShowing = 0;
+
+
+            centerPanel = new JPanel();
             centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
             centerPanel.setOpaque(false);
-
-            ScrollableRankingPanel globalRankingByCrowns = new ScrollableRankingPanel("Global Ranking by Crowns");
-            ScrollableRankingPanel globalRankingByWinRatio = new ScrollableRankingPanel("Global Ranking by Win Ratio");
-            ScrollableRankingPanel latestBattles = new ScrollableRankingPanel("Latest Battles");
-
-
-            JTabbedPane rankingsTabbedPane = new JTabbedPane();
-            rankingsTabbedPane.add("Global Ranking", globalRankingByCrowns);
-            rankingsTabbedPane.add("Win Ratio", globalRankingByWinRatio);
-            rankingsTabbedPane.add("Latest Battles", latestBattles);
-
-
 
 
             RoyaleLabel rankingsLabel = new RoyaleLabel("Rankings", RoyaleLabel.LabelType.TITLE);
             rankingsLabel.setAlignmentX(CENTER_ALIGNMENT);
 
 
+            JPanel buttonsPanel = new JPanel();
+            buttonsPanel.setAlignmentX(CENTER_ALIGNMENT);
+            buttonsPanel.setOpaque(false);
+            buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.X_AXIS));
+
+            playersByCrownsButton = new RoyaleButton("Ranking by Crowns");
+            playersByCrownsButton.setFont(playersByCrownsButton.getFont().deriveFont(14f));
+            playersByWinRatioButton = new RoyaleButton("Ranking by WinRatio");
+            playersByWinRatioButton.setFont(playersByWinRatioButton.getFont().deriveFont(14f));
+            latestBattlesButton = new RoyaleButton("Latest Battles");
+            latestBattlesButton.setFont(latestBattlesButton.getFont().deriveFont(14f));
+
+            buttonsPanel.add(playersByCrownsButton);
+            buttonsPanel.add(Box.createRigidArea(new Dimension(20, 5)));
+            buttonsPanel.add(playersByWinRatioButton);
+            buttonsPanel.add(Box.createRigidArea(new Dimension(20, 5)));
+            buttonsPanel.add(latestBattlesButton);
+
+
+            rankingsScrollPanel = new JScrollPane();
+            rankingsScrollPanel.setOpaque(false);
+            rankingsScrollPanel.getViewport().setOpaque(false);
+            rankingsScrollPanel.setBorder(new EmptyBorder(0, 0, 0, 0));
+            rankingsScrollPanel.setAlignmentX(CENTER_ALIGNMENT);
+            rankingsScrollPanel.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+            rankingsScrollPanel.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+            rankingsScrollPanel.getVerticalScrollBar().setPreferredSize(new Dimension(0,0)); //Hide the Vertical Scroll Bar if it appears
+            rankingsScrollPanel.getVerticalScrollBar().setUnitIncrement(6);
+            rankingsScrollPanel.setMaximumSize(new Dimension(SCREEN_WIDTH * 50/100, SCREEN_HEIGHT * 50/100));
+            rankingsScrollPanel.setMinimumSize(new Dimension(SCREEN_WIDTH * 50/100, SCREEN_HEIGHT * 50/100));
+            rankingsScrollPanel.setPreferredSize(new Dimension(SCREEN_WIDTH * 50/100, SCREEN_HEIGHT * 50/100));
+
+
+
             centerPanel.add(rankingsLabel);
-            centerPanel.add(Box.createRigidArea(new Dimension(50, SCREEN_HEIGHT * 3/100)));
-            centerPanel.add(rankingsTabbedPane);
+            centerPanel.add(Box.createRigidArea(new Dimension(50, SCREEN_HEIGHT * 5/100)));
+            centerPanel.add(buttonsPanel);
+            centerPanel.add(Box.createRigidArea(new Dimension(50, SCREEN_HEIGHT * 2/100)));
+            centerPanel.add(rankingsScrollPanel);
+
 
             add(centerPanel, new GridBagConstraints());
+
+            //Now that we added everything, let's add the woodTable and scale it accordingly
+            woodTable = MenuGraphics.scaleImage(MenuGraphics.getWoodTableLight(), rankingsScrollPanel.getPreferredSize().height);
+            //woodTableXCoord and woodTableYCoord will be calculated on runtime, when the screen is already displayed so as to
+            //be able to use the cardsGridPanel.getLocationOnScreen() method
+        }
+
+
+        private void updateInformation(Player[] playersByCrowns, Player[] playersByWinRatio, BattleInfo[] latestBattles){
+            this.playersByCrowns = playersByCrowns;
+            this.playersByWinRatio = playersByWinRatio;
+            this.latestBattles = latestBattles;
+
+            showRankingByCrowns();
+        }
+
+        private void showRankingByCrowns(){
+            String[] columnNames = {"Player", "Wins", "Plays", "Crowns"};
+            String[][] data = new String[playersByCrowns.length][4];
+
+            for(int i = 0; i < data.length; i++){
+                data[i][0] = playersByCrowns[i].getName();
+                data[i][1] = Integer.toString(playersByCrowns[i].getBattleWins());
+                data[i][2] = Integer.toString(playersByCrowns[i].getBattlePlays());
+                data[i][3] = Integer.toString(playersByCrowns[i].getCrowns());
+            }
+
+            JTable rankingByCrownsTable = returnNewFormattedTable(data, columnNames);
+            rankingsScrollPanel.setViewportView(rankingByCrownsTable);
+        }
+
+        private void showRankingByWinRate(){
+            String[] columnNames = {"Player", "Crowns", "Win Ratio"};
+            String[][] data = new String[playersByWinRatio.length][3];
+
+            for(int i = 0; i < data.length; i++){
+                data[i][0] = playersByWinRatio[i].getName();
+                data[i][1] = Integer.toString(playersByWinRatio[i].getCrowns());
+                data[i][2] = ((int)((playersByWinRatio[i].getBattleWins()/(double)playersByWinRatio[i].getBattlePlays())*100)) + "%";
+            }
+
+            JTable rankingByWinRate = returnNewFormattedTable(data, columnNames);
+            rankingsScrollPanel.setViewportView(rankingByWinRate);
+        }
+
+        private void showLatestBattles(){
+            String[] columnNames = {"Player", "Name", "Result", "Date", "ID"};
+            String[][] data = new String[latestBattles.length][5];
+
+            for(int i = 0; i < data.length; i++){
+                data[i][0] = latestBattles[i].getPlayerName();
+                data[i][1] = latestBattles[i].getName().equals("null")? "-": latestBattles[i].getName();
+                data[i][2] = latestBattles[i].isWon() ? "Won": "Lost";
+                data[i][3] = new SimpleDateFormat("dd-MM hh:mm").format(latestBattles[i].getDatePlayed());
+                data[i][4] = Integer.toString(latestBattles[i].getId());
+            }
+
+            JTable latestBattles = returnNewFormattedTable(data, columnNames);
+            rankingsScrollPanel.setViewportView(latestBattles);
+        }
+
+
+        private JTable returnNewFormattedTable(String[][] data, String[] columnNames){
+            JTable newTable = new JTable(data, columnNames);
+            newTable.setFillsViewportHeight(true);
+            newTable.setShowGrid(false);
+            newTable.setOpaque(false);
+            newTable.setDragEnabled(false);
+            newTable.setEnabled(false);
+            ((DefaultTableCellRenderer)newTable.getDefaultRenderer(Object.class)).setOpaque(false);
+
+            newTable.setPreferredSize(new Dimension(rankingsScrollPanel.getPreferredSize().width, newTable.getPreferredSize().height));
+            newTable.setMaximumSize(new Dimension(rankingsScrollPanel.getMaximumSize().width, newTable.getMaximumSize().height));
+            newTable.setMinimumSize(new Dimension(rankingsScrollPanel.getMinimumSize().width, newTable.getMinimumSize().height));
+
+            newTable.getTableHeader().setReorderingAllowed(false);
+            newTable.getTableHeader().setResizingAllowed(false);
+            newTable.getTableHeader().setDefaultRenderer(new DefaultTableCellRenderer() {
+                                                             @Override
+                                                             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                                                                 RoyaleLabel t = new RoyaleLabel(value.toString(), RoyaleLabel.LabelType.PARAGRAPH);
+                                                                 t.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
+                                                                 t.setHorizontalAlignment(LEFT);
+                                                                 t.setForeground(MenuGraphics.YELLOW);
+                                                                 t.setOpaque(false);
+                                                                 return t;
+                                                             }
+                                                         });
+            newTable.getTableHeader().setBackground(new Color(0, 0, 0, 0));
+
+            newTable.setForeground(Color.WHITE);
+            newTable.setFont(MenuGraphics.getMainFont());
+            newTable.setRowHeight((int)(newTable.getRowHeight() * 2.5));
+
+            return newTable;
         }
 
         private void addButtonsListener(ActionListener al){
-
+            playersByCrownsButton.addActionListener(al);
+            playersByCrownsButton.setActionCommand(RANKING_BY_CROWNS_BUTTON_ACTION_COMMAND);
+            playersByWinRatioButton.addActionListener(al);
+            playersByWinRatioButton.setActionCommand(RANKING_BY_WINRATE_BUTTON_ACTION_COMMAND);
+            latestBattlesButton.addActionListener(al);
+            latestBattlesButton.setActionCommand(LATEST_BATTLES_BUTTON_ACTION_COMMAND);
         }
 
 
-        private class ScrollableRankingPanel extends JPanel{
+        @Override
+        protected void paintComponent(Graphics g) {
+            //If woodTableXCoord is 0 (meaning it hasn't been initialized yet) let's calculate woodTableXCoord and woodTableYCoord
+            if(woodTableXCoord == 0){
+                JFrame parentJFrame = (JFrame) SwingUtilities.getWindowAncestor(rankingsScrollPanel); //Obtain a reference to the current JFrame
 
-            public ScrollableRankingPanel(String ranking){
-                add(new RoyaleLabel(ranking, RoyaleLabel.LabelType.PARAGRAPH));
+                final Point cardsGridPanelPosition = SwingUtilities.convertPoint(centerPanel, rankingsScrollPanel.getLocation().x,
+                        rankingsScrollPanel.getLocation().y, parentJFrame.getContentPane());
+                woodTableXCoord = cardsGridPanelPosition.x - (woodTable.getWidth(null) - rankingsScrollPanel.getPreferredSize().width)/2;
+
+                int northHeight = ((BorderLayout) this.getParent().getLayout()).getLayoutComponent(BorderLayout.NORTH).getHeight();
+                woodTableYCoord = cardsGridPanelPosition.y - northHeight;
             }
 
+            Graphics2D g2d = (Graphics2D) g;
+            //Draw the woodTable before everything else
+            g2d.drawImage(woodTable, woodTableXCoord, woodTableYCoord, null);
+
+            super.paintComponent(g);
         }
+
     }
 
 

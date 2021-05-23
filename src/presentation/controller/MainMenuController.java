@@ -1,12 +1,14 @@
 package presentation.controller;
 
 import business.GameModel;
+import business.entities.BattleInfo;
 import business.entities.Player;
 import business.entities.Songs;
 import presentation.sound.MusicPlayer;
 import presentation.view.MainMenuScreen;
 import presentation.view.RoyaleFrame;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 
@@ -22,6 +24,7 @@ import java.awt.event.MouseEvent;
 public class MainMenuController extends ScreenController{
 
     private MainMenuScreen mainMenuScreen;
+    private Thread updateRankingsThread;
 
 
     /**
@@ -42,6 +45,7 @@ public class MainMenuController extends ScreenController{
         mainMenuScreen.addButtonsListener(this);
         mainMenuScreen.addPanelsListener(this);
         mainMenuScreen.addLabelsListener(this);
+        updateRankings();
         setPanelToListenForESCKey(mainMenuScreen);
 
         royaleFrame.changeScreen(mainMenuScreen);
@@ -77,6 +81,30 @@ public class MainMenuController extends ScreenController{
     }
 
 
+    /**
+     * Updates the Rankings of the MainMenuScreen in a new separated Thread.
+     */
+    private void updateRankings(){
+        //If we're already updating, return
+        if(updateRankingsThread != null && updateRankingsThread.isAlive()) return;
+
+        updateRankingsThread = new Thread(() -> {
+            Player[] playersByCrowns = gameModel.getPlayersByCrowns(15);
+            Player[] playersByWinRate = gameModel.getPlayersByWinRate(15);
+            BattleInfo[] latestBattles = gameModel.getLatestBattles(15);
+
+            //Once all information has been retrieved from the database, let's tell the EDT to
+            //update the view
+            SwingUtilities.invokeLater(() -> {
+                mainMenuScreen.updateRankingsMenuInformation(playersByCrowns, playersByWinRate, latestBattles);
+            });
+
+        });
+
+        updateRankingsThread.start();
+    }
+
+
     @Override
     public void actionPerformed(ActionEvent e) {
         switch(e.getActionCommand()){
@@ -87,11 +115,22 @@ public class MainMenuController extends ScreenController{
                 mainMenuScreen.putCardsMenuPanelToCenter();
                 break;
             case MainMenuScreen.RANKINGS_MENU_BUTTON_ACTION_COMMAND:
+                updateRankings(); //Starts updating the rankings
                 mainMenuScreen.putRankingsMenuPanelToCenter();
                 break;
             case MainMenuScreen.PLAY_BUTTON_COMMAND:
                 mainMenuScreen.pauseAllComponents();
                 goToScreen(Screens.LOADING_BATTLE_SCREEN);
+                break;
+            case MainMenuScreen.RANKING_BY_CROWNS_BUTTON_ACTION_COMMAND:
+                mainMenuScreen.showRankingPlayersByCrowns();
+                break;
+            case MainMenuScreen.RANKING_BY_WINRATE_BUTTON_ACTION_COMMAND:
+                mainMenuScreen.showRankingPlayersByWinRate();
+                break;
+            case MainMenuScreen.LATEST_BATTLES_BUTTON_ACTION_COMMAND:
+                mainMenuScreen.showLatestBattles();
+                break;
         }
     }
 

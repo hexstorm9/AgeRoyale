@@ -183,12 +183,17 @@ public class GameModel {
      *
      * @param numberOfPlayersToBeReturned The number of players to be returned (maximum). It can be less than the number provided.
      * @return An array of {@link Player} ordered by Win Rate
-     * @throws SQLException If a connection to the database can't be established or queries are wrong
      */
-   public Player[] getPlayersByWinRate(int numberOfPlayersToBeReturned) throws SQLException{
+   public Player[] getPlayersByWinRate(int numberOfPlayersToBeReturned){
        PlayerDAO playerDAO = new PlayerDAO();
-       return playerDAO.getPlayersByWinRate(numberOfPlayersToBeReturned);
+       try{
+           return playerDAO.getPlayersByWinRate(numberOfPlayersToBeReturned);
+       }catch(SQLException e){
+           e.printStackTrace();
+           return null;
+       }
    }
+
 
     /**
      * Returns an array of {@link Player} objects (the array size will be determined by the param introduced) ordered
@@ -198,11 +203,15 @@ public class GameModel {
      * @param numberOfPlayersToBeReturned The maximum number of players to be returned (can be less than the number provided, if there
      *                                    aren't enough entries)
      * @return An array of {@link Player} ordered by Crowns
-     * @throws SQLException If a connection to the database can't be established or queries are wrong
      */
-    public Player[] getPlayersByCrowns(int numberOfPlayersToBeReturned) throws SQLException{
+    public Player[] getPlayersByCrowns(int numberOfPlayersToBeReturned){
         PlayerDAO playerDAO = new PlayerDAO();
-        return playerDAO.getPlayersByCrowns(numberOfPlayersToBeReturned);
+        try{
+            return playerDAO.getPlayersByCrowns(numberOfPlayersToBeReturned);
+        }catch (SQLException e){
+            e.printStackTrace();
+            return null;
+        }
     }
 
 
