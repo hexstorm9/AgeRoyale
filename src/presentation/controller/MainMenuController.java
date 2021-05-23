@@ -26,6 +26,7 @@ public class MainMenuController extends ScreenController{
 
     private MainMenuScreen mainMenuScreen;
     private Thread updateRankingsThread;
+    private Thread showPlayerBattlesThread;
 
     private CustomMouseAdapter mouseAdapter;
 
@@ -110,6 +111,27 @@ public class MainMenuController extends ScreenController{
     }
 
 
+    /**
+     * To be called whenever the action desired is showing the player battles
+     */
+    private void showPlayerBattles(String playerName){
+        //If we're already loading some player battles, return
+        if(showPlayerBattlesThread != null && showPlayerBattlesThread.isAlive()) return;
+
+        showPlayerBattlesThread = new Thread(() -> {
+            BattleInfo[] playerLatestBattles = gameModel.getBattlesByUser(playerName);
+
+            //Once all information has been retrieved from the database, let's tell the EDT to
+            //update the view
+            SwingUtilities.invokeLater(() -> {
+                mainMenuScreen.showPlayerLatestBattles(playerName, playerLatestBattles);
+            });
+        });
+
+        showPlayerBattlesThread.start();
+    }
+
+
     @Override
     public void actionPerformed(ActionEvent e) {
         switch(e.getActionCommand()){
@@ -185,7 +207,7 @@ public class MainMenuController extends ScreenController{
     public void mouseExited(MouseEvent e) {}
 
 
-    class CustomMouseAdapter extends MouseAdapter{
+    private class CustomMouseAdapter extends MouseAdapter{
         @Override
         public void mousePressed(MouseEvent e) {
             super.mousePressed(e);
@@ -202,7 +224,8 @@ public class MainMenuController extends ScreenController{
                     Integer.parseInt(secondColumn);
 
                     //A player has been clicked, so let's show its battles ->
-                    //TODO: Show player battles
+                    final String playerName = (String) currentTable.getValueAt(row, 0);
+                    showPlayerBattles(playerName);
 
                 } catch (NumberFormatException ex) {
                     //If it is not an integer, a battle has been clicked

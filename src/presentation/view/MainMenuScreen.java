@@ -279,6 +279,17 @@ public class MainMenuScreen extends Screen {
     }
 
     /**
+     * When we're in the RankingsMenu Tab, call this method so as to show the player latest battles
+     */
+    public void showPlayerLatestBattles(String playerName, BattleInfo[] playerBattles){
+        //If what's inside the CENTER is not the rankingsMenu, return
+        if(((BorderLayout)getLayout()).getLayoutComponent(BorderLayout.CENTER) != rankingMenuPanel) return;
+
+        rankingMenuPanel.showPlayerBattles(playerName, playerBattles);
+    }
+
+
+    /**
      * Pauses all components so as the user is not able to click anything or carry out any action
      */
     public void pauseAllComponents(){
@@ -706,6 +717,24 @@ public class MainMenuScreen extends Screen {
             JTable latestBattles = returnNewFormattedTable(data, columnNames);
             rankingsScrollPanel.setViewportView(latestBattles);
             currentTableShowing = latestBattles;
+        }
+
+
+        private void showPlayerBattles(String playerName, BattleInfo[] latestPlayerBattles){
+            String[] columnNames = {playerName + " ->   ", "Name", "Result", "Date", "ID"};
+            Object[][] data = new String[latestPlayerBattles.length][5];
+
+            for(int i = 0; i < data.length; i++){
+                data[i][0] = "";
+                data[i][1] = latestPlayerBattles[i].getName().equals("null")? "-": latestPlayerBattles[i].getName();
+                data[i][2] = latestPlayerBattles[i].isWon() ? "Won": "Lost";
+                data[i][3] = new SimpleDateFormat("dd-MM hh:mm").format(latestPlayerBattles[i].getDatePlayed());
+                data[i][4] = Integer.toString(latestPlayerBattles[i].getId());
+            }
+
+            JTable latestPlayerBattlesTable = returnNewFormattedTable(data, columnNames);
+            rankingsScrollPanel.setViewportView(latestPlayerBattlesTable);
+            currentTableShowing = latestPlayerBattlesTable;
         }
 
 
