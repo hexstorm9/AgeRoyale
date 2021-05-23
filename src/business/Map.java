@@ -1,6 +1,5 @@
 package business;
 
-import presentation.graphics.BattleGraphics;
 import presentation.graphics.MenuGraphics;
 
 import java.awt.*;
@@ -76,7 +75,7 @@ public class Map {
         for(int i = 0; i < mapTileInfo.length; i++){
             for(int j = 0; j < mapTileInfo[0].length(); j++){
                 char tile = mapTileInfo[i].charAt(j);
-                Image tileImg = BattleGraphics.getMapTile(tile);
+                Image tileImg = BattleSprites.getMapTile(tile);
                 mapTiles[i][j] = MenuGraphics.scaleImage(tileImg, TILE_HEIGHT);
             }
         }
@@ -91,7 +90,7 @@ public class Map {
             for(int j = 0; j < mapDecorationInfo[0].length(); j++){
                 char currentDecoration = mapDecorationInfo[i].charAt(j);
                 if(currentDecoration != '0'){ //If currentDecoration is '0', it means that there is no decoration in that point
-                    Image decorationImg = BattleGraphics.getDecorationImage(currentDecoration);
+                    Image decorationImg = BattleSprites.getDecorationImage(currentDecoration);
                     Image scaledDecorationImg = MenuGraphics.scaleImage(decorationImg, TILE_HEIGHT);
                     Vector2 decorationPosition = new Vector2(firstTileColumnXPosition + (j * TILE_WIDTH), i * TILE_HEIGHT);
                     mapDecoration.add(new Tuple<>(scaledDecorationImg, decorationPosition));
@@ -104,7 +103,7 @@ public class Map {
         outerMapTiles = new ArrayList<>();
         int necessaryOuterHorizontalTiles = ((battlePanelDimension.width - mapWidth) / TILE_WIDTH) + 2; //We add always 2 (one to the right and another to the left)
 
-        Image tile = BattleGraphics.getMapTile('1');
+        Image tile = BattleSprites.getMapTile('1');
         Image scaledTile = MenuGraphics.scaleImage(tile, TILE_HEIGHT);
         for(int i = 0; i < mapTileInfo.length; i++){
             for(int j = 0; j < necessaryOuterHorizontalTiles/2; j++){ //Fill outer tiles to the right side of the map
@@ -125,13 +124,13 @@ public class Map {
                                                                                   // add another one to each side (so as to draw correctly the decorations)
         for(int i = 0; i < mapTileInfo.length; i++){
             for(int j = 0; j < necessaryOuterHorizontalTiles/2; j+=2){ //Fill outer decorations to the right side of the map
-                Image decoration = BattleGraphics.getOuterDecorationImage(new Random().nextInt(4));
+                Image decoration = BattleSprites.getOuterDecorationImage(new Random().nextInt(4));
                 Image scaledDecoration = MenuGraphics.scaleImage(decoration, TILE_HEIGHT * 2);
                 Vector2 decorationPosition = new Vector2(firstTileColumnXPosition + mapWidth + (j * TILE_WIDTH), i * TILE_HEIGHT);
                 outerMapDecoration.add(new Tuple<>(scaledDecoration, decorationPosition));
             }
             for(int j = 0; j < necessaryOuterHorizontalTiles/2; j+=2){ //Fill outer decorations to the left side of the map
-                Image decoration = BattleGraphics.getOuterDecorationImage(new Random().nextInt(4));
+                Image decoration = BattleSprites.getOuterDecorationImage(new Random().nextInt(4));
                 Image scaledDecoration = MenuGraphics.scaleImage(decoration, TILE_HEIGHT * 2);
                 Vector2 decorationPosition = new Vector2(firstTileColumnXPosition - 2*TILE_WIDTH - (j * TILE_WIDTH), i * TILE_HEIGHT);
                 outerMapDecoration.add(new Tuple<>(scaledDecoration, decorationPosition));

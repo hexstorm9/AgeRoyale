@@ -1,7 +1,6 @@
 package business;
 
 import business.entities.Cards;
-import presentation.graphics.BattleGraphics;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -301,10 +300,10 @@ public class Card {
         if(movingVelocity == 0) initialState = State.IDLE;
         else initialState = State.WALKING;
 
-        idleSprites = BattleGraphics.getSprites(cardType, State.IDLE, CARD_HEIGHT);
-        movingSprites = BattleGraphics.getSprites(cardType, State.WALKING, CARD_HEIGHT);
-        attackingSprites = BattleGraphics.getSprites(cardType, State.ATTACKING, CARD_HEIGHT);
-        dyingSprites = BattleGraphics.getSprites(cardType, State.DYING, CARD_HEIGHT);
+        idleSprites = BattleSprites.getSprites(cardType, State.IDLE, CARD_HEIGHT);
+        movingSprites = BattleSprites.getSprites(cardType, State.WALKING, CARD_HEIGHT);
+        attackingSprites = BattleSprites.getSprites(cardType, State.ATTACKING, CARD_HEIGHT);
+        dyingSprites = BattleSprites.getSprites(cardType, State.DYING, CARD_HEIGHT);
     }
 
 

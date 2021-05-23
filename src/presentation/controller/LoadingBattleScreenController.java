@@ -2,7 +2,7 @@ package presentation.controller;
 
 import business.GameModel;
 import business.Movement;
-import presentation.graphics.BattleGraphics;
+import business.BattleSprites;
 import presentation.sound.MusicPlayer;
 import presentation.view.LoadingBattleScreen;
 import presentation.view.RoyaleFrame;
@@ -108,7 +108,7 @@ public class LoadingBattleScreenController extends ScreenController{
                     return "Error loading the Battle to Reproduce";
                 }
                 try {
-                    BattleGraphics.load();
+                    BattleSprites.load();
                     moveProgress(41, 100, 600);
                 }catch(IOException e){
                     e.printStackTrace();

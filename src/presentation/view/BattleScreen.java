@@ -2,7 +2,6 @@ package presentation.view;
 
 import business.entities.Cards;
 import presentation.controller.BattleController;
-import presentation.graphics.BattleGraphics;
 import presentation.graphics.MenuGraphics;
 import presentation.view.customcomponents.RoyaleButton;
 import presentation.view.customcomponents.RoyaleLabel;

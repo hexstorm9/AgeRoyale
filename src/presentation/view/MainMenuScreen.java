@@ -639,11 +639,11 @@ public class MainMenuScreen extends Screen {
             rankingsScrollPanel.setAlignmentX(CENTER_ALIGNMENT);
             rankingsScrollPanel.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
             rankingsScrollPanel.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-            rankingsScrollPanel.getVerticalScrollBar().setPreferredSize(new Dimension(0,0)); //Hide the Vertical Scroll Bar if it appears
-            rankingsScrollPanel.getVerticalScrollBar().setUnitIncrement(6);
             rankingsScrollPanel.setMaximumSize(new Dimension(SCREEN_WIDTH * 50/100, SCREEN_HEIGHT * 50/100));
             rankingsScrollPanel.setMinimumSize(new Dimension(SCREEN_WIDTH * 50/100, SCREEN_HEIGHT * 50/100));
             rankingsScrollPanel.setPreferredSize(new Dimension(SCREEN_WIDTH * 50/100, SCREEN_HEIGHT * 50/100));
+            rankingsScrollPanel.getVerticalScrollBar().setPreferredSize(new Dimension(0,0)); //Hide the Vertical Scroll Bar if it appears
+            rankingsScrollPanel.getVerticalScrollBar().setUnitIncrement(6);
 
 
 
@@ -673,13 +673,17 @@ public class MainMenuScreen extends Screen {
 
         private void showRankingByCrowns(){
             String[] columnNames = {"Player", "Wins", "Plays", "Crowns"};
-            String[][] data = new String[playersByCrowns.length][4];
+            Object[][] data = new Object[][]{};
 
-            for(int i = 0; i < data.length; i++){
-                data[i][0] = playersByCrowns[i].getName();
-                data[i][1] = Integer.toString(playersByCrowns[i].getBattleWins());
-                data[i][2] = Integer.toString(playersByCrowns[i].getBattlePlays());
-                data[i][3] = Integer.toString(playersByCrowns[i].getCrowns());
+            if(playersByCrowns != null){
+                data = new String[playersByCrowns.length][4];
+
+                for(int i = 0; i < data.length; i++){
+                    data[i][0] = playersByCrowns[i].getName();
+                    data[i][1] = Integer.toString(playersByCrowns[i].getBattleWins());
+                    data[i][2] = Integer.toString(playersByCrowns[i].getBattlePlays());
+                    data[i][3] = Integer.toString(playersByCrowns[i].getCrowns());
+                }
             }
 
             JTable rankingByCrownsTable = returnNewFormattedTable(data, columnNames);
@@ -689,12 +693,16 @@ public class MainMenuScreen extends Screen {
 
         private void showRankingByWinRate(){
             String[] columnNames = {"Player", "Crowns", "Win Ratio"};
-            String[][] data = new String[playersByWinRatio.length][3];
+            Object[][] data = new Object[][]{};
 
-            for(int i = 0; i < data.length; i++){
-                data[i][0] = playersByWinRatio[i].getName();
-                data[i][1] = Integer.toString(playersByWinRatio[i].getCrowns());
-                data[i][2] = ((int)((playersByWinRatio[i].getBattleWins()/(double)playersByWinRatio[i].getBattlePlays())*100)) + "%";
+            if(playersByWinRatio != null){
+                data = new String[playersByWinRatio.length][3];
+
+                for(int i = 0; i < data.length; i++){
+                    data[i][0] = playersByWinRatio[i].getName();
+                    data[i][1] = Integer.toString(playersByWinRatio[i].getCrowns());
+                    data[i][2] = ((int)((playersByWinRatio[i].getBattleWins()/(double)playersByWinRatio[i].getBattlePlays())*100)) + "%";
+                }
             }
 
             JTable rankingByWinRate = returnNewFormattedTable(data, columnNames);
@@ -704,14 +712,18 @@ public class MainMenuScreen extends Screen {
 
         private void showLatestBattles(){
             String[] columnNames = {"Player", "Name", "Result", "Date", "ID"};
-            Object[][] data = new String[latestBattles.length][5];
+            Object[][] data = new Object[][]{};
 
-            for(int i = 0; i < data.length; i++){
-                data[i][0] = latestBattles[i].getPlayerName();
-                data[i][1] = latestBattles[i].getName().equals("null")? "-": latestBattles[i].getName();
-                data[i][2] = latestBattles[i].isWon() ? "Won": "Lost";
-                data[i][3] = new SimpleDateFormat("dd-MM hh:mm").format(latestBattles[i].getDatePlayed());
-                data[i][4] = Integer.toString(latestBattles[i].getId());
+            if(latestBattles != null){
+                data = new String[latestBattles.length][5];
+
+                for(int i = 0; i < data.length; i++){
+                    data[i][0] = latestBattles[i].getPlayerName();
+                    data[i][1] = latestBattles[i].getName().equals("null")? "-": latestBattles[i].getName();
+                    data[i][2] = latestBattles[i].isWon() ? "Won": "Lost";
+                    data[i][3] = new SimpleDateFormat("dd-MM hh:mm").format(latestBattles[i].getDatePlayed());
+                    data[i][4] = Integer.toString(latestBattles[i].getId());
+                }
             }
 
             JTable latestBattles = returnNewFormattedTable(data, columnNames);
@@ -721,15 +733,19 @@ public class MainMenuScreen extends Screen {
 
 
         private void showPlayerBattles(String playerName, BattleInfo[] latestPlayerBattles){
-            String[] columnNames = {playerName + " ->   ", "Name", "Result", "Date", "ID"};
-            Object[][] data = new String[latestPlayerBattles.length][5];
+            String[] columnNames = {playerName + " ->  ", "Name", "Result", "Date", "ID"};
+            Object[][] data = new Object[][]{};
 
-            for(int i = 0; i < data.length; i++){
-                data[i][0] = "";
-                data[i][1] = latestPlayerBattles[i].getName().equals("null")? "-": latestPlayerBattles[i].getName();
-                data[i][2] = latestPlayerBattles[i].isWon() ? "Won": "Lost";
-                data[i][3] = new SimpleDateFormat("dd-MM hh:mm").format(latestPlayerBattles[i].getDatePlayed());
-                data[i][4] = Integer.toString(latestPlayerBattles[i].getId());
+            if(latestPlayerBattles != null){
+                data = new String[latestPlayerBattles.length][5];
+
+                for(int i = 0; i < data.length; i++){
+                    data[i][0] = "";
+                    data[i][1] = latestPlayerBattles[i].getName().equals("null")? "-": latestPlayerBattles[i].getName();
+                    data[i][2] = latestPlayerBattles[i].isWon() ? "Won": "Lost";
+                    data[i][3] = new SimpleDateFormat("dd-MM hh:mm").format(latestPlayerBattles[i].getDatePlayed());
+                    data[i][4] = Integer.toString(latestPlayerBattles[i].getId());
+                }
             }
 
             JTable latestPlayerBattlesTable = returnNewFormattedTable(data, columnNames);
@@ -773,6 +789,7 @@ public class MainMenuScreen extends Screen {
 
             return newTable;
         }
+
 
         private void addButtonsListener(ActionListener al){
             playersByCrownsButton.addActionListener(al);

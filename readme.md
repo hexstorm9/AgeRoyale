@@ -35,17 +35,16 @@
 
 ## How To Use
 ```bash
-# Install IntelliJ Community Edition (Linux)
-$ sudo snap install intellij-idea-community --classic
-
-#Install IntelliJ Community Edition (MacOS)
-$ brew cask install intellij-idea
-
-
 # Clone this repository
 $ git clone https://github.com/hexstorm9/AgeRoyale/tree/develop.git
 
 # Open the project on IntelliJ and Run it
+# No further actions are required, as the database is remote.
+
+#If you wish to use your own SQL database, the only thing you have
+#to modify is the file /resources/config.json, and manually enter the
+#information of your database.
+#To configure your database, use the SQL script located in the root folder.
 ```
 
 ## Contact

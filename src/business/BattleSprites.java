@@ -1,7 +1,7 @@
-package presentation.graphics;
+package business;
 
-import business.Card;
 import business.entities.Cards;
+import presentation.graphics.MenuGraphics;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -16,19 +16,16 @@ import java.util.Random;
 
 
 /**
- * BattleGraphics is a {@code static} class that will have all the graphics (images, fonts, colors, etc.) loaded
- * for drawing the {@link presentation.view.BattleScreen}.
- *
+ * BattleSprites is a {@code static} class that will have all the sprites of the Battle loaded
  * <p>To access them, use the public (static) getters provided
  *
- * <p>Before using any objects of the class, {@link BattleGraphics#load()} shall be called. Otherwise, all {@code getters} will return null.
+ * <p>Before using any objects of the class, {@link BattleSprites#load()} shall be called. Otherwise, all {@code getters} will return null.
  *
  *
- * @see Image
  * @see java.awt.image.BufferedImage
  * @version 1.0
  */
-public class BattleGraphics {
+public class BattleSprites {
 
     //References to Resources -------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------------
@@ -254,7 +251,7 @@ public class BattleGraphics {
         //Fill the leftSpritesToBeReturned
         leftSpritesToBeReturned = new Image[rightSpritesToBeReturned.length];
         for(int i = 0; i < leftSpritesToBeReturned.length; i++)
-            leftSpritesToBeReturned[i] = BattleGraphics.flipImageHorizontally(rightSpritesToBeReturned[i]);
+            leftSpritesToBeReturned[i] = BattleSprites.flipImageHorizontally(rightSpritesToBeReturned[i]);
 
         //Save images to the Card.Orientation.LEFT
         hashMapSprites.put(Card.Orientation.LEFT, leftSpritesToBeReturned);
