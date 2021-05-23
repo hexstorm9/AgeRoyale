@@ -17,14 +17,34 @@ import java.sql.SQLException;
 import java.util.Arrays;
 
 
+/**
+ * {@code RegisterScreenController} is a {@link ScreenController} that will manage and listen to an instance of
+ * a {@link RegisterScreen} and put it onto the {@link RoyaleFrame} of the game.
+ *
+ * <p>When the user submits a new register event (with its information), this class will initiate a new
+ * {@code thread} so as to check (using the {@link GameModel} whether the information is correct or not). If it
+ * is, the registration will be successful and the new user will be redirected to the {@link presentation.view.MainMenuScreen}
+ *
+ * @see RegisterScreen
+ * @version 1.0
+ */
 public class RegisterScreenController extends ScreenController {
 
     private RegisterScreen registerScreen;
 
+    /**
+     * Default RegisterScreenController constructor.
+     * @param royaleFrame The royaleFrame of the game
+     * @param gameModel The gameModel of the game
+     */
     public RegisterScreenController(RoyaleFrame royaleFrame, GameModel gameModel){
         super(royaleFrame, gameModel, null);
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
     public void start(boolean showSettingsPanelOnStart){
         registerScreen = new RegisterScreen(royaleFrame.getHeight());
         registerScreen.addLabelsListener(this);
@@ -40,6 +60,9 @@ public class RegisterScreenController extends ScreenController {
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     public void buildSettingsPanel(){
         settingsPanel.addLanguagesButton();
         settingsPanel.addCreditsButton();

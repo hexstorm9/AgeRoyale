@@ -124,7 +124,16 @@ public class Card {
     private Card currentlyAttackingCard;
 
 
-
+    /**
+     * Default Card constructor.
+     * @param cardType The type of card that wants to be created
+     * @param level The level of the card
+     * @param cardStatus The status of the card (whether it's an enemy card or a player card)
+     * @param initialPosition The initial position of the Card
+     * @param CARD_HEIGHT The height that the Card will have
+     * @param physicsSystem The PhysicsSystem that will be called from the card in order to interact with its
+     * surroundings
+     */
     public Card(Cards cardType, int level, Status cardStatus, Vector2 initialPosition, final int CARD_HEIGHT,
                 PhysicsSystem physicsSystem){
         this.cardType = cardType;
@@ -346,8 +355,16 @@ public class Card {
     }
 
 
+    /**
+     * Returns the current status of the card
+     * @return Current status of the card
+     */
     public Status getStatus(){ return cardStatus;}
 
+    /**
+     * Sets the current orientation of the card
+     * @param orientation The new orientation of this card
+     */
     public void setOrientation(Orientation orientation){
         this.currentOrientation = orientation;
     }

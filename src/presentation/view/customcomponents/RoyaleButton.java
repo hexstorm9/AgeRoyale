@@ -21,11 +21,19 @@ import java.awt.event.MouseListener;
 public class RoyaleButton extends JButton implements MouseListener{
 
 
+    /**
+     * The type of button that the button will be.
+     */
     public enum ButtonType{
         NORMAL,
         BIG
     }
 
+
+    /**
+     * Default RoyaleButton Constructor.
+     * @param buttonMessage The text inside the button
+     */
     public RoyaleButton(String buttonMessage){
         super(buttonMessage);
 
@@ -40,6 +48,7 @@ public class RoyaleButton extends JButton implements MouseListener{
         setFont(MenuGraphics.getMainFont());
         setCursor(MenuGraphics.getClickableCursor());
     }
+
 
     @Override
     public void mousePressed(MouseEvent e) {

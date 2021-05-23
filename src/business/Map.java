@@ -1,6 +1,5 @@
 package business;
 
-import business.entities.Player;
 import presentation.graphics.BattleGraphics;
 import presentation.graphics.MenuGraphics;
 
@@ -9,6 +8,14 @@ import java.util.ArrayList;
 import java.util.Random;
 
 
+/**
+ * {@code Map} defines the map of the Battle in the Game.
+ * <p>It knows how it is, what decoration has inside it, and given the resolution of the screen, how to draw it
+ * optimally (without depending on the ratio of the screen, neither the height nor the width, changing
+ * the dimension of the Map accordingly)
+ *
+ * @version 1.0
+ */
 public class Map {
 
     private final int TILE_HEIGHT, TILE_WIDTH;
@@ -51,6 +58,11 @@ public class Map {
     private ArrayList<Tuple<Image, Vector2>> outerMapDecoration;
 
 
+    /**
+     * Default Map Constructor.
+     * <p>Constructs a new map given the dimension of the panel it will be painted to
+     * @param battlePanelDimension
+     */
     public Map(Dimension battlePanelDimension){
         this.battlePanelDimension = battlePanelDimension;
 
@@ -127,6 +139,10 @@ public class Map {
     }
 
 
+    /**
+     * Given a {@link Graphics}, it draws the whole Map onto it
+     * @param g The {@link Graphics} object to be drawn to
+     */
     public void draw(Graphics g){
 
         //Drawing outer map tiles

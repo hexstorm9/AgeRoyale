@@ -1,9 +1,8 @@
-package business.entities;
-
-import persistence.JDBCConnector;
+package persistence;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+
 
 /**
  * Data Access Object for retrieving/updating information from the Player Cards.

@@ -8,24 +8,35 @@ import presentation.view.MainMenuScreen;
 import presentation.view.RoyaleFrame;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
 
 
 /**
+ * {@code MainMenuController} is a {@link ScreenController} that will manage and listen to an instance of a
+ * {@link MainMenuScreen} and put it onto the {@link RoyaleFrame} of the game.
  *
+ * @see MainMenuScreen
+ * @see ScreenController
+ * @version 1.0
  */
-public class MainMenuController extends ScreenController implements ActionListener, MouseListener{
+public class MainMenuController extends ScreenController{
 
     private MainMenuScreen mainMenuScreen;
 
 
+    /**
+     * Default MainMenuController constructor.
+     * @param royaleFrame The royaleFrame of the game
+     * @param gameModel The gameModel of the game
+     */
     public MainMenuController(RoyaleFrame royaleFrame, GameModel gameModel){
         super(royaleFrame, gameModel, null);
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     public void start(boolean showSettingsPanelOnStart){
         mainMenuScreen = new MainMenuScreen(gameModel.getPlayer(), royaleFrame.getWidth(), royaleFrame.getHeight());
         mainMenuScreen.addButtonsListener(this);
@@ -42,6 +53,9 @@ public class MainMenuController extends ScreenController implements ActionListen
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void buildSettingsPanel(){
         Player currentPlayer = gameModel.getPlayer();

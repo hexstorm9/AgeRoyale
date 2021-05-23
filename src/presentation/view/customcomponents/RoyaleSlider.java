@@ -7,6 +7,14 @@ import javax.swing.plaf.basic.BasicSliderUI;
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 
+/**
+ * {@code RoyaleSlider} is the {@link JSlider} of the game.
+ * <p>It provides the same functionality as a normal {@link JSlider}, but also has
+ * a new look that doesn't depend on the SO.
+ *
+ * @see JSlider
+ * @version 1.0
+ */
 public class RoyaleSlider extends JSlider {
 
     private String actionCommand;
@@ -24,23 +32,32 @@ public class RoyaleSlider extends JSlider {
         setSnapToTicks(false);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void updateUI() {
         setUI(new CustomSliderUI(this));
     }
 
+    /**
+     * Sets the ActionCommand of this RoyaleSlider
+     * @param actionCommand String representing the actionCommand of the slider
+     */
     public void setActionCommand(String actionCommand){
         this.actionCommand = actionCommand;
     }
 
+    /**
+     * Returns the ActionCommand of this RoyaleSlider
+     * @return String representing the actionCommand of the slider
+     */
     public String getActionCommand(){
         return actionCommand;
     }
 
 
    private class CustomSliderUI extends BasicSliderUI {
-
-        // https://stackoverflow.com/questions/62609789/change-thumb-and-color-of-jslider
        private final int TRACK_HEIGHT = 8;
        private final int TRACK_WIDTH = 16;
        private final int TRACK_ARC = 6;

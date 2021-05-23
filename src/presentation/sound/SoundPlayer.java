@@ -76,10 +76,18 @@ public class SoundPlayer{
     }
 
 
+    /**
+     * Sets the volume of the sounds that will be played
+     * @param newVolume The new volume of the sounds that will be played (from 0 to 100)
+     */
     public void setVolume(int newVolume){
         volume = newVolume;
     }
 
+    /**
+     * Returns the current volume of the sounds that will be played
+     * @return The current volume of the sounds that will be played
+     */
     public int getVolume(){
         return (int)volume;
     }

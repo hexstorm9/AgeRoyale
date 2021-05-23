@@ -14,6 +14,19 @@ import java.util.List;
 import java.util.Random;
 
 
+/**
+ * {@code LoadingBattleScreenController} is a {@link ScreenController} that will manage and listen to an
+ * instance of a {@link LoadingBattleScreen} and put it onto the {@link RoyaleFrame} of the game.
+ *
+ * <p>It will load whatever is necessary to start the Battle, and when it finishes to do so it will create
+ * and start a new {@link BattleController}
+ *
+ * <p>Depending on what it is provided to the constructor, it will load an existing old battle or load
+ * a new battle to play.
+ *
+ * @see LoadingBattleScreen
+ * @version 1.0
+ */
 public class LoadingBattleScreenController extends ScreenController{
 
 

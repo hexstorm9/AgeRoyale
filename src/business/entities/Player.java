@@ -1,5 +1,6 @@
 package business.entities;
 
+import persistence.PlayerCardsDAO;
 import persistence.PlayerDAO;
 
 import java.sql.SQLException;
@@ -7,8 +8,15 @@ import java.util.HashMap;
 
 
 /**
- * Player class of the Game.
- * <p>It will serve as a container of the Player information, and an interface to modify it to the {@code database}.
+ * {@code Player} class of the Game.
+ * <p>It will serve as a container of the Player information, and an interface to modify itself
+ * to the {@code database}.
+ *
+ * <p>Each game needs to have a Player, but this class can also be used as a container to store information
+ * about other players.
+ * <p><b>Never update a Player that is not the Player of the Game</b>
+ *
+ * @version 1.0
  */
 public class Player {
 

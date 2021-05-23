@@ -15,6 +15,9 @@ import java.awt.*;
 public class RoyaleProgressBar extends JProgressBar {
 
 
+    /**
+     * Default RoyaleProgressBar constructor.
+     */
     public RoyaleProgressBar(){
         super();
         setCursor(MenuGraphics.getDefaultCursor());

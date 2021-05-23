@@ -21,15 +21,33 @@ import java.awt.event.MouseListener;
 import java.sql.SQLException;
 import java.util.Arrays;
 
+/**
+ * {@code PasswordForgottenScreenController} is a {@link ScreenController} that will manage and listen to an
+ * instance of a {@link PasswordForgottenScreen} and put it onto the {@link RoyaleFrame} of the game.
+ *
+ * <p>Whenever the email of the user that wants to recover the password, or when it already can change it and
+ * submits the new one, this class will create new {@code threads} to carry out these tasks on background.
+ *
+ * @see PasswordForgottenScreen
+ * @version 1.0
+ */
 public class PasswordForgottenScreenController extends ScreenController{
 
     private PasswordForgottenScreen passwordForgottenScreen;
 
 
+    /**
+     * Default PasswordForgottenScreenController constructor
+     * @param royaleFrame The royaleFrame of the game
+     * @param gameModel The gameModel of the game
+     */
     public PasswordForgottenScreenController(RoyaleFrame royaleFrame, GameModel gameModel){
         super(royaleFrame, gameModel, null);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void start(boolean showSettingsPanelOnStart){
         passwordForgottenScreen = new PasswordForgottenScreen(royaleFrame.getHeight());
         passwordForgottenScreen.addButtonListener(this);
@@ -45,6 +63,9 @@ public class PasswordForgottenScreenController extends ScreenController{
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void buildSettingsPanel(){
         settingsPanel.addLanguagesButton();
@@ -99,10 +120,10 @@ public class PasswordForgottenScreenController extends ScreenController{
 
 
 
-    public class checkEmailValidAndSendEmailInBackground extends SwingWorker<String, Void>{
+    private class checkEmailValidAndSendEmailInBackground extends SwingWorker<String, Void>{
 
         @Override
-        protected String doInBackground() throws SQLException {
+        protected String doInBackground(){
             try{
                 if(gameModel.checkIfMailExists(passwordForgottenScreen.getTextEmailTextField()) == false)
                     return LanguageManager.getSentence(Sentences.EMAIL_DOES_NOT_EXIST);
@@ -115,7 +136,6 @@ public class PasswordForgottenScreenController extends ScreenController{
                         SecurityUtility.getSixDigitRandomVerificationCode());
             }catch(Exception e){
                 return "Can't send email";
-                //TODO: ADD LANGUAGE MANAGER
             }
 
             return null; //If mail exists and no SQL exception has been thrown, return null

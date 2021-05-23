@@ -1,5 +1,9 @@
 package business.entities;
 
+
+/**
+ * The {@code Sounds enum} declares all the Sounds that can be reproduced on the game
+ */
 public enum Sounds {
     BUTTON("button.mp3"),
     SPLASH_SCREEN("splashscreen.mp3"),
@@ -15,6 +19,11 @@ public enum Sounds {
         this.path = path;
     }
 
+
+    /**
+     * Returns a {@code String} representing the filename of the Sound in the system
+     * @return A {@code String} representing the filename of the Sound in the system
+     */
     public String getFileName(){
         return path;
     }

@@ -33,10 +33,11 @@ import java.io.IOException;
  */
 public class Main {
 
+
     public static void main(String[] args) {
 
+        //The main thread of our application will be the EDT
         SwingUtilities.invokeLater(() -> {
-
             //Let's load the Graphics of the Menu
             try{
                 MenuGraphics.load(); //Load graphics before creating the screen

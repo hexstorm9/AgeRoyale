@@ -16,16 +16,34 @@ import java.awt.event.MouseEvent;
 import java.sql.SQLException;
 
 
+/**
+ * {@code LoginScreenController} is a {@link ScreenController} that will manage and listen to an instance of a
+ * {@link LoginScreen} and put it onto the {@link RoyaleFrame} of the game.
+ *
+ * <p>Whenever a new login attempt event is created, this class will start a new {@code thread} to check whether
+ * that login is correct or not. If it is, it will create and start a new {@link MainMenuController}
+ *
+ * @see LoginScreen
+ * @version 1.0
+ */
 public class LoginScreenController extends ScreenController {
 
     private LoginScreen loginScreen;
 
 
+    /**
+     * Default LoginScreenController constructor.
+     * @param royaleFrame The royaleFrame of the game
+     * @param gameModel The gameModel of the game
+     */
     public LoginScreenController(RoyaleFrame royaleFrame, GameModel gameModel){
         super(royaleFrame, gameModel, null);
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     public void start(boolean settingsPanelIsBeingShown){
         loginScreen = new LoginScreen(royaleFrame.getHeight());
         loginScreen.addButtonListener(this);
@@ -41,6 +59,9 @@ public class LoginScreenController extends ScreenController {
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void buildSettingsPanel(){
         settingsPanel.addLanguagesButton();
@@ -58,6 +79,7 @@ public class LoginScreenController extends ScreenController {
             new CheckLoginInBackground().execute();
         }
     }
+
 
     @Override
     public void mousePressed(MouseEvent e) {

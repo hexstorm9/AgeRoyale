@@ -20,6 +20,19 @@ import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
 
+/**
+ * {@code SettingsPanelController} is a {@link FrontPanelController} that will manage and listen to an instance
+ * of a {@link SettingsPanel} (a {@link presentation.view.FrontPanel}.
+ *
+ * <p>Note that a {@code SettingsPanelController} has to be created by a {@link ScreenController}.
+ *
+ * <p>Depending on the actions taken on that {@link SettingsPanel}, this controller will take action and redirect
+ * some of them (like logging out of the game) to the {@link ScreenController} that created it.
+ *
+ * @see SettingsPanel
+ * @see FrontPanelController
+ * @version 1.0
+ */
 public class SettingsPanelController extends FrontPanelController implements ChangeListener{
 
     //We need to have a reference to the ScreenController that created this SettingsPanelController
@@ -27,6 +40,13 @@ public class SettingsPanelController extends FrontPanelController implements Cha
     //language or logging out
     private ScreenController screenController;
 
+
+    /**
+     * Default SettingsPanelController constructor.
+     * @param settingsPanelToControl The {@link SettingsPanel} that this controller will control
+     * @param screenControllerToRedirectActions The {@link ScreenController} that invoked this object, so as to redirect some actions
+     * @param royaleFrame The {@link RoyaleFrame} of the game
+     */
     public SettingsPanelController(SettingsPanel settingsPanelToControl, ScreenController screenControllerToRedirectActions, RoyaleFrame royaleFrame){
         super(settingsPanelToControl, royaleFrame);
         this.screenController = screenControllerToRedirectActions;

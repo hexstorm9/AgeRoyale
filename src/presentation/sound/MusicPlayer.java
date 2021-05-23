@@ -75,6 +75,10 @@ public class MusicPlayer implements BasicPlayerListener {
     }
 
 
+    /**
+     * Sets the volume of the music
+     * @param newVolume The desired volume of the music (from 0 to 100)
+     */
     public void setVolume(int newVolume){
         volume = newVolume;
         if(basicMusicPlayer != null){
@@ -86,9 +90,14 @@ public class MusicPlayer implements BasicPlayerListener {
 
     }
 
+    /**
+     * Returns the current volume of the music playing
+     * @return The current volume of the music playing
+     */
     public int getVolume(){
         return (int)volume;
     }
+
 
     /**
      * Starts playing the {@link Songs} provided in an infinite loop.
@@ -108,6 +117,9 @@ public class MusicPlayer implements BasicPlayerListener {
     }
 
 
+    /**
+     * Stops the music currently playing
+     */
     public void stop(){
         if(basicMusicPlayer == null) return;
         try{

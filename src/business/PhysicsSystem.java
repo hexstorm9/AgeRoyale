@@ -1,5 +1,21 @@
 package business;
 
+/**
+ * The {@code PhysicsSystem} class provides a system for the {@link Card}s in the Battle to interact
+ * with its surroundings.
+ * <p>It helps them attack and move (depending on the enemies there are on the map)
+ *
+ * <p>There should exit only one {@code PhysicsSystem} on the game, managed by the {@link BattleModel} and provided
+ * to each of the {@link Card}s on the Battle.
+ *
+ * <p>In order for the physics system to interact with the environment, it will need references to the {@link Map}
+ * of the Battle, and the {@link BattleModel} (class that manages the {@code cards} of the Battle)
+ *
+ *
+ * @see Card
+ * @see Map
+ * @version 1.0
+ */
 public class PhysicsSystem {
 
     private BattleModel battleModel;
@@ -12,6 +28,13 @@ public class PhysicsSystem {
     private final double RANGE_UNIT; //Tells the pixels that 1 point of range is worth. Will depend on the resolution of the screen
 
 
+    /**
+     * Default PhysicsSystem Constructor.
+     * @param battleModel The battleModel that manages this {@link PhysicsSystem} (so as to be able to get
+     *                    information about the {@code cards} that are playing right now
+     * @param map The Map of the Battle (so as to be able to get information about boundaries, and to where
+     *            should {@code cards} go.
+     */
     public PhysicsSystem(BattleModel battleModel, Map map){
         this.battleModel = battleModel;
         this.map = map;
@@ -27,6 +50,14 @@ public class PhysicsSystem {
     }
 
 
+    /**
+     * Provided the position of a Card and its range, returns the closest enemy in range or {@code null}
+     * if there are none.
+     * @param card The Card that wants to know for enemies in range
+     * @param position The position of the Card
+     * @param range The range of the Card
+     * @return The closest enemy {@link Card} in range, or {@code null} if none.
+     */
     public Card getEnemyInRange(Card card, Vector2 position, int range){
         //Calculate the range in pixels.
         final double RANGE_IN_PIXELS = range * RANGE_UNIT;
@@ -56,9 +87,9 @@ public class PhysicsSystem {
 
 
     /**
-     * Given the actual position of a card,
-     * returns the new position of the card
+     * Given the actual position of a card, returns the new position of the card
      *
+     * @param card {@link Card} to calculate its new position
      * @param position Current position of the card
      * @return new position of the card
      */
@@ -247,9 +278,6 @@ public class PhysicsSystem {
 
         if(positionXNegative) newX = -newX;
         if(positionYNegative) newY = -newY;
-
-        //Debug
-        //System.out.println("Position: " + position.x + " " + position.y + "   --- New Position: " + newX + " " + newY + "   --- newHypotenuseValue: " + newHypotenuseValue);
 
         return new Vector2(newX, newY);
     }

@@ -44,22 +44,42 @@ public class DatabaseInfo {
     }
 
 
+    /**
+     * Returns the IP of the database
+     * @return IP of the database
+     */
     public String getIp(){
         return ip;
     }
 
+    /**
+     * Returns the Port of the database
+     * @return Port of the database
+     */
     public String getPort(){
         return port;
     }
 
+    /**
+     * Returns the user of the database
+     * @return User of the database
+     */
     public String getUser(){
         return user;
     }
 
+    /**
+     * Returns the password of the user in the database
+     * @return The password of the user in the database
+     */
     public String getPassword(){
         return password;
     }
 
+    /**
+     * Returns the database name
+     * @return The database name
+     */
     public String getDatabaseName(){
         return databaseName;
     }

@@ -1,5 +1,8 @@
 package business.entities;
 
+/**
+ * The {@code Sentences enum} declares all the sentences that will be displayed on the Game
+ */
 public enum Sentences {
     LOGIN("login"),
     USERNAME("username"),
@@ -52,6 +55,10 @@ public enum Sentences {
         this.stringValue = stringValue;
     }
 
+    /**
+     * Returns a {@code String} representation of that Sentence
+     * @return A {@code String} representation of that Sentence
+     */
     public String toString(){
         return stringValue;
     }

@@ -31,6 +31,10 @@ public class RoyaleLabel extends JLabel implements MouseListener{
     }
 
 
+    /**
+     * There are different types of {@link RoyaleLabel} you can construct.
+     * <p>Use this enum to provide a type on the constructor
+     */
     public enum LabelType{
         TITLE,
         PARAGRAPH,
@@ -39,6 +43,13 @@ public class RoyaleLabel extends JLabel implements MouseListener{
     }
 
 
+    /**
+     * Default RoyaleLabel Constructor.
+     * @param s The string of the label
+     * @param labelType The type of the label
+     *
+     * @see LabelType
+     */
     public RoyaleLabel(String s, LabelType labelType){
         super(s, JLabel.CENTER);
 

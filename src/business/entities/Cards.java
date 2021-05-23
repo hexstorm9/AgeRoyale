@@ -1,6 +1,5 @@
 package business.entities;
 
-import java.util.Locale;
 
 /**
  * The Cards {@code enum} will contain all the Cards information of the game

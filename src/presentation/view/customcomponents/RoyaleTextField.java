@@ -13,10 +13,13 @@ import javax.swing.*;
 */
 public class RoyaleTextField extends JTextField {
 
-
+    /**
+     * Default RoyaleTextField constructor.
+     */
     public RoyaleTextField() {
         super(20);
         setFont(MenuGraphics.getMainFont());
         setCursor(MenuGraphics.getWritingCursor());
     }
+
 }
